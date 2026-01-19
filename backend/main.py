@@ -1,13 +1,15 @@
 from fastapi import FastAPI
 from database import init_db, getConnection
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 init_db()
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"msg": "You are connected"}
 
 class Pasient(BaseModel): # Definerer en Pydantic-modell for Pasient som brukes til validering av innkommende data
     pasientID : int 
