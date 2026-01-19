@@ -1,0 +1,1 @@
+For å starte backeend så må du lage et [venv](https://www.w3schools.com/python/python_virtualenv.asp), aktivere det, kjøre `pip install -r requirements.txt`, etterfulgt av å starte serveren med `fastapi dev main.py`. 
