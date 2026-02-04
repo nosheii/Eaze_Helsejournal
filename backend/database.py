@@ -20,6 +20,12 @@ def init_db():
         epost TEXT
     )
     """
+    CREATE TABLE IF NOT EXISTS user (
+        userID INTEGER PRIMARY KEY AUTOINCREMENT,
+        brukernavn TEXT NOT NULL,
+        passord TEXT NOT NULL,
+        fnr TEXT,
+        ansattID INTEGER
     )
     connection.commit()
     connection.close()
