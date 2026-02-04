@@ -8,6 +8,16 @@ def getConnection():
 
 def init_db():
     connection = getConnection() 
+
+    connection.execute( # Oppretter tabellen "ansatt" hvis den ikke allerede finnes
+    """
+    CREATE TABLE IF NOT EXISTS ansatt (
+        ansattID INTEGER PRIMARY KEY AUTOINCREMENT,
+        mail TEXT,
+        navn TEXT
+    )
+    """)
+
     connection.execute( # Oppretter tabellen "pasient" hvis den ikke allerede finnes
     """
     CREATE TABLE IF NOT EXISTS pasient (
