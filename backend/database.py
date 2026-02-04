@@ -30,3 +30,4 @@ def init_db():
     connection.commit() # Lagre endringene i databasen
     connection.close()
 
+    )
