@@ -19,6 +19,8 @@ def init_db():
         adresse TEXT, 
         epost TEXT
     )
+    """)
+    connection.execute( # Oppretter tabellen "ansatt" hvis den ikke allerede finnes
     """
     CREATE TABLE IF NOT EXISTS user (
         userID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,7 +29,7 @@ def init_db():
         fnr TEXT,
         ansattID INTEGER
     )
+    """)
     connection.commit() # Lagre endringene i databasen
     connection.close()
 
-    )
