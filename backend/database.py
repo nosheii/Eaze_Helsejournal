@@ -8,7 +8,7 @@ def getConnection():
 
 def init_db():
     connection = getConnection() 
-    connection.execute(
+    connection.execute( # Oppretter tabellen "pasient" hvis den ikke allerede finnes
     """
     CREATE TABLE IF NOT EXISTS pasient (
         pasientID INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -27,6 +27,6 @@ def init_db():
         fnr TEXT,
         ansattID INTEGER
     )
-    connection.commit()
+    connection.commit() # Lagre endringene i databasen
     connection.close()
 
