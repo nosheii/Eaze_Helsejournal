@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from database import init_db, getConnection
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware 
+from jose import jwt
+from passlib.context import CryptContext
+from datetime import datetime, timedelta
 
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 app = FastAPI() # Oppretter en FastAPI-applikasjon
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]) # Legger til CORS-middleware for å tillate forespørsler fra alle opprinnelser
 init_db() # Initialiserer databasen ved oppstart av applikasjonen
