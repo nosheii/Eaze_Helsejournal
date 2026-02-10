@@ -1,42 +1,55 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react'
+import Login from './Login'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [message, setMessage] = useState('Not connected')
-  useEffect(function test() {
-    fetch('http://localhost:8000/')
-      .then(response => response.json())
-      .then(data => setMessage(data.msg))
-  }, [])
+    // Lagrer token, rolle og brukerinfo når bruker logger inn
+    const [token, setToken] = useState(null)
+    const [rolle, setRolle] = useState(null)
+    const [brukerinfo, setBrukerinfo] = useState(null)
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>{message}</p>
-      <h1>Eaze er en pasientjournal</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    function handleLoginSuccess(nyToken, nyRolle, nyBrukerinfo) {
+        setToken(nyToken)
+        setRolle(nyRolle)
+        setBrukerinfo(nyBrukerinfo)
+    }
+
+    function handleLoggUt() {
+        setToken(null)
+        setRolle(null)
+        setBrukerinfo(null)
+    }
+
+    // Hvis ikke innlogget - vis Login-siden
+    if (!token) {
+        return <Login onLoginSuccess={handleLoginSuccess} />
+    }
+
+    // Hvis innlogget - vis dashboard basert på rolle
+    return (
+        <div>
+            <h1>Velkommen, {brukerinfo.navn}!</h1>
+            <p>Du er logget inn som: <strong>{rolle}</strong></p>
+
+            {/* Vis ulik info basert på rolle */}
+            {rolle === "lege" && (
+                <div>
+                    <h2>Lege-dashboard</h2>
+                    <p>AnsattID: {brukerinfo.ansattID}</p>
+                    <p>Mail: {brukerinfo.mail}</p>
+                    <p>Her kan legen se journaler, pasienter og mer...</p>
+                </div>
+            )}
+
+            {rolle === "pasient" && (
+                <div>
+                    <h2>Pasient-dashboard</h2>
+                    <p>Her kan pasienten se sin egen informasjon...</p>
+                </div>
+            )}
+
+            <button onClick={handleLoggUt}>Logg ut</button>
+        </div>
+    )
 }
 
 export default App
