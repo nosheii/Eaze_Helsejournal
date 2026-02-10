@@ -33,8 +33,6 @@ def init_db():
     )
     """
     )
-    connection.commit()
-    connection.close()
 
     connection.execute("""
 CREATE TABLE IF NOT EXISTS user (
@@ -46,6 +44,8 @@ CREATE TABLE IF NOT EXISTS user (
     FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
 )
 """)
+    connection.commit()
+    connection.close()
 
     
 
