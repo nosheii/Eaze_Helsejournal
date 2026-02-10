@@ -1,3 +1,5 @@
+from multiprocessing.dummy import connection
+from os import name
 import sqlite3
 
 def getConnection(): 
@@ -29,17 +31,12 @@ def init_db():
         adresse TEXT, 
         epost TEXT
     )
-    """)
-    connection.execute( # Oppretter tabellen "ansatt" hvis den ikke allerede finnes
     """
-    CREATE TABLE IF NOT EXISTS user (
-        userID INTEGER PRIMARY KEY AUTOINCREMENT,
-        brukernavn TEXT NOT NULL,
-        passord TEXT NOT NULL,
-        fnr TEXT,
-        ansattID INTEGER
     )
-    """)
-    connection.commit() # Lagre endringene i databasen
+    connection.commit()
     connection.close()
+    
 
+if __name__ == "__main__":  
+    init_db()  # Initialiserer databasen når skriptet kjøres direkte
+    

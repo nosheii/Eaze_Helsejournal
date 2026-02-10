@@ -32,8 +32,8 @@ frontend/
 
      #Windows (Powershell)
      .navnpådittvenv\Scripts\Activate.ps1
-     ```
-2. Start backend serveren fra backend mappen med `fastapi dev main.py`
+     ``
+2. Start backend serveren fra backend mappen med `fastapi dev main.py
 3. Besøk [https://127.0.0.1:8000/docs](https://127.0.0.1:8000/docs) for å se API'et
 
 ## Frontend
