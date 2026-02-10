@@ -33,8 +33,20 @@ def init_db():
     )
     """
     )
+
+    connection.execute("""
+CREATE TABLE IF NOT EXISTS user (
+    userID INTEGER PRIMARY KEY AUTOINCREMENT,
+    brukernavn TEXT UNIQUE NOT NULL,
+    passord TEXT NOT NULL,
+    ansattID INTEGER,
+    fnr TEXT,
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
+""")
     connection.commit()
     connection.close()
+
     
 
 if __name__ == "__main__":  
