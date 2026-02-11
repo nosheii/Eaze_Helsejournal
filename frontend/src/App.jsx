@@ -13,6 +13,7 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
     const [brukerinfo, setBrukerinfo] = useState(decoded_token ? decoded_token.brukerinfo : null) // useState for å huske brukerinfo (hvis det finnes)
 
     function handleLoginSuccess(nyToken, nyRolle, nyBrukerinfo) { // Denne funksjonen kalles når Login.jsx får en vellykket login-respons fra backend
+        sessionStorage.setItem("token", nyToken) // Lagre token i sessionStorage slik at den er tilgjengelig ved refresh
         setToken(nyToken) // Oppdaterer token i state for å indikere at brukeren er logget inn
         setRolle(nyRolle) // Oppdaterer rolle i state slik at vi kan vise riktig dashboard
         setBrukerinfo(nyBrukerinfo) // Oppdaterer brukerinfo i state slik at vi kan vise det i dashboardet
