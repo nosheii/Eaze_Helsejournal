@@ -28,8 +28,8 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
     }
 
     // Hvis ikke innlogget - vis Login-siden
-    if (!token) {
-        return <Login onLoginSuccess={handleLoginSuccess} />
+    if (!token) { // Hvis det ikke finnes en token (!utrops tegnet betyr "ikke"), vis Login-siden (dvs. at brukeren ikke er logget inn)
+        return <Login onLoginSuccess={handleLoginSuccess} /> 
     }
 
     // Hvis innlogget - vis dashboard basert på rolle
