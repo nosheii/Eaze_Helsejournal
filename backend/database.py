@@ -54,7 +54,48 @@ def init_db():
         FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
 )
 """)
-                       
+    
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS diagnose (
+        diagnoseID INTEGER PRIMARY KEY AUTOINCREMENT,
+        journalNr INTEGER NOT NULL,
+        kode TEXT NOT NULL,
+        beskrivelse TEXT,
+        FOREIGN KEY (journalNr) REFERENCES journal(journalNr)
+)
+""")
+
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS medikament ( 
+        mediID INTEGER PRIMARY KEY AUTOINCREMENT, 
+        mediNavn TEXT NOT NULL,
+        doseEnhet TEXT NOT NULL
+)
+""")              
+    
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS diagnose_medikament (
+        diagnoseID INTEGER NOT NULL,
+        mediID INTEGER NOT NULL,
+        dose TEXT NOT NULL,
+        varighet TEXT NOT NULL,
+        PRIMARY KEY (diagnoseID, mediID),
+        FOREIGN KEY (diagnoseID) REFERENCES diagnose(diagnoseID),
+        FOREIGN KEY (mediID) REFERENCES medikament(mediID)
+)
+""")
+    
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS dokument (
+        dokumentID INTEGER PRIMARY KEY AUTOINCREMENT,
+        journalNr INTEGER NOT NULL,
+        ansattID INTEGER NOT NULL,
+        opprettetDato TEXT NOT NULL DEFAULT (date('now')),
+        tekst TEXT,
+        FOREIGN KEY (journalNr) REFERENCES journal(journalNr),
+        FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
+""")
 
     connection.commit()
     connection.close()
