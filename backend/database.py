@@ -17,8 +17,8 @@ def init_db():
         ansattID INTEGER PRIMARY KEY AUTOINCREMENT,
         mail TEXT,
         navn TEXT
-    )
-    """)
+)
+""")
 
     connection.execute( # Oppretter tabellen "pasient" hvis den ikke allerede finnes
     """
@@ -30,20 +30,32 @@ def init_db():
         tlf TEXT, 
         adresse TEXT, 
         epost TEXT
-    )
-    """
-    )
-
-    connection.execute("""
-CREATE TABLE IF NOT EXISTS user (
-    userID INTEGER PRIMARY KEY AUTOINCREMENT,
-    brukernavn TEXT UNIQUE NOT NULL,
-    passord TEXT NOT NULL,
-    ansattID INTEGER,
-    fnr TEXT,
-    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
 )
 """)
+
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS user (
+        userID INTEGER PRIMARY KEY AUTOINCREMENT,
+        brukernavn TEXT UNIQUE NOT NULL,
+        passord TEXT NOT NULL,
+        ansattID INTEGER,
+        fnr TEXT,
+        FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
+""")
+    
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS journal (
+        journalNr INTEGER PRIMARY KEY AUTOINCREMENT,
+        fnr TEXT NOT NULL,
+        ansattID INTEGER NOT NULL,
+        opprettetDato TEXT NOT NULL DEFAULT (date('now')),
+        FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+        FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
+""")
+                       
+
     connection.commit()
     connection.close()
 
