@@ -7,8 +7,34 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from typing import Optional
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+# "Vakten" som sjekker token
+security = HTTPBearer()
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Ugyldig eller utløpt token"
+        )
+
+def krever_lege(bruker = Depends(verify_token)):
+    if bruker.get("rolle") != "lege":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Du har ikke tilgang til denne ressursen"
+        )
+    return bruker
+
+
+
 app = FastAPI() # Oppretter en FastAPI-applikasjon
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]) # Legger til CORS-middleware for å tillate forespørsler fra alle opprinnelser
 init_db() # Initialiserer databasen ved oppstart av applikasjonen
@@ -26,6 +52,14 @@ class Pasient(BaseModel): # Definerer en Pydantic-modell for Pasient som brukes 
     adresse : str
     epost : str
 
+class JournalRequest(BaseModel): # Modell for å opprette en journal, inneholder fnr til pasienten og ansattID til legen som oppretter journalen
+    fnr: str
+
+class DokumentRequest(BaseModel):
+    journalNr: int
+    tekst: str
+
+
 @app.post("/leggTilPas") # Endpoint for å legge til en ny pasient
 def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection = getConnection()
@@ -38,6 +72,157 @@ def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection.commit()
     connection.close()
     return {"status":"Success!"}
+
+@app.get("/journal") # Endpoint for å hente alle journaler, krever at brukeren er en lege (krever_lege)
+def hent_alle_journaler(bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    
+    try:
+        cursor.execute("""
+            SELECT 
+                j.journalNr,
+                j.fnr,
+                j.opprettetDato,
+                p.forNavn,
+                p.etterNavn,
+                a.navn as legeNavn
+            FROM journal j
+            LEFT JOIN pasient p ON j.fnr = p.fnr
+            LEFT JOIN ansatt a ON j.ansattID = a.ansattID
+            ORDER BY j.opprettetDato DESC
+        """)
+        
+        journaler = cursor.fetchall()
+        return {"journaler": [dict(j) for j in journaler]} 
+        
+    finally:
+        connection.close()
+
+@app.get("/journal/{fnr}") # Endpoint for å hente journaler for en spesifikk pasient basert på fødselsnummer (fnr), krever at brukeren er enten legen selv eller pasienten det gjelder
+def hent_journal_for_pasient(fnr: str, bruker = Depends(verify_token)):
+    # Pasient kan bare se sin egen journal
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Du kan bare se din egen journal"
+            )
+    
+    connection = getConnection()
+    cursor = connection.cursor()
+    
+    try:
+        cursor.execute("""
+            SELECT 
+                j.journalNr,
+                j.fnr,
+                j.opprettetDato,
+                a.navn as legeNavn,
+                p.forNavn,
+                p.etterNavn
+            FROM journal j
+            LEFT JOIN ansatt a ON j.ansattID = a.ansattID
+            LEFT JOIN pasient p ON j.fnr = p.fnr
+            WHERE j.fnr = ?
+            ORDER BY j.opprettetDato DESC
+        """, (fnr,))
+        
+        journaler = cursor.fetchall()
+        return {"journaler": [dict(j) for j in journaler]}
+        
+    finally:
+        connection.close()
+
+
+@app.post("/journal") # Endpoint for å opprette en ny journal, krever at brukeren er en lege (krever_lege)
+def opprett_journal(journal_data: JournalRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    
+    try:
+        cursor.execute("""
+            INSERT INTO journal (fnr, ansattID)
+            VALUES (?, ?)
+        """, (
+            journal_data.fnr,
+            bruker["brukerinfo"]["ansattID"]
+        ))
+        
+        journal_nr = cursor.lastrowid
+        connection.commit()
+        
+        return {
+            "status": "Journal opprettet!",
+            "journalNr": journal_nr
+        }
+        
+    finally:
+        connection.close()
+
+@app.post("/dokument") # Endpoint for å opprette et nytt dokument i en journal, krever at brukeren er en lege (krever_lege)
+def opprett_dokument(dokument_data: DokumentRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    
+    try:
+        cursor.execute("""
+            INSERT INTO dokument (journalNr, ansattID, tekst)
+            VALUES (?, ?, ?)
+        """, (
+            dokument_data.journalNr,
+            bruker["brukerinfo"]["ansattID"],
+            dokument_data.tekst
+        ))
+        
+        connection.commit()
+        
+        return {
+            "status": "Dokument opprettet!",
+            "dokumentID": cursor.lastrowid
+        }
+        
+    finally:
+        connection.close()
+
+@app.get("/dokument/{journalNr}") # Endpoint for å hente alle dokumenter i en journal, krever at brukeren er enten legen selv eller pasienten det gjelder
+def hent_dokumenter(journalNr: int, bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    
+    try:
+        # Sjekk om pasienten har tilgang til denne journalen
+        if bruker.get("rolle") == "pasient":
+            cursor.execute("""
+                SELECT fnr FROM journal WHERE journalNr = ?
+            """, (journalNr,))
+            
+            journal = cursor.fetchone()
+            
+            if not journal or journal["fnr"] != bruker.get("brukerinfo", {}).get("fnr"):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Du har ikke tilgang til dette dokumentet"
+                )
+        
+        # Hent dokumenter
+        cursor.execute("""
+            SELECT 
+                d.dokumentID,
+                d.opprettetDato,
+                d.tekst,
+                a.navn as legeNavn
+            FROM dokument d
+            LEFT JOIN ansatt a ON d.ansattID = a.ansattID
+            WHERE d.journalNr = ?
+            ORDER BY d.opprettetDato DESC
+        """, (journalNr,))
+        
+        dokumenter = cursor.fetchall()
+        return {"dokumenter": [dict(d) for d in dokumenter]}
+        
+    finally:
+        connection.close()
 
 # Hemmelighet for å signere JWT tokens - VIKTIG: Bytt dette til noe hemmelig i produksjon!
 SECRET_KEY = "din-hemmelige-nokkel-som-ingen-andre-skal-vite-om-123"
