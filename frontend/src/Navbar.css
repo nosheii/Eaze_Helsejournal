@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background: #0097b2;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-left {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex: 1;  /* Legger til flex: 1 */
+}
+.navbar-logo {
+    height: 40px;
+    width: auto;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 2rem;
+    align-items:;
+    flex: 1;
+    justify-content: center;
+}
+
+.navbar-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: opacity 0.2s;
+}
+
+.navbar-link:hover {
+    opacity: 0.8;
+}
+
+.navbar-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex: 1;  /* Legger til flex: 1 */
+    justify-content: flex-end;  /* Høyrejusterer innholdet */
+}
+
+.navbar-user-name {
+    color: white;
+    font-size: 1rem;
+}
+
+.navbar-profile-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+.navbar-logout-btn {
+    background: white;
+    color: #0097b2;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.navbar-logout-btn:hover {
+    opacity: 0.9;
+}

@@ -1,25 +1,26 @@
 import { Link } from 'react-router-dom'
+import './Navbar.css'
+import logo from './assets/logo-eaze.png'
+import profilBilde from './assets/profil-bilde.jpg'
 
 function Navbar({ brukerinfo, onLoggUt }) {
     return (
-        <nav style={{ 
-            background: '#17a2b8', 
-            padding: '1rem', 
-            display: 'flex', 
-            justifyContent: 'space-between',
-            alignItems: 'center'
-        }}>
-            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                <h2 style={{ color: 'white', margin: 0 }}>Eaze</h2>
-                <Link to="/hjem" style={{ color: 'white', textDecoration: 'none' }}>Hjem</Link>
-                <Link to="/innboks" style={{ color: 'white', textDecoration: 'none' }}>Innboks</Link>
-                <Link to="/avtaler" style={{ color: 'white', textDecoration: 'none' }}>Avtaler</Link>
-                <Link to="/journal" style={{ color: 'white', textDecoration: 'none' }}>Journal</Link>
+        <nav className="navbar">
+            <div className="navbar-left">
+                <img src={logo} alt="Eaze logo" className="navbar-logo" />
+                
+                <div className="navbar-links">
+                    <Link to="/hjem" className="navbar-link">Hjem</Link>
+                    <Link to="/innboks" className="navbar-link">Innboks</Link>
+                    <Link to="/avtaler" className="navbar-link">Avtaler</Link>
+                    <Link to="/journal" className="navbar-link">Journal</Link>
+                </div>
             </div>
             
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <span style={{ color: 'white' }}>{brukerinfo.navn}</span>
-                <button onClick={onLoggUt}>Logg ut</button>
+            <div className="navbar-right">
+                <span className="navbar-user-name">{brukerinfo.navn}</span>
+                <img src={profilBilde} alt="Profil" className="navbar-profile-img" />
+                <button onClick={onLoggUt} className="navbar-logout-btn">Logg ut</button>
             </div>
         </nav>
     )
