@@ -2,6 +2,12 @@ import { useState } from 'react'
 import Login from './Login'
 import { jwtDecode } from "jwt-decode";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Navbar from './Navbar'
+import Hjem from './Hjem'
+import Innboks from './Innboks'
+import Avtaler from './Avtaler'
+import Journal from './Journal'
+import { Navigate } from 'react-router-dom'
 
 function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs. at brukeren er logget inn)
     const existing_token = sessionStorage.getItem("token") || null // Sjekk om det finnes en token i sessionStorage
@@ -30,34 +36,22 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
 
     // Hvis ikke innlogget - vis Login-siden
     if (!token) { // Hvis det ikke finnes en token (!utrops tegnet betyr "ikke"), vis Login-siden (dvs. at brukeren ikke er logget inn)
-        return <Login onLoginSuccess={handleLoginSuccess} /> 
+        return <Login onLoginSuccess={handleLoginSuccess} />
     }
 
-    // Hvis innlogget - vis dashboard basert på rolle
+    // Hvis innlogget - vis Navbar + Routes
     return (
-        <div>
-            <h1>Velkommen, {brukerinfo.navn}!</h1>
-            <p>Du er logget inn som: <strong>{rolle}</strong></p>
+        <BrowserRouter>
+            <Navbar brukerinfo={brukerinfo} onLoggUt={handleLoggUt} />
 
-            {/* Vis ulik info basert på rolle */}
-            {rolle === "lege" && (
-                <div>
-                    <h2>Lege-dashboard</h2>
-                    <p>AnsattID: {brukerinfo.ansattID}</p>
-                    <p>Mail: {brukerinfo.mail}</p>
-                    <p>Her kan legen se journaler, pasienter og mer...</p>
-                </div>
-            )}
-
-            {rolle === "pasient" && (
-                <div>
-                    <h2>Pasient-dashboard</h2>
-                    <p>Her kan pasienten se sin egen informasjon...</p>
-                </div>
-            )}
-
-            <button onClick={handleLoggUt}>Logg ut</button>
-        </div>
+            <Routes>
+                <Route path="/hjem" element={<Hjem rolle={rolle} brukerinfo={brukerinfo} />} />
+                <Route path="/innboks" element={<Innboks />} />
+                <Route path="/avtaler" element={<Avtaler />} />
+                <Route path="/journal" element={<Journal />} />
+                <Route path="*" element={<Navigate to="/hjem" />} />
+            </Routes>
+        </BrowserRouter>
     )
 }
 
