@@ -25,7 +25,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
             detail="Ugyldig eller utløpt token"
         )
 
-def krever_lege(bruker = Depends(verify_token)):
+def krever_lege(bruker = Depends(verify_token)): # Avhengighet som sjekker at brukeren er en lege
     if bruker.get("rolle") != "lege":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
