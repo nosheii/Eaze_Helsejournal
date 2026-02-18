@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Login from './Login'
 import { jwtDecode } from "jwt-decode";
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs. at brukeren er logget inn)
     const existing_token = sessionStorage.getItem("token") || null // Sjekk om det finnes en token i sessionStorage
