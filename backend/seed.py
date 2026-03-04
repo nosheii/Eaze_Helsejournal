@@ -1,13 +1,9 @@
 # seed.py er for at vi skal slippe å manuelt legge inn testdata i database hver gang for alle som jobber på prosjektet
-# Det er et skript som fyller databasen med testdata, og det kan kjøres flere ganger uten å skape duplikater fordi det først sletter gamle testbrukere.
+# Det er et skript som fyller databasen med testdata, og det kan kjøres flere ganger 
+# uten å skape duplikater fordi det først sletter gamle testbrukere.
 #Først må du slette den gamle databasen (i terminalen, rm app.db) for å unngå duplikater
 # kjør python database.py i terminalen for å opprette tabellene på nytt, og deretter kjør 
 # python seed.py for å fylle på med testdata. Husk å være i backend mappen og i ditt virtuelle miljø før du kjører disse kommandoene.
-# Dette skriptet fyller databasen med testdata.
-# Kjør det etter init_db() har opprettet tabellene:
-#   python seed.py
-# Du kan trygt kjøre dette flere ganger — det sletter gamle testbrukere
-# først, slik at du aldri får duplikater.
 
 import sqlite3
 from passlib.context import CryptContext
