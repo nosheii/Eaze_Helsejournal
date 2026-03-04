@@ -1,0 +1,135 @@
+/* Hoved siden, farge, font */
+.side {
+    min-height: calc(100vh - 80px);
+    background: #f0fafa;
+    padding: 40px 48px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+/* Wrapper for å gjøre alt midtstilt i forhold til gridet */
+.innhold {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* "Hei" seksjon, og dato og alt til venstre */
+.venstreSeksjon {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.hilsen {
+    font-size: 38px;
+    font-weight: 800;
+    color: #1a2e2e;
+    margin: 0 0 8px 0;
+    line-height: 1.1;
+}
+
+/* Gjenrbukar komponent for det kortet for leger */
+.kort {
+    background: #ffffff;
+    border: 1.5px solid #d0ecec;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #5a8080;
+    line-height: 1.8;
+}
+
+.dato {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a2e2e;
+}
+
+.datoLabel {
+    font-size: 13px;
+    color: #5a8080;
+}
+
+.kortTittel {
+    font-weight: 700;
+    color: #1a2e2e;
+    margin-bottom: 4px;
+}
+
+/* Selve wigdet griden */
+.widgetGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+/* Selve widget kortene */
+.widget {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 26px;
+    background: #ffffff;
+    border: 1.5px solid #d0ecec;
+    border-radius: 16px;
+    cursor: pointer;
+    text-align: left;
+    /* transition er det som gjør skaper "hover over" animasjonen */
+    transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    width: 100%;
+}
+
+/* Hover tilstanden er dynamisk  */
+.widgetHover {
+    background: #e8f7f7;
+    box-shadow: 0 6px 24px rgba(0, 168, 168, 0.13);
+    transform: translateY(-2px);
+}
+
+/* Ikonene sine sirkler (alle ikonene er i sirkler) */
+.ikonSirkel {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Selve sirkelens farge */
+.ikonSirkelOutline {
+    background: transparent;
+    border: 2px solid #0aadad;
+    color: #0aadad;
+}
+
+/* De sirklene som er fylt er fylt med denne fargen -> */
+.ikonSirkelFilled {
+    background: #0aadad;
+    border: none;
+    color: #ffffff;
+}
+
+/* Hvordan tekster ser ut på widgetene */
+.widgetTittel {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a2e2e;
+    margin-bottom: 4px;
+}
+
+/* Beskrivelses teksten under widgetsene */
+.widgetBeskrivelse {
+    font-size: 13px;
+    color: #5a8080;
+    line-height: 1.4;
+}
