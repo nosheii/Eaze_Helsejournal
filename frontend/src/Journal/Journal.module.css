@@ -1,0 +1,88 @@
+
+/*Hele siden */
+.side {
+  min-height: calc(100vh - 80px);
+  background: #f0fafa;
+  padding: 40px 48px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+.innhold {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Pasientheader (den bolken hvor det står navn alder osv) */
+.pasientHeader {
+  margin-bottom: 24px;
+  font-size: 18px;
+  color: #1a2e2e;
+}
+
+.pasientNavn {
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.pasientDetaljer {
+  font-weight: 400;
+  color: #2a4040;
+}
+
+/* De forskjellige fanene*/
+.faneKontainer {
+  border: 1.5px solid #d0ecec;
+  border-radius: 19px;
+  overflow: hidden;
+  margin-bottom: 36px;
+  background: #ffffff;
+}
+
+/* Den øverste raden */
+.faneRad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1.5px solid #d0ecec;
+}
+
+/* De to siste radene under faneRad */
+.faneRadTo{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-bottom: none;
+}
+
+.fane {
+  padding: 18px 20px;
+  background: #ffffff;
+  border: none;
+  border-right: 1.5px solid #d0ecec;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  color: #2a4040;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align:center;
+}
+
+/*Denne er for å fjerne borderright på den siste fanen i hver rad sånn at det ser mer clean ut*/
+.fane:last-child {
+  border-right: none;
+}
+
+.fane:hover {
+  background: #e8f7f7;
+}
+
+/*Den fanen som er trykket på får en mørkere blå ish farge */
+.faneAktiv {
+  background: #0aadad;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* og den blir enda mørkere hvis man hoverer over den*/
+.faneAktiv:hover {
+  background: #089090;
+}

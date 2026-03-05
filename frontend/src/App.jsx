@@ -6,7 +6,7 @@ import Navbar from './Navbar'
 import Hjem from './Hjem'
 import Innboks from './Innboks'
 import Avtaler from './Avtaler'
-import Journal from './Journal'
+import Journal from './Journal/Journal'
 import { Navigate } from 'react-router-dom'
 
 function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs. at brukeren er logget inn)

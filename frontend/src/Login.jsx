@@ -50,7 +50,7 @@ function Login({ onLoginSuccess }) {
         <div>
             <h2>Logg inn</h2>
 
-            <form onSubmit={handleSubmit}> // Bruker en form for å kunne bruke Enter-tasten for å logge inn
+            <form onSubmit={handleSubmit}> 
                 <div>
                     <label>Brukernavn</label>
                     <input
