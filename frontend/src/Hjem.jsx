@@ -42,7 +42,7 @@ function Hjem({ rolle, brukerinfo }) {
     const legeWidgets = [ //Her blir widgetsene definert, og hvilke som skal være filled vs ikke. Legg også merke til at logoene er hentet fra lucide-react og at onClick navigerer til riktig path
         { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les nye meldinger", filled: false, path: "/innboks" },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Kalender", description: "Se kommende timer og påminnelser", filled: false, path: "/avtaler" },
-        { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se og les journaler", filled: false, path: "/journal" },
+        { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se og les journaler", filled: false, path: "/journalsok" },
         { icon: <User size={36} strokeWidth={1.8} />, title: "Min info", description: "Se og oppdater informasjon", filled: true, path: "/profil" },
         { icon: <Pill size={36} strokeWidth={1.8} />, title: "Resept", description: "Se og bestill resepter", filled: false, path: "/resept" },
         { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },

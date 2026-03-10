@@ -8,6 +8,9 @@ import Innboks from './Innboks'
 import Avtaler from './Avtaler'
 import Journal from './Journal/Journal'
 import { Navigate } from 'react-router-dom'
+import JournalSok from './Journal/JournalSok'
+
+
 
 function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs. at brukeren er logget inn)
     const existing_token = sessionStorage.getItem("token") || null // Sjekk om det finnes en token i sessionStorage
@@ -50,6 +53,8 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
                 <Route path="/avtaler" element={<Avtaler />} />
                 <Route path="/journal" element={<Journal />} />
                 <Route path="*" element={<Navigate to="/hjem" />} />
+                <Route path="/journalsok" element={<JournalSok />} />
+                <Route path="/journal/:fnr" element={<Journal />} />
             </Routes>
         </BrowserRouter>
     )
