@@ -19,7 +19,13 @@ function JournalSok() {
             })
             const data = await respons.json()
             if (respons.ok) {
-                navigate(`/journal/${fnr}`)
+                // Sjekk at listen faktisk inneholder noe før vi navigerer
+                // En tom liste betyr at pasienten ikke har journaler eller ikke finnes
+                if (data.journaler && data.journaler.length > 0) {
+                    navigate(`/journal/${fnr}`)
+                } else {
+                    setFeilmelding("Fant ingen pasient med dette fødselsnummeret, prøv igjen")
+                }
             } else {
                 setFeilmelding(data.detail || "Fant ingen pasient med dette fødselsnummeret")
             }
