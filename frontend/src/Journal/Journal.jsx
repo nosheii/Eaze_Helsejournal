@@ -4,10 +4,11 @@
 // Logikken på de andre fanene er delt opp i underkomponenter for 
 // å holde det mer ryddig og mindre kaotisk
 
-import { useState } from "react"; 
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styles from "./Journal.module.css";
 
-//Her importeres underkomponenetene for hver faen.
+// Her importeres underkomponentene for hver fane.
 import JournalOmPasient from "./JournalOmPasient";
 import JournalMedikament from "./JournalMedikament";
 import JournalVaksiner from "./JournalVaksiner";
@@ -17,24 +18,62 @@ import JournalHistorikk from "./JournalHistorikk";
 function Journal() {
   const [valgtFane, setValgtFane] = useState("pasientInfo");
 
-  // Placeholder-pasient
-  const pasient = {
-    fnr: "120119931234",
-    navn: "Malik, Zayn",
-    detaljer: "12.01.1993 (33år) – Mann"
-  };
+  // useParams henter fnr fra URL-en, f.eks. /journal/21267788 → fnr = "21267788"
+  const { fnr } = useParams();
+
+  // useState for å lagre pasientdata fra backend
+  const [pasient, setPasient] = useState(null);
+  const [laster, setLaster] = useState(true);
+
+  // useEffect henter pasientinfo fra backend når komponenten lastes inn
+  // eller når fnr i URL-en endrer seg (derfor har vi [fnr] i dependency-arrayen)
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+
+    fetch(`http://127.0.0.1:8000/journal/${fnr}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // Backend returnerer en liste med journaler — vi henter pasientinfo fra første rad
+        if (data.journaler && data.journaler.length > 0) {
+          const j = data.journaler[0];
+          setPasient({
+            fnr: j.fnr,
+            navn: `${j.etterNavn}, ${j.forNavn}`,
+            // Detaljer kan utvides med fødselsdato osv. når det finnes i databasen
+            detaljer: j.fnr
+          });
+        }
+        setLaster(false);
+      })
+      .catch((feil) => {
+        console.error("Kunne ikke hente pasientinfo:", feil);
+        setLaster(false);
+      });
+  }, [fnr]); // [fnr] betyr: kjør på nytt hvis fnr i URL-en endrer seg
 
   return (
-    <div className={styles.side}> {/* bakerste container for siden, setter bakgrunnsfarge og padding */}
-      <div className={styles.innhold}> {/* container for selve innholdet på siden, setter max-width og sentrerer */}
+    <div className={styles.side}>
+      <div className={styles.innhold}>
 
-        {/*Pasient header med navn og detaljer*/}
+        {/* Pasientheader — viser navn og fnr mens vi venter på mer detaljert info */}
         <div className={styles.pasientHeader}>
-          <span className={styles.pasientNavn}>{pasient.navn}</span>
-          <span className={styles.pasientDetaljer}> – {pasient.detaljer}</span>
+          {laster ? (
+            <span className={styles.pasientNavn}>Laster pasient...</span>
+          ) : pasient ? (
+            <>
+              <span className={styles.pasientNavn}>{pasient.navn}</span>
+              <span className={styles.pasientDetaljer}> – {pasient.detaljer}</span>
+            </>
+          ) : (
+            <span className={styles.pasientNavn}>Pasient ikke funnet</span>
+          )}
         </div>
 
-        {/* De ulike fanenene*/}
+        {/* De ulike fanene */}
         <div className={styles.faneKontainer}>
           <div className={styles.faneRad}>
             <button
@@ -57,7 +96,7 @@ function Journal() {
             </button>
           </div>
 
-          <div className={styles.faneRadTo}> 
+          <div className={styles.faneRadTo}>
             <button
               className={`${styles.fane} ${valgtFane === "pasientDok" ? styles.faneAktiv : ""}`}
               onClick={() => setValgtFane("pasientDok")}
@@ -73,28 +112,28 @@ function Journal() {
           </div>
         </div>
 
-        {/*Fane innholdet */}
-        {/* Fødselsnr (fnr) må sendes som prop til hver underkomponent sånn at de
-            kan hente riktige data fra backend når det er klart */}
+        {/* Fane-innhold */}
+        {/* fnr sendes som prop til hver underkomponent slik at de
+            kan hente riktige data fra backend */}
 
         {valgtFane === "pasientInfo" && (
-          <JournalOmPasient fnr={pasient.fnr} />
+          <JournalOmPasient fnr={fnr} />
         )}
 
         {valgtFane === "pasientMed" && (
-          <JournalMedikament fnr={pasient.fnr} />
+          <JournalMedikament fnr={fnr} />
         )}
 
         {valgtFane === "pasientVak" && (
-          <JournalVaksiner fnr={pasient.fnr} />
+          <JournalVaksiner fnr={fnr} />
         )}
 
         {valgtFane === "pasientDok" && (
-          <JournalDokumenter fnr={pasient.fnr} />
+          <JournalDokumenter fnr={fnr} />
         )}
 
         {valgtFane === "pasientHis" && (
-          <JournalHistorikk fnr={pasient.fnr} />
+          <JournalHistorikk fnr={fnr} />
         )}
 
       </div>
