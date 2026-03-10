@@ -109,6 +109,17 @@ def init_db():
         FOREIGN KEY (mottakerID) REFERENCES user(userID)
 )
 """)
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS Vaksiner (
+        vaksineID INTEGER PRIMARY KEY AUTOINCREMENT,
+        vaksineNavn TEXT NOT NULL,
+        fnr TEXT NOT NULL,
+        dato TEXT NOT NULL,
+        FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+        FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
+""")
+
 
 
     connection.commit()
