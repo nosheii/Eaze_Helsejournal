@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+
+.side {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #d0fafa9e;
+    font-family: 'DM Sans', sans-serif;
+    padding: 2rem;
+}
+
+.kort {
+    background: #0097b2b9;
+    border-radius: 10px;
+    padding: 2rem 2rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 40px rgba(0,0,0,0.06);
+}
+
+.tittel {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #01839a;
+    margin-bottom: 0.4rem;
+    font-weight: 400;
+}
+
+.felt {
+    margin-bottom: 1.4rem;
+}
+
+.felt label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.felt input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid #e8e3dd;
+    border-radius: 5px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #1a1714;
+    background: #faf9f8;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.felt input:focus {
+    border-color: #b5a898;
+    background: #ffffff;
+}
+
+.felt input::placeholder {
+    color: #c8c0b8;
+    font-weight: 300;
+}
+
+.feilmelding {
+    font-size: 0.82rem;
+    color: #c0503a;
+    margin-bottom: 1.2rem;
+    padding: 0.6rem 0.8rem;
+    background: #fdf2f0;
+    border-left: 2px solid #c0503a;
+    border-radius: 1px;
+}
+
+.knapp {
+    width: 100%;
+    padding: 0.9rem;
+    background: #01839a;
+    color: #f7f5f2;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    margin-top: 0.5rem;
+}
+
+.knapp:hover:not(:disabled) {
+    background: #2e2924;
+}
+
+.knapp:active:not(:disabled) {
+    transform: scale(0.99);
+}
+
+.knapp:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
