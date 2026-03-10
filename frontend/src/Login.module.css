@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+
+.loginPage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0aadad;
+    font-family: 'DM Sans', sans-serif;
+    padding: 2rem;
+}
+
+.usnBanner {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin-bottom: 3.5rem;
+    text-align: center;
+}
+
+.loginCard {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 3rem 3.5rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 40px rgba(0,0,0,0.06);
+}
+
+.loginTitle {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #1a1714;
+    margin-bottom: 0.4rem;
+    font-weight: 400;
+}
+
+.loginSubtitle {
+    font-size: 0.90rem;
+    color: #76716b;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+}
+
+.field {
+    margin-bottom: 1.4rem;
+}
+
+.field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #7a7269;
+    margin-bottom: 0.5rem;
+}
+
+.field input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid #e8e3dd;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #1a1714;
+    background: #faf9f8;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.field input:focus {
+    border-color: #0097b2;
+    background: #ffffff;
+}
+
+.field input::placeholder {
+    color: #76716b;
+    font-weight: 300;
+}
+
+.feilmelding {
+    font-size: 0.82rem;
+    color: #c0503a;
+    margin-bottom: 1.2rem;
+    padding: 0.6rem 0.8rem;
+    background: #fdf2f0;
+    border-left: 2px solid #c0503a;
+    border-radius: 1px;
+}
+
+.loginBtn {
+    width: 100%;
+    padding: 0.9rem;
+    background: #0097b2;
+    color: #f7f5f2;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    margin-top: 0.5rem;
+}
+
+.loginBtn:hover:not(:disabled) {
+    background: #2e2924;
+}
+
+.loginBtn:active:not(:disabled) {
+    transform: scale(0.99);
+}
+
+.loginBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
