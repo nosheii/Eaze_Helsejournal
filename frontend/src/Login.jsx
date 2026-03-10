@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import styles from './Login.module.css'
+import logo from './assets/Logo-eaze.png'
+
 
 function Login({ onLoginSuccess }) {
     const [brukernavn, setBrukernavn] = useState("")
@@ -36,8 +38,8 @@ function Login({ onLoginSuccess }) {
 
     return (
         <div className={styles.loginPage}>
+            <img src={logo} alt="Eaze logo" className={styles.logo} />
             <p className={styles.usnBanner}>Eaze er et studentprosjekt ved USN</p>
-
             <div className={styles.loginCard}>
                 <h2 className={styles.loginTitle}>Logg inn</h2>
                 <p className={styles.loginSubtitle}>Bruk dine tildelte innloggingsdetaljer</p>
