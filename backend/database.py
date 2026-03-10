@@ -96,6 +96,20 @@ def init_db():
         FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
 )
 """)
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS melding (
+        meldingID   INTEGER PRIMARY KEY AUTOINCREMENT,
+        avsenderID  INTEGER NOT NULL,
+        mottakerID  INTEGER NOT NULL,
+        overskrift  TEXT NOT NULL,
+        innhold     TEXT NOT NULL,
+        sendt_dato  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        lest        INTEGER DEFAULT 0,
+        FOREIGN KEY (avsenderID) REFERENCES user(userID),
+        FOREIGN KEY (mottakerID) REFERENCES user(userID)
+)
+""")
+
 
     connection.commit()
     connection.close()

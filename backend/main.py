@@ -39,6 +39,11 @@ app = FastAPI() # Oppretter en FastAPI-applikasjon
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]) # Legger til CORS-middleware for å tillate forespørsler fra alle opprinnelser
 init_db() # Initialiserer databasen ved oppstart av applikasjonen
 
+@app.get("/debug/meg")
+def debug_meg(bruker = Depends(verify_token)):
+    # Returnerer hele payload-objektet fra tokenet for å kunne debuge ved feil
+    return {"token_innhold": dict(bruker)}
+
 @app.get("/") # Definerer en GET-endpoint på roten av applikasjonen
 async def root(): # Returnerer en enkel melding for å indikere at serveren kjører
     return {"msg": "You are connected"}
@@ -59,6 +64,10 @@ class DokumentRequest(BaseModel):
     journalNr: int
     tekst: str
 
+class MeldingRequest(BaseModel):
+    mottakerID: int
+    overskrift: str
+    innhold: str
 
 @app.post("/leggTilPas") # Endpoint for å legge til en ny pasient
 def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
@@ -221,6 +230,95 @@ def hent_dokumenter(journalNr: int, bruker = Depends(verify_token)):
         dokumenter = cursor.fetchall()
         return {"dokumenter": [dict(d) for d in dokumenter]}
         
+    finally:
+        connection.close()
+
+@app.get("/meldinger")
+def hent_meldinger(bruker = Depends(verify_token)):
+    """
+    Henter alle meldinger der innlogget bruker er mottaker.
+    Backend filtrerer selv basert på hvem som er logget inn —
+    frontend trenger ikke å sende med rolle eller userID manuelt.
+    
+    COALESCE betyr "bruk den første verdien som ikke er NULL".
+    Vi bruker det fordi avsenderen kan være enten en lege (navn fra ansatt-tabellen)
+    eller en pasient (navn fra pasient-tabellen), og vi vil alltid få ett navn tilbake.
+    """
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT
+                m.meldingID,
+                m.overskrift,
+                m.innhold,
+                m.sendt_dato,
+                m.lest,
+                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as avsender_navn
+            FROM melding m
+            JOIN user u ON m.avsenderID = u.userID
+            LEFT JOIN ansatt a ON u.ansattID = a.ansattID
+            LEFT JOIN pasient p ON u.fnr = p.fnr
+            WHERE m.mottakerID = ?
+            ORDER BY m.sendt_dato DESC
+        """, (bruker["userID"],))
+
+        meldinger = cursor.fetchall()
+        return {"meldinger": [dict(m) for m in meldinger]}
+
+    finally:
+        connection.close()
+
+
+@app.post("/meldinger")
+def send_melding(melding_data: MeldingRequest, bruker = Depends(verify_token)):
+    """
+    Sender en ny melding. AvsenderID hentes fra tokenet automatisk,
+    så frontend kan ikke forfalske hvem meldingen er fra.
+    """
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            INSERT INTO melding (avsenderID, mottakerID, overskrift, innhold)
+            VALUES (?, ?, ?, ?)
+        """, (
+            bruker["userID"],
+            melding_data.mottakerID,
+            melding_data.overskrift,
+            melding_data.innhold
+        ))
+        connection.commit()
+        return {"status": "Melding sendt!", "meldingID": cursor.lastrowid}
+
+    finally:
+        connection.close()
+
+
+@app.patch("/meldinger/{meldingID}/lest")
+def merk_som_lest(meldingID: int, bruker = Depends(verify_token)):
+    """
+    Markerer en melding som lest.
+    Vi sjekker alltid at det er mottakeren selv som gjør dette 
+    du skal ikke kunne markere andres meldinger som lest.
+    """
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        # Sikkerhetsjekk: tilhører denne meldingen den innloggede brukeren?
+        cursor.execute("SELECT mottakerID FROM melding WHERE meldingID = ?", (meldingID,))
+        melding = cursor.fetchone()
+
+        if not melding or melding["mottakerID"] != bruker["userID"]:
+            raise HTTPException(status_code=403, detail="Ikke din melding")
+
+        cursor.execute("UPDATE melding SET lest = 1 WHERE meldingID = ?", (meldingID,))
+        connection.commit()
+        return {"status": "Merket som lest"}
+
     finally:
         connection.close()
 

@@ -1,0 +1,263 @@
+/* Innboks.module.css */
+
+/* Hele sden sin css*/
+.side {
+  min-height: calc(100vh - 80px);
+  background: #f0fafa;
+  padding: 40px 48px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+/* To kolloner, en for å vise små meldinger og en for større */
+.layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/*sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nyMeldingKnapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: #0aadad;
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease; /*litt fancy med 3D-effekt på knappen */
+  box-shadow: 0 4px 14px rgba(10, 173, 173, 0.25);
+  width: 100%;
+}
+
+.nyMeldingKnapp:hover {
+  background: #089090;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(10, 173, 173, 0.35);
+}
+
+.meldingListe {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.laster {
+  text-align: center;
+  color: #8aabab;
+  font-size: 14px;
+  padding: 20px;
+}
+
+.ingenMeldinger {
+  text-align: center;
+  color: #8aabab;
+  font-size: 14px;
+  padding: 20px;
+}
+
+/* de ulike meldingskortene i listen */
+.meldingKort {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  background: #ffffff;
+  border: 1.5px solid #d0ecec;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  width: 100%;
+}
+
+.meldingKort:hover {
+  background: #e8f7f7;
+  border-color: #0aadad;
+}
+
+/* Det aktive kortet som er valgt er litt annerledes enn de andre */
+.meldingKortAktiv {
+  background: #e8f7f7;
+  border-color: #0aadad;
+  box-shadow: 0 4px 16px rgba(10, 173, 173, 0.15);
+}
+
+.kortTopp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kortAvsender {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2e2e;
+}
+
+/* Liten blå sirkel som viser at denne meldingen ikke er elst ennå */
+.ulestDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0aadad;
+  flex-shrink: 0;
+}
+
+.kortOverskrift {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2e2e;
+}
+
+.kortForhåndsvisning {
+  font-size: 12px;
+  color: #5a8080;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kortDato {
+  font-size: 11px;
+  color: #8aabab;
+  margin-top: 2px;
+}
+
+/*Store meldingskjsermen for lesing */
+.meldingsVisning {
+  background: #ffffff;
+  border: 1.5px solid #d0ecec;
+  border-radius: 16px;
+  padding: 36px 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.meldingsHeader {
+  margin-bottom: 28px;
+}
+
+.meldingsOverskrift {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a2e2e;
+  margin: 0 0 16px 0;
+}
+
+.skillelinje {
+  height: 2px;
+  background: #d0ecec;
+  border-radius: 1px;
+}
+
+/* white-space: pre-line gjør at \n i meldingsteksten rendres som linjeskift */
+.meldingsInnhold {
+  font-size: 16px;
+  color: #2a4040;
+  line-height: 1.8;
+  white-space: pre-line;
+  flex: 1;
+}
+
+/* bunnen på meldingen */
+.meldingsBunn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1.5px solid #d0ecec;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.avsenderInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* rundt sirkel med initialer og farge */
+.avsenderAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #0aadad;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avsenderLabel {
+  font-size: 11px;
+  color: #8aabab;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.avsenderNavn {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a2e2e;
+}
+
+.meldingsDato {
+  font-size: 12px;
+  color: #8aabab;
+  margin-top: 2px;
+}
+
+.svarKnapp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #0aadad;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.svarKnapp:hover {
+  background: #089090;
+  transform: translateY(-1px);
+}
+
+/* Tomt state hvis ingen melding er valgt */
+.tomtState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #8aabab;
+  font-size: 15px;
+}

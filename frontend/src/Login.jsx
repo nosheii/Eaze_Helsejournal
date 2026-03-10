@@ -25,7 +25,7 @@ function Login({ onLoginSuccess }) {
             })
 
             const data = await respons.json()
-            
+
             if (respons.ok) {
                 // Login vellykket! Send token og brukerinfo tilbake til App.jsx
                 onLoginSuccess(data.access_token, data.rolle, data.brukerinfo)
@@ -40,36 +40,43 @@ function Login({ onLoginSuccess }) {
             setLaster(false)
         }
     }
+    function handleSubmit(e) {
+        e.preventDefault() // Stopper siden fra å laste inn på nytt
+        handleLogin()      // Kaller login funksjonen legner opp i koden for å slippe at knappen kaller 
+        // på handleLogin direkte, som gjør at vi kan bruke Enter-tasten for å logge inn også
+    }
 
     return (
         <div>
             <h2>Logg inn</h2>
 
-            <div>
-                <label>Brukernavn</label>
-                <input
-                    type="text"
-                    value={brukernavn}
-                    onChange={(e) => setBrukernavn(e.target.value)}
-                    placeholder="Skriv inn brukernavn"
-                />
-            </div>
+            <form onSubmit={handleSubmit}> 
+                <div>
+                    <label>Brukernavn</label>
+                    <input
+                        type="text"
+                        value={brukernavn}
+                        onChange={(e) => setBrukernavn(e.target.value)}
+                        placeholder="Skriv inn brukernavn"
+                    />
+                </div>
 
-            <div>
-                <label>Passord</label>
-                <input
-                    type="password"
-                    value={passord}
-                    onChange={(e) => setPassord(e.target.value)}
-                    placeholder="Skriv inn passord"
-                />
-            </div>
+                <div>
+                    <label>Passord</label>
+                    <input
+                        type="password"
+                        value={passord}
+                        onChange={(e) => setPassord(e.target.value)}
+                        placeholder="Skriv inn passord"
+                    />
+                </div>
 
-            {feilmelding && <p style={{ color: "red" }}>{feilmelding}</p>}
+                {feilmelding && <p style={{ color: "red" }}>{feilmelding}</p>}
 
-            <button onClick={handleLogin} disabled={laster}>
-                {laster ? "Logger inn..." : "Logg inn"}
-            </button>
+                <button onClick={handleLogin} disabled={laster}>
+                    {laster ? "Logger inn..." : "Logg inn"}
+                </button>
+            </form>
         </div>
     )
 }
