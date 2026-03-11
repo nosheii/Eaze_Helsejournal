@@ -119,7 +119,17 @@ def init_db():
         FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
 )
 """)
-
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS avtale (
+    avtaleID    INTEGER PRIMARY KEY AUTOINCREMENT,
+    fnr         TEXT NOT NULL,
+    ansattID    INTEGER NOT NULL,
+    tidspunkt   TEXT NOT NULL,
+    kommentar   TEXT,
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
+""")
 
 
     connection.commit()
