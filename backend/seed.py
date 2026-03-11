@@ -28,6 +28,7 @@ def seed():
     cursor.execute("DELETE FROM user WHERE brukernavn IN ('dr_hansen', '21267788')")
     cursor.execute("DELETE FROM ansatt WHERE mail = 'hansen@eaze.no'")
     cursor.execute("DELETE FROM pasient WHERE fnr = '21267788'")
+    cursor.execute("DELETE FROM vaksine WHERE fnr = '21267788'") 
     print("✓ Ryddet opp gamle testdata")
 
 
@@ -64,6 +65,22 @@ def seed():
         VALUES (?, ?, NULL, ?)
     """, ("21267788", hash_password("pasientMumtaz"), "21267788"))
     print("✓ Opprettet bruker: 21267788 / pasientMumtaz")
+
+    # Legger inn testvaksine for pasienten #
+    vaksine = [
+        ("HPV", "2021-06-10"),
+        ("Influensa", "2019-01-10"),
+        ("Covid-19", "2023-08-17"),
+    ]
+
+    # Vi legger inn alle vaksinene for pasienten i en for-loop #
+    for vaksineNavn, dato in vaksine:
+        cursor.execute("""
+            INSERT INTO vaksine (fnr, vaksineNavn, dato)
+            VALUES (?, ?, ?)
+        """, ("21267788", vaksineNavn, "dato"))
+
+    print("✓ Opprettet ny vaksine for pasient: 21267788")
 
     connection.commit()
     connection.close()
