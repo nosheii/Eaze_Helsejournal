@@ -249,8 +249,10 @@ def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
             SELECT 
                 v.vaksineID,
                 v.vaksineNavn,
-                v.dato
+                v.dato,
+                a.navn as legeNavn
             FROM vaksine v
+            LEFT JOIN ansatt a ON v.ansattID = a.ansattID
             WHERE v.fnr = ?
             ORDER BY v.dato DESC
         """, (fnr,))

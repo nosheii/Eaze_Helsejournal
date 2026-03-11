@@ -28,12 +28,11 @@ export function Vaksine () {
             <h1>Vaksine</h1>
             {vaksineID.map(v => ( // gjennomgår vaksiner og viser navn og dato for hver vaksine
                 <div key={v.vaksineID}>
-                    <p>Vaksine: {v.vaksineNavn} {v.dato}</p>
-         </div>          
-    ))}
- </div>
-
-)
+                    <p>Vaksine: {v.vaksineNavn} {v.dato} - Lege: {v.legeNavn}</p>
+                </div>
+            ))}
+        </div>
+    )
 }
 
 

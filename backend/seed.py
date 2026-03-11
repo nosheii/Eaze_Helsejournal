@@ -76,9 +76,9 @@ def seed():
     # Vi legger inn alle vaksinene for pasienten i en for-loop #
     for vaksineNavn, dato in vaksine:
         cursor.execute("""
-            INSERT INTO vaksine (fnr, vaksineNavn, dato)
+            INSERT INTO vaksine (fnr, vaksineNavn, dato, ansattID)
             VALUES (?, ?, ?)
-        """, ("21267788", vaksineNavn, dato))
+        """, ("21267788", vaksineNavn, dato, ansatt_ID))
 
     print("✓ Opprettet ny vaksine for pasient: 21267788")
 
