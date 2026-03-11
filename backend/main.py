@@ -233,6 +233,36 @@ def hent_dokumenter(journalNr: int, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+@app.get("/vaksine/{fnr}") # henter vaksiner fra fødselsnummer
+def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Du kan bare se dine egne vaksiner"
+            )
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT 
+                v.vaksineID,
+                v.vaksineNavn,
+                v.dato
+            FROM vaksine v
+            WHERE v.fnr = ?
+            ORDER BY v.dato DESC
+        """, (fnr,))
+        
+        vaksine = cursor.fetchall()
+        return {"vaksine": [dict(v) for v in vaksine]}
+    
+    finally:
+        connection.close()
+    
+        
+
 @app.get("/meldinger")
 def hent_meldinger(bruker = Depends(verify_token)):
     """

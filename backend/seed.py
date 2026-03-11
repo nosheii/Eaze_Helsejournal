@@ -78,7 +78,7 @@ def seed():
         cursor.execute("""
             INSERT INTO vaksine (fnr, vaksineNavn, dato)
             VALUES (?, ?, ?)
-        """, ("21267788", vaksineNavn, "dato"))
+        """, ("21267788", vaksineNavn, dato))
 
     print("✓ Opprettet ny vaksine for pasient: 21267788")
 
