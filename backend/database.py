@@ -110,15 +110,29 @@ def init_db():
 )
 """)
     connection.execute("""
-    CREATE TABLE IF NOT EXISTS vaksine (
-        vaksineID INTEGER PRIMARY KEY AUTOINCREMENT,
-        vaksineNavn TEXT NOT NULL,
-        fnr TEXT NOT NULL,
-        dato TEXT NOT NULL,
-        FOREIGN KEY (fnr) REFERENCES pasient(fnr)
+    CREATE TABLE IF NOT EXISTS Vaksine (
+    vaksineID INTEGER PRIMARY KEY AUTOINCREMENT,
+    vaksineNavn TEXT NOT NULL,
+    fnr TEXT NOT NULL,
+    ansattID INTEGER NOT NULL,
+    dato TEXT NOT NULL,
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
 )
 """)
-    
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS avtale (
+    avtaleID    INTEGER PRIMARY KEY AUTOINCREMENT,
+    fnr         TEXT NOT NULL,
+    ansattID    INTEGER NOT NULL,
+    tidspunkt   TEXT NOT NULL,
+    kommentar   TEXT,
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
+""")
+
+
     connection.commit()
     connection.close()
 
