@@ -111,12 +111,13 @@ def init_db():
 """)
     connection.execute("""
     CREATE TABLE IF NOT EXISTS Vaksiner (
-        vaksineID INTEGER PRIMARY KEY AUTOINCREMENT,
-        vaksineNavn TEXT NOT NULL,
-        fnr TEXT NOT NULL,
-        dato TEXT NOT NULL,
-        FOREIGN KEY (fnr) REFERENCES pasient(fnr),
-        FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+    vaksineID INTEGER PRIMARY KEY AUTOINCREMENT,
+    vaksineNavn TEXT NOT NULL,
+    fnr TEXT NOT NULL,
+    ansattID INTEGER NOT NULL,
+    dato TEXT NOT NULL,
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
 )
 """)
     connection.execute("""
