@@ -1,0 +1,70 @@
+.vaksineSide {
+    background-color: #ecfcff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;;
+}
+.vaksineKort {
+    background-color: #ffffff;
+    border: 1.3px solid #707272;
+    border-radius: 5px;
+    width: 600px;
+    overflow: hidden
+}
+.vaksineHeader {
+    background-color: #d9d9d9;;
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    align-items: center;
+    padding: 10px 20px;
+
+}
+.vaksineKnapp {
+    background-color: #99d9d9;
+    color: rgb(0, 0, 0);
+    border: 1.5px solid #707272;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.vaksineHeader h2 {
+    background-color: #d9d9d9;
+    font-size: 23px;
+    font-weight: bold;
+    margin: 0;
+}
+.vaksineTabell {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+}
+.vaksineTabell thead tr { /* Vaksinasjon og vaksinasjonsdato */
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    margin-top: 0;
+}
+.vaksineTabell th {
+    text-align: center;
+    font-weight: normal;
+    padding: 10px;
+    border: 1.3px solid #ccc;
+}
+.vaksineTabell td {
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    border: 1.3px solid #ccc;
+}
+.dato {
+    text-align: center;
+}
+.vaksineScrollbar {
+    max-height: 150px;
+    overflow-y: auto;
+}
