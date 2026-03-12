@@ -93,7 +93,7 @@
 }
 
 .knapp:hover:not(:disabled) {
-    background: #2e2924;
+    background: #015e6e;
 }
 
 .knapp:active:not(:disabled) {
