@@ -89,6 +89,7 @@ def seed():
     print("\nTestbrukere:")
     print("  Lege    — brukernavn: dr_hansen      passord: hemmelig123")
     print("  Pasient — brukernavn: 21267788       passord: pasientMumtaz")
+    print(" Testvaksine for pasient 21267788: HPV (2021-06-10), Influensa (2019-01-10), Covid-19 (2023-08-17) ")
 
 if __name__ == "__main__":
     seed()
