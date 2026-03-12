@@ -91,6 +91,32 @@ def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection.close()
     return {"status":"Success!"}
 
+@app.get("/avtaler/mine")
+def hent_mine_avtaler(bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    #Endpoint for å hente alle avtaler der innlogget lege er ansattID.
+    #Joiner pasient tabellen for å få med pasientens navn i responsen, sånn at vi slipper
+    #å gjøre en ekstra request fra frontend for å hente pasientnavnet basert på fnr for hver avtale
+    try: 
+        cursor.execute(""" 
+            SELECT
+                a.avtaleID,
+                a.fnr,
+                a.tidspunkt,
+                a.kommentar,
+                p.forNavn || ' ' || p.etterNavn as pasientNavn
+            FROM avtale a
+            LEFT JOIN pasient p ON a.fnr = p.fnr
+            WHERE a.ansattID = ?
+            ORDER BY a.tidspunkt ASC
+        """, (bruker["brukerinfo"]["ansattID"],))
+
+        avtaler = cursor.fetchall()
+        return {"avtaler": [dict(a) for a in avtaler]}
+    finally:
+        connection.close()
+
 @app.get("/avtaler/{fnr}")
 def hent_avtaler(fnr: str, bruker = Depends(krever_lege)):
     connection = getConnection()
