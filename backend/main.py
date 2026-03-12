@@ -260,9 +260,7 @@ def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
     
     finally:
         connection.close()
-    
         
-
 @app.get("/meldinger")
 def hent_meldinger(bruker = Depends(verify_token)):
     """
