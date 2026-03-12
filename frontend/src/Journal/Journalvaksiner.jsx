@@ -1,6 +1,6 @@
 import styles from "../Vaksine.module.css";
 import { useState, useEffect } from "react";
-function JournalVaksiner({ fnr }) {
+function JournalVaksiner({ fnr, rolle }) {
     const [vaksine, setVaksine] = useState([]);
 
     useEffect(() => {
@@ -22,8 +22,10 @@ function JournalVaksiner({ fnr }) {
         <div className={styles.vaksineKort}>
                         <div className={styles.vaksineHeader}>
                             <h2>Vaksinehistorikk</h2>
-                                <button className={styles.vaksineKnapp}> + Legg til vaksine
-                                </button>
+                                {rolle === "lege" && (
+                                    <button className={styles.vaksineKnapp}> + Legg til vaksine
+                                    </button>
+                                )}
                         </div>
                         <div className={styles.vaksineScrollbar}>
                             <table className={styles.vaksineTabell}>

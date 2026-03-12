@@ -15,7 +15,7 @@ import JournalVaksiner from "./JournalVaksiner";
 import JournalDokumenter from "./JournalDokumenter";
 import JournalHistorikk from "./JournalHistorikk";
 
-function Journal() {
+function Journal({ rolle }) {
   const [valgtFaneParams, setValgtFane] = useSearchParams();
   const valgtFane = valgtFaneParams.get("fane") || "pasientInfo"; // Hent "fane" fra URL-en, default til "pasientInfo" hvis ikke satt
 
@@ -123,11 +123,11 @@ function Journal() {
         )}
 
         {valgtFane === "pasientMed" && (
-          <JournalMedikament fnr={fnr} />
+          <JournalMedikament fnr={fnr} rolle={rolle}/>
         )}
 
         {valgtFane === "pasientVak" && (
-          <JournalVaksiner fnr={fnr} />
+          <JournalVaksiner fnr={fnr} rolle={rolle}/>
         )}
 
         {valgtFane === "pasientDok" && (
