@@ -69,6 +69,15 @@ class MeldingRequest(BaseModel):
     overskrift: str
     innhold: str
 
+class AvtaleRequest(BaseModel):
+    fnr: str
+    tidspunkt: str
+    kommentar: str = None
+
+class AvtaleOppdaterRequest(BaseModel):
+    tidspunkt: str
+    kommentar: str = None
+
 @app.post("/leggTilPas") # Endpoint for å legge til en ny pasient
 def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection = getConnection()
@@ -100,6 +109,61 @@ def hent_avtaler(fnr: str, bruker = Depends(krever_lege)):
         """, (fnr,))
         avtaler = cursor.fetchall()
         return {"avtaler": [dict(a) for a in avtaler]}
+    finally:
+        connection.close()
+
+@app.post("/avtaler") # Oppretter en ny avtale, krever at brukeren er en lege
+def opprett_avtale(avtale_data: AvtaleRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            INSERT INTO avtale (fnr, ansattID, tidspunkt, kommentar)
+            VALUES (?, ?, ?, ?)
+        """, (
+            avtale_data.fnr,
+            bruker["brukerinfo"]["ansattID"],
+            avtale_data.tidspunkt,
+            avtale_data.kommentar
+        ))
+        connection.commit()
+        return {"status": "Avtale opprettet!", "avtaleID": cursor.lastrowid}
+
+    finally:
+        connection.close()
+
+@app.put("/avtaler/{avtaleID}") # Endrer en eksisterende avtale, krever at brukeren er en lege
+def oppdater_avtale(avtaleID: int, avtale_data: AvtaleOppdaterRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE avtale
+            SET tidspunkt = ?, kommentar = ?
+            WHERE avtaleID = ?
+        """, (
+            avtale_data.tidspunkt,
+            avtale_data.kommentar,
+            avtaleID
+        ))
+        connection.commit()
+        return {"status": "Avtale oppdatert!"}
+
+    finally:
+        connection.close()
+
+@app.delete("/avtaler/{avtaleID}") # Sletter en avtale, krever at brukeren er en lege
+def slett_avtale(avtaleID: int, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("DELETE FROM avtale WHERE avtaleID = ?", (avtaleID,))
+        connection.commit()
+        return {"status": "Avtale slettet!"}
+
     finally:
         connection.close()
 
@@ -281,7 +345,7 @@ def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
     
     finally:
         connection.close()
-        
+
 @app.get("/meldinger")
 def hent_meldinger(bruker = Depends(verify_token)):
     """
