@@ -5,7 +5,7 @@
 // å holde det mer ryddig og mindre kaotisk
 
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import styles from "./Journal.module.css";
 
 // Her importeres underkomponentene for hver fane.
@@ -16,7 +16,8 @@ import JournalDokumenter from "./JournalDokumenter";
 import JournalHistorikk from "./JournalHistorikk";
 
 function Journal() {
-  const [valgtFane, setValgtFane] = useState("pasientInfo");
+  const [valgtFaneParams, setValgtFane] = useSearchParams();
+  const valgtFane = valgtFaneParams.get("fane") || "pasientInfo"; // Hent "fane" fra URL-en, default til "pasientInfo" hvis ikke satt
 
   // useParams henter fnr fra URL-en, f.eks. /journal/21267788 → fnr = "21267788"
   const { fnr } = useParams();
@@ -55,6 +56,7 @@ function Journal() {
       });
   }, [fnr]); // [fnr] betyr: kjør på nytt hvis fnr i URL-en endrer seg
 
+
   return (
     <div className={styles.side}>
       <div className={styles.innhold}>
@@ -78,19 +80,19 @@ function Journal() {
           <div className={styles.faneRad}>
             <button
               className={`${styles.fane} ${valgtFane === "pasientInfo" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientInfo")}
+              onClick={() => setValgtFane({ fane: "pasientInfo" })}
             >
               Om pasient
             </button>
             <button
               className={`${styles.fane} ${valgtFane === "pasientMed" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientMed")}
+              onClick={() => setValgtFane({ "fane": "pasientMed" })}
             >
               Medikament
             </button>
             <button
               className={`${styles.fane} ${valgtFane === "pasientVak" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientVak")}
+              onClick={() => setValgtFane({ "fane": "pasientVak" })}
             >
               Vaksiner
             </button>
@@ -99,13 +101,13 @@ function Journal() {
           <div className={styles.faneRadTo}>
             <button
               className={`${styles.fane} ${valgtFane === "pasientDok" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientDok")}
+              onClick={() => setValgtFane({ "fane": "pasientDok" })}
             >
               Journaldokumenter
             </button>
             <button
               className={`${styles.fane} ${valgtFane === "pasientHis" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientHis")}
+              onClick={() => setValgtFane({ "fane": "pasientHis" })}
             >
               Besøkshistorikk
             </button>
