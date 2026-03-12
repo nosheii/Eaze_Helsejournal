@@ -82,6 +82,27 @@ def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection.close()
     return {"status":"Success!"}
 
+@app.get("/avtaler/{fnr}")
+def hent_avtaler(fnr: str, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                a.avtaleID,
+                a.tidspunkt,
+                a.kommentar,
+                ans.navn as legeNavn
+            FROM avtale a
+            LEFT JOIN ansatt ans ON a.ansattID = ans.ansattID
+            WHERE a.fnr = ?
+            ORDER BY a.tidspunkt ASC
+        """, (fnr,))
+        avtaler = cursor.fetchall()
+        return {"avtaler": [dict(a) for a in avtaler]}
+    finally:
+        connection.close()
+
 @app.get("/journal") # Endpoint for å hente alle journaler, krever at brukeren er en lege (krever_lege)
 def hent_alle_journaler(bruker = Depends(krever_lege)):
     connection = getConnection()
