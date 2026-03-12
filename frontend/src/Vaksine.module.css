@@ -7,11 +7,12 @@
     font-family: 'Nunito', 'Segoe UI', sans-serif;;
 }
 .vaksineKort {
+    align-items: flex-start;
     background-color: #ffffff;
     border: 1.3px solid #707272;
     border-radius: 5px;
-    width: 600px;
-    overflow: hidden
+    width: 100%;
+    max-width: 100%;
 }
 .vaksineHeader {
     background-color: #d9d9d9;;

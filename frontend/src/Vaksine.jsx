@@ -4,8 +4,6 @@
 import {useState, useEffect} from "react";
 import styles from "./Vaksine.module.css";
 
-// henter pasientdata fra backend
-
 export function Vaksine ({brukerinfo, rolle}) {
     const[vaksine, setVaksine] = useState([]) //lagrer vaksiner
     const fnr = brukerinfo?.fnr
