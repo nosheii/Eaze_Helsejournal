@@ -65,6 +65,7 @@
     text-align: center;
 }
 .vaksineScrollbar {
+    background-color: #0097b2;
     max-height: 150px;
     overflow-y: auto;
 }
