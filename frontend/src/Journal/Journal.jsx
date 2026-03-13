@@ -25,6 +25,8 @@ function Journal({ rolle }) {
   // useState for å lagre pasientdata fra backend
   const [pasient, setPasient] = useState(null);
   const [laster, setLaster] = useState(true);
+  // useState for å lagre journalnummeret som skal sendes til JournalDokumenter
+  const [journalNr, setJournalNr] = useState(null);
 
   // useEffect henter pasientinfo fra backend når komponenten lastes inn
   // eller når fnr i URL-en endrer seg (derfor har vi [fnr] i dependency-arrayen)
@@ -40,6 +42,7 @@ function Journal({ rolle }) {
       .then((data) => {
         if (data.journaler && data.journaler.length > 0) {
             const j = data.journaler[0];
+            setJournalNr(j.journalNr); 
             setPasient({
                 fnr: j.fnr,
                 navn: `${j.etterNavn}, ${j.forNavn}`,
