@@ -40,6 +40,7 @@ function Journal({ rolle }) {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log("Journal data:", data);
         if (data.journaler && data.journaler.length > 0) {
             const j = data.journaler[0];
             setJournalNr(j.journalNr); 

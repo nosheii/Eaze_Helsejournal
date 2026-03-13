@@ -3,6 +3,16 @@ import styles from "./Journaldokumenter.module.css";
 
 const API = "http://127.0.0.1:8000";
 
+const tomtSkjema = {
+    dokumentnavn: "",
+    kategori: "Konsultasjonsnotat",
+    subjektivt: "",
+    objektivt: "",
+    vurdering: "",
+    plan: "",
+    kommentar: "",
+};
+
 function JournalDokumenter({ journalNr }) {
     const token = sessionStorage.getItem("token");
 
@@ -12,6 +22,9 @@ function JournalDokumenter({ journalNr }) {
     const [ekspandert, setEkspandert] = useState(null);
     const [fraFilter, setFraFilter] = useState("");
     const [tilFilter, setTilFilter] = useState("");
+    const [visSkjema, setVisSkjema] = useState(false);
+    const [skjema, setSkjema] = useState(tomtSkjema);
+    const [lagrer, setLagrer] = useState(false);
 
     useEffect(() => {
         if (journalNr) hentDokumenter();
@@ -34,6 +47,32 @@ function JournalDokumenter({ journalNr }) {
         }
     }
 
+    async function lagreDokument() {
+        if (!skjema.dokumentnavn.trim()) {
+            alert("Dokumentnavn er påkrevd");
+            return;
+        }
+        setLagrer(true);
+        try {
+            const res = await fetch(`${API}/dokument`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ journalNr, tekst: JSON.stringify(skjema) }),
+            });
+            if (!res.ok) throw new Error("Kunne ikke lagre dokument");
+            setVisSkjema(false);
+            setSkjema(tomtSkjema);
+            await hentDokumenter();
+        } catch (e) {
+            alert(e.message);
+        } finally {
+            setLagrer(false);
+        }
+    }
+
     function toggleEkspander(id) {
         setEkspandert(ekspandert === id ? null : id);
     }
@@ -46,12 +85,84 @@ function JournalDokumenter({ journalNr }) {
         return true;
     });
 
+    // --- Opprett skjema ---
+    if (visSkjema) {
+        return (
+            <div className={styles.kontainer}>
+                <div className={styles.skjemaTopp}>
+                    <div className={styles.skjemaVenstre}>
+                        <input
+                            className={styles.dokumentNavnInput}
+                            placeholder="Dokumentnavn"
+                            value={skjema.dokumentnavn}
+                            onChange={(e) => setSkjema({ ...skjema, dokumentnavn: e.target.value })}
+                        />
+                        <select
+                            className={styles.kategoriValg}
+                            value={skjema.kategori}
+                            onChange={(e) => setSkjema({ ...skjema, kategori: e.target.value })}
+                        >
+                            <option>Konsultasjonsnotat</option>
+                            <option>Sykepleienotat</option>
+                            <option>Epikrise</option>
+                            <option>Henvisning</option>
+                            <option>Prøvesvar</option>
+                            <option>Resept</option>
+                        </select>
+                    </div>
+
+                    <div className={styles.skjemaHoyre}>
+                        <span className={styles.kritiskInfoTittel}>Kritisk info:</span>
+                        <div className={styles.kritiskKnapper}>
+                            <button className={styles.kritiskKnapp}>Allergi</button>
+                            <button className={styles.kritiskKnapp}>HLR</button>
+                            <button className={styles.kritiskKnapp}>Smitte</button>
+                        </div>
+                        <p className={styles.kritiskInfoTekst}>Ingen kritisk info registrert enda</p>
+                    </div>
+                </div>
+
+                <div className={styles.soapGrid}>
+                    {["subjektivt", "vurdering", "objektivt", "plan"].map((felt) => (
+                        <div key={felt} className={styles.soapFelt}>
+                            <label className={styles.soapLabel}>
+                                {felt.charAt(0).toUpperCase() + felt.slice(1)}:
+                            </label>
+                            <textarea
+                                className={styles.soapInput}
+                                value={skjema[felt]}
+                                onChange={(e) => setSkjema({ ...skjema, [felt]: e.target.value })}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <textarea
+                    className={styles.kommentarInput}
+                    placeholder="Kommentar/tilleggsinfo"
+                    value={skjema.kommentar}
+                    onChange={(e) => setSkjema({ ...skjema, kommentar: e.target.value })}
+                />
+
+                <div className={styles.skjemaKnapper}>
+                    <button className={styles.lagreKnapp} onClick={lagreDokument} disabled={lagrer}>
+                        {lagrer ? "Lagrer..." : "Lagre dokument"}
+                    </button>
+                    <button className={styles.avbrytKnapp} onClick={() => { setVisSkjema(false); setSkjema(tomtSkjema); }}>
+                        Avbryt
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // --- Dokumentliste ---
     if (laster) return <p>Laster dokumenter...</p>;
     if (feil) return <p>{feil}</p>;
 
     return (
         <div className={styles.kontainer}>
-            <button className={styles.opprettKnapp}>
+            <button className={styles.opprettKnapp} onClick={() => setVisSkjema(true)}>
                 Opprett nytt dokument +
             </button>
 
@@ -70,7 +181,7 @@ function JournalDokumenter({ journalNr }) {
                     value={tilFilter}
                     onChange={(e) => setTilFilter(e.target.value)}
                 />
-                <button className={styles.filterKnapp}>Filter</button>
+                <button className={styles.filterKnapp}>Filter 🔍</button>
             </div>
 
             <div className={styles.listeHeader}>
