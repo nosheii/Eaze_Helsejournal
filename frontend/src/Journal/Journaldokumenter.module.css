@@ -90,8 +90,10 @@
 
 .pil {
     text-align: right;
-    color: #0aadad;
+    color: #007185;
     font-weight: 700;
+    font-size: 18px;
+
 }
 
 /* Ekspandert detaljer */
@@ -114,16 +116,15 @@
 
 .apneKnapp {
     margin-left: auto;
-    background: #0aadad;
-    color: #ffffff;
-    border: none;
+    background: #77c6d3;
+    color: #000000;
+    border: solid 1.5px #007185;
     border-radius: 8px;
     padding: 8px 24px;
     font-size: 14px;
     font-weight: 700;
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     cursor: pointer;
-    transition: background 0.15s ease;
 }
 
 .apneKnapp:hover {
@@ -295,9 +296,9 @@
 }
 
 .lagreKnapp {
-    background: #0aadad;
-    color: #ffffff;
-    border: none;
+    background: #77c6d3;
+    color: #000000;
+    border: 1.5px solid #007185;
     border-radius: 10px;
     padding: 10px 24px;
     font-size: 14px;
@@ -305,6 +306,7 @@
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     cursor: pointer;
     transition: background 0.15s ease;
+    margin-bottom: 20px;
 }
 
 .lagreKnapp:hover {
@@ -317,9 +319,9 @@
 }
 
 .avbrytKnapp {
-    background: #ffffff;
-    color: #2a4040;
-    border: 1.5px solid #d0ecec;
+    background: #77c6d3;
+    color: #000000;
+    border: 1.5px solid #007185;
     border-radius: 10px;
     padding: 10px 24px;
     font-size: 14px;
@@ -327,8 +329,9 @@
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     cursor: pointer;
     transition: background 0.15s ease;
+    margin-bottom: 20px;
 }
 
 .avbrytKnapp:hover {
-    background: #e8f7f7;
+    background: #089090;
 }
