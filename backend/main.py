@@ -60,6 +60,11 @@ class Pasient(BaseModel): # Definerer en Pydantic-modell for Pasient som brukes 
 class JournalRequest(BaseModel): # Modell for å opprette en journal, inneholder fnr til pasienten og ansattID til legen som oppretter journalen
     fnr: str
 
+class VaksineRequest(BaseModel):
+    fnr: str
+    vaksineNavn: str
+    dato: str
+
 class DokumentRequest(BaseModel):
     journalNr: int
     tekst: str
@@ -370,6 +375,30 @@ def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
         
         vaksine = cursor.fetchall()
         return {"vaksine": [dict(v) for v in vaksine]}
+    
+    finally:
+        connection.close()
+
+@app.post("/vaksine") # oppretter vaksine
+def ny_vaksine(vaksine_data: VaksineRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO vaksine (fnr, vaksineNavn, dato, ansattID)
+            VALUES (?, ?, ?, ?)
+        """, (
+            vaksine_data.fnr,
+            vaksine_data.vaksineNavn,
+            vaksine_data.dato,
+            bruker["brukerinfo"]["ansattID"]
+        ))
+        
+        connection.commit()
+        return {
+            "status": "Vaksine opprettet!",
+            "vaksineID": cursor.lastrowid
+        }
     
     finally:
         connection.close()
