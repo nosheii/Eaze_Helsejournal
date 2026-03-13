@@ -27,7 +27,8 @@ function AvtaleKort({ avtale, tidligere }) { //denne komponenten brukes til å r
     return ( 
         <div className={`${styles.avtaleKort} ${tidligere ? styles.avtaleKortTidligere : ""}`}> 
             <div className={styles.avtaleHeader}>
-                <span className={styles.pasientNavn}>{avtale.pasientNavn}</span>
+                {/* pasientNavn vises for lege, legeNavn vises for pasient bruker || for å vise det som finnes */}
+                <span className={styles.pasientNavn}>{avtale.pasientNavn || avtale.legeNavn}</span>
                 <span className={`${styles.tidspunkt} ${tidligere ? styles.tidspunktTidligere : ""}`}>
                     {formaterDato(avtale.tidspunkt)}
                 </span>
@@ -49,14 +50,21 @@ function AvtaleKort({ avtale, tidligere }) { //denne komponenten brukes til å r
     )
 }
 
-function Avtaler() { //her er hovedkomponenten til hele avtaler siden, den har ansvar for å hente avtalene og dele dem opp
+function Avtaler({ rolle }) { //her er hovedkomponenten til hele avtaler siden, den har ansvar for å hente avtalene og dele dem opp
                     // i både kommende og tidligere, og også for å håndtere den "hvis alle" knappen nederst for tidlgiere avtaler
+                    // rolle-propen bestemmer hvilken URL vi henter fra — lege eller pasient
     const [avtaler, setAvtaler] = useState([]) // usestate for å lagre avtalene som hentes fra backend, starter som en tom array før dataen kommer inn
     const [visAlle, setVisAlle] = useState(false) //usestate starter som fale for å vise at vi bare viser de 3 første tidlgiere avtalene
 
-    useEffect(() => { 
+    useEffect(() => {
         const token = sessionStorage.getItem("token")
-        fetch("http://localhost:8000/avtaler/mine", {
+        // lege henter sine egne avtaler via /avtaler/mine (filtrert på ansattID i backend)
+        // pasient henter sine egne avtaler via /avtaler/pasient (filtrert på fnr i backend)
+        const url = rolle === "lege"
+            ? "http://localhost:8000/avtaler/mine"
+            : "http://localhost:8000/avtaler/pasient"
+
+        fetch(url, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -64,7 +72,7 @@ function Avtaler() { //her er hovedkomponenten til hele avtaler siden, den har a
         .then(response => response.json()) //når vi får svar fra backend, så parse til json
         .then(data => setAvtaler(data.avtaler)) //avtaler settes i state sån at vi kan bruke de til å rendre avtale kortene
         .catch(error => console.error("Kunne ikke hente avtaler:", error)) //hvis det er en feil i kallet, så logg det i konsollen
-    }, [])
+    }, [rolle]) // rolle er en avhengighet her — hvis rollen endres, hent på nytt
 
     function toggleVisAlle() { //denne funksjonen håndterer klikket på "se alle" knappen nederst for tidligere avtaler
         setVisAlle(prev => !prev) //hvis knappen trykkes, så toggler den visAlle boleanen mellom true og false, enten vise alle eller bare 3
