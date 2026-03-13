@@ -25,6 +25,7 @@ function JournalDokumenter({ journalNr }) {
     const [visSkjema, setVisSkjema] = useState(false);
     const [skjema, setSkjema] = useState(tomtSkjema);
     const [lagrer, setLagrer] = useState(false);
+    const [apentDokument, setApentDokument] = useState(null); 
 
     useEffect(() => {
         if (journalNr) hentDokumenter();
@@ -156,6 +157,51 @@ function JournalDokumenter({ journalNr }) {
         );
     }
 
+    if (apentDokument) {
+    const innhold = (() => {
+        try { return JSON.parse(apentDokument.tekst); }
+        catch { return {}; }
+    })();
+
+    return (
+        <div className={styles.kontainer}>
+            <button className={styles.avbrytKnapp} onClick={() => setApentDokument(null)}>
+                ← Tilbake
+            </button>
+
+            <div className={styles.skjemaTopp}>
+                <div className={styles.skjemaVenstre}>
+                    <p><strong>Dokumentnavn:</strong> {innhold.dokumentnavn}</p>
+                    <p><strong>Kategori:</strong> {innhold.kategori}</p>
+                </div>
+                <div className={styles.skjemaHoyre}>
+                    <span className={styles.kritiskInfoTittel}>Kritisk info:</span>
+                    <div className={styles.kritiskKnapper}>
+                        <button className={styles.kritiskKnapp}>Allergi</button>
+                        <button className={styles.kritiskKnapp}>HLR</button>
+                        <button className={styles.kritiskKnapp}>Smitte</button>
+                    </div>
+                </div>
+            </div>
+
+            <div className={styles.soapGrid}>
+                {["subjektivt", "vurdering", "objektivt", "plan"].map((felt) => (
+                    <div key={felt} className={styles.soapFelt}>
+                        <label className={styles.soapLabel}>
+                            {felt.charAt(0).toUpperCase() + felt.slice(1)}:
+                        </label>
+                        <p>{innhold[felt] || "—"}</p>
+                    </div>
+                ))}
+            </div>
+
+            <div className={styles.kommentarInput}>
+                <strong>Kommentar:</strong> {innhold.kommentar || "—"}
+            </div>
+        </div>
+    );
+}
+
     // --- Dokumentliste ---
     if (laster) return <p>Laster dokumenter...</p>;
     if (feil) return <p>{feil}</p>;
@@ -226,7 +272,7 @@ function JournalDokumenter({ journalNr }) {
                                         <span><strong>Klokkeslett opprettet:</strong></span>
                                         <span>{dok.opprettetDato}</span>
                                     </div>
-                                    <button className={styles.apneKnapp}>Åpne</button>
+                                    <button className={styles.apneKnapp} onClick={() => setApentDokument(dok)}>Åpne</button>
                                 </div>
                             )}
                         </div>
