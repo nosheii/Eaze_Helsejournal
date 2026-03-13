@@ -122,6 +122,28 @@ def hent_mine_avtaler(bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+@app.get("/avtaler/pasient")
+def hent_pasient_avtaler(bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                a.avtaleID,
+                a.fnr,
+                a.tidspunkt,
+                a.kommentar,
+                ans.navn as legeNavn
+            FROM avtale a
+            LEFT JOIN ansatt ans ON a.ansattID = ans.ansattID
+            WHERE a.fnr = ?
+            ORDER BY a.tidspunkt ASC
+        """, (bruker["brukerinfo"]["fnr"],))
+        avtaler = cursor.fetchall()
+        return {"avtaler": [dict(a) for a in avtaler]}
+    finally:
+        connection.close()
+
 @app.get("/avtaler/{fnr}")
 def hent_avtaler(fnr: str, bruker = Depends(krever_lege)):
     connection = getConnection()
