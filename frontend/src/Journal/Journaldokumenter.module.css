@@ -112,7 +112,6 @@
     gap: 4px;
 }
 
-/* Åpne-knapp */
 .apneKnapp {
     margin-left: auto;
     background: #0aadad;
@@ -135,4 +134,201 @@
     color: #8aabab;
     font-size: 15px;
     padding: 20px 0;
+}
+
+/* ---- Skjema ---- */
+
+.skjemaTopp {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.skjemaVenstre {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #cccccc;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.skjemaHoyre {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #cccccc;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.dokumentNavnInput {
+    border: 1.5px solid #b0d8d8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: #2a4040;
+    background: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.kategoriValg {
+    border: 1.5px solid #b0d8d8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: #2a4040;
+    background: #ffffff;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.kritiskInfoTittel {
+    font-weight: 700;
+    font-size: 15px;
+    color: #1a2e2e;
+}
+
+.kritiskKnapper {
+    display: flex;
+    gap: 10px;
+}
+
+.kritiskKnapp {
+    background: #0aadad;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.kritiskKnapp:hover {
+    background: #089090;
+}
+
+.kritiskInfoTekst {
+    font-size: 13px;
+    color: #555;
+    margin: 0;
+}
+
+/* SOAP-grid */
+.soapGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1.5px solid #d0ecec;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.soapFelt {
+    padding: 16px;
+    border-right: 1.5px solid #d0ecec;
+    border-bottom: 1.5px solid #d0ecec;
+}
+
+.soapFelt:nth-child(even) {
+    border-right: none;
+}
+
+.soapFelt:nth-child(3),
+.soapFelt:nth-child(4) {
+    border-bottom: none;
+}
+
+.soapLabel {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #1a2e2e;
+}
+
+.soapInput {
+    width: 100%;
+    min-height: 80px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: #2a4040;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.kommentarInput {
+    width: 100%;
+    border: 1.5px solid #d0ecec;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: #2a4040;
+    background: #ffffff;
+    resize: vertical;
+    min-height: 60px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.kommentarInput::placeholder {
+    color: #8aabab;
+}
+
+/* Skjema-knapper */
+.skjemaKnapper {
+    display: flex;
+    gap: 12px;
+}
+
+.lagreKnapp {
+    background: #0aadad;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.lagreKnapp:hover {
+    background: #089090;
+}
+
+.lagreKnapp:disabled {
+    background: #a0d4d4;
+    cursor: not-allowed;
+}
+
+.avbrytKnapp {
+    background: #ffffff;
+    color: #2a4040;
+    border: 1.5px solid #d0ecec;
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.avbrytKnapp:hover {
+    background: #e8f7f7;
 }
