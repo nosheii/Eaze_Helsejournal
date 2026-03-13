@@ -131,7 +131,7 @@ function Journal({ rolle }) {
         )}
 
         {valgtFane === "pasientDok" && (
-          <JournalDokumenter fnr={fnr} />
+          <JournalDokumenter journalNr={journalNr} />
         )}
 
         {valgtFane === "pasientHis" && (
