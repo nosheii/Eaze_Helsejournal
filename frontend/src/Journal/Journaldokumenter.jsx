@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { useNavigation } from 'react-router-dom'
 import style from './Journaldokumenter.module.css'
 
 function JournalDokumenter({ fnr }) {
-    
 
 
     return (
