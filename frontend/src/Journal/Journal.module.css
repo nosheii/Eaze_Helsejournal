@@ -31,8 +31,8 @@
 
 /* De forskjellige fanene*/
 .faneKontainer {
-  border: 1.5px solid #d0ecec;
-  border-radius: 19px;
+  border: 1.5px solid #007185;
+  border-radius: 5px;
   overflow: hidden;
   margin-bottom: 36px;
   background: #ffffff;
@@ -42,7 +42,7 @@
 .faneRad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-bottom: 1.5px solid #d0ecec;
+  border-bottom: 1.5px solid #007185;
 }
 
 /* De to siste radene under faneRad */
@@ -56,7 +56,7 @@
   padding: 18px 20px;
   background: #ffffff;
   border: none;
-  border-right: 1.5px solid #d0ecec;
+  border-right: 1.5px solid #007185;
   font-size: 15px;
   font-weight: 600;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
@@ -77,12 +77,12 @@
 
 /*Den fanen som er trykket på får en mørkere blå ish farge */
 .faneAktiv {
-  background: #0aadad;
-  color: #ffffff;
+  background: #cccccc;
+  color: #000000;
   font-weight: 700;
 }
 
 /* og den blir enda mørkere hvis man hoverer over den*/
 .faneAktiv:hover {
-  background: #089090;
+  background: #0097b2;
 }
