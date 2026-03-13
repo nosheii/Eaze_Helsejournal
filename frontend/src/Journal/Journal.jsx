@@ -38,22 +38,31 @@ function Journal({ rolle }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        // Backend returnerer en liste med journaler — vi henter pasientinfo fra første rad
         if (data.journaler && data.journaler.length > 0) {
-          const j = data.journaler[0];
-          setPasient({
-            fnr: j.fnr,
-            navn: `${j.etterNavn}, ${j.forNavn}`,
-            // Detaljer kan utvides med fødselsdato osv. når det finnes i databasen
-            detaljer: j.fnr
-          });
+            const j = data.journaler[0];
+            setPasient({
+                fnr: j.fnr,
+                navn: `${j.etterNavn}, ${j.forNavn}`,
+                detaljer: j.fnr
+            });
+        } else {
+            // Ingen journal funnet — opprett en ny
+            const token = sessionStorage.getItem("token");
+            fetch("http://127.0.0.1:8000/journal", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ fnr })
+            })
+            .then(() => {
+                // Hent journalen på nytt etter opprettelse
+                window.location.reload();
+            });
         }
         setLaster(false);
-      })
-      .catch((feil) => {
-        console.error("Kunne ikke hente pasientinfo:", feil);
-        setLaster(false);
-      });
+    })
   }, [fnr]); // [fnr] betyr: kjør på nytt hvis fnr i URL-en endrer seg
 
 
