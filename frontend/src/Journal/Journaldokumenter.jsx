@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import style from './Journaldokumenter.module.css'
 
 function JournalDokumenter({ fnr }) {
 
