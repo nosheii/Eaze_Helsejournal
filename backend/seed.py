@@ -21,9 +21,8 @@ def seed():
     print(" Starter seeding av testdata...\n")
 
 
-    # RYDD OPP GAMLE TESTDATA FØRST                                       #
-    # Rekkefølgen her er viktig! Vi må slette i "riktig retning" av       #
-    # foreign key-relasjonene — barn før foreldre.                        #
+    # RYDDER OPP GAMLE TESTDATA FØRST#
+    # rekkefølgen er viktig, vi må slette i riktig foregn key relasjon, barn før foreldre#
     # user peker på ansatt og pasient, så user slettes først.            #
     cursor.execute("DELETE FROM user WHERE brukernavn IN ('dr_hansen', '21267788')")
     cursor.execute("DELETE FROM ansatt WHERE mail = 'hansen@eaze.no'")
