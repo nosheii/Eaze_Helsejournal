@@ -50,7 +50,7 @@ export function Vaksine ({brukerinfo, rolle}) {
                             {vaksine.map(v => ( // går og viser hver vaksine i en tabellrad
                                 <tr key={v.vaksineID}>
                                     <td><strong>{v.vaksineNavn}</strong></td>
-                                    <td className={styles.dato}>{v.dato}</td>
+                                    <td className={styles.dato}>{v.dato.replace(/-/g, ".")}</td>
                                 </tr>
                             ))}    
                         </tbody>

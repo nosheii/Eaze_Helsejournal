@@ -21,23 +21,27 @@
     font-size: 24px;
     align-items: center;
     padding: 10px 20px;
-
 }
 .vaksineKnapp {
-    background-color: #99d9d9;
-    color: rgb(0, 0, 0);
-    border: 1.5px solid #707272;
+    background-color: #77c6d3;
+    color: #000000;
+    font-size: 14px;
+    border: 1.5px solid #007185;
     font-weight: bold;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+.vaksineKnapp:hover {
+    background:#0097b2;
 }
 .vaksineHeader h2 {
     background-color: #d9d9d9;
     font-size: 23px;
     font-weight: bold;
     margin: 0;
+    padding-left: 120px;
 }
 .vaksineTabell {
     width: 100%;
