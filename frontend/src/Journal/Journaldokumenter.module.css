@@ -1,0 +1,138 @@
+.kontainer {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: #1a2e2e;
+}
+
+/* Opprett-knapp */
+.opprettKnapp {
+    background: #ecfcff;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.15s ease;
+}
+
+.opprettKnapp:hover {
+    background: #089090;
+}
+
+/* Filterrad */
+.filterRad {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #e0f0f0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #2a4040;
+}
+
+.filterLabel {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.filterInput {
+    border: 1.5px solid #b0d8d8;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: #2a4040;
+    background: #ffffff;
+}
+
+.filterKnapp {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Kolonneheader */
+.listeHeader {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr 1.5fr 40px;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #1a2e2e;
+    border-bottom: 1.5px solid #d0ecec;
+}
+
+/* Dokumentrad */
+.dokumentRad {
+    border-bottom: 1.5px solid #d0ecec;
+}
+
+.dokumentRadHoved {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr 1.5fr 40px;
+    padding: 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #2a4040;
+    transition: background 0.1s ease;
+}
+
+.dokumentRadHoved:hover {
+    background: #e8f7f7;
+}
+
+.pil {
+    text-align: right;
+    color: #0aadad;
+    font-weight: 700;
+}
+
+/* Ekspandert detaljer */
+.dokumentDetaljer {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 14px 16px 18px 16px;
+    background: #f0fafa;
+    font-size: 14px;
+    color: #2a4040;
+}
+
+.detaljerVenstre,
+.detaljerMidt {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Åpne-knapp */
+.apneKnapp {
+    margin-left: auto;
+    background: #0aadad;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.apneKnapp:hover {
+    background: #089090;
+}
+
+.ingenDokumenter {
+    color: #8aabab;
+    font-size: 15px;
+    padding: 20px 0;
+}
