@@ -1,0 +1,123 @@
+.side {
+    padding: 2rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.tittel {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 2rem;
+}
+
+.seksjonTittel {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-bottom: 1rem;
+    margin-top: 2.5rem;
+}
+
+.avtaleKort {
+    background: white;
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-left: 4px solid #00a3a3;
+    transition: box-shadow 0.2s ease;
+}
+
+.avtaleKort:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.avtaleKortTidligere {
+    border-left-color: #ccc;
+    background: #f9f9f9;
+}
+
+.avtaleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.pasientNavn {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.tidspunkt {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #00a3a3;
+    background: #e6f7f7;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+}
+
+.tidspunktTidligere {
+    color: #888;
+    background: #efefef;
+}
+
+.fnr {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 0.5rem;
+}
+
+.kommentar {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+.kommentarKnapp {
+    background: none;
+    border: none;
+    color: #00a3a3;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 0.25rem;
+}
+
+.ingenAvtaler {
+    color: #bbb;
+    font-size: 0.9rem;
+    font-style: italic;
+    padding: 1rem 0;
+}
+
+.seMerKnapp {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.7rem;
+    background: none;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    color: #aaa;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.seMerKnapp:hover {
+    border-color: #00a3a3;
+    color: #00a3a3;
+}
+
+.skillelinje {
+    border: none;
+    border-top: 2px dashed #eee;
+    margin: 2rem 0 1rem;
+}
