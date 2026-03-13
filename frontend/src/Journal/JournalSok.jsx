@@ -21,7 +21,7 @@ function JournalSok() {
             if (respons.ok) {
                 // Sjekk at listen faktisk inneholder noe før vi navigerer
                 // En tom liste betyr at pasienten ikke har journaler eller ikke finnes
-                if (data.journaler && data.journaler.length > 0) {
+                if (data.journaler) {
                     navigate(`/journal/${fnr}`)
                 } else {
                     setFeilmelding("Fant ingen pasient med dette fødselsnummeret, prøv igjen")
