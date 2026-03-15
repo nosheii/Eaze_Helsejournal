@@ -17,12 +17,18 @@ function Innboks() {
   // det at den er null i starten betyr bare ingen melding valgt ennå (mens siden loader)
   const [valgtId, setValgtId] = useState(null);
 
-  // laster er en bolean som sier at den venter på data fr a backend
+  // laster er en bolean som sier at den venter på data fra backend
   const [laster, setLaster] = useState(true);
+
+  // visSvarSkjema er en boolean som styrer om svar-skjemaet vises eller ikke
+  const [visSvarSkjema, setVisSvarSkjema] = useState(false);
+
+  // svarTekst er staten som holder teksten brukeren skriver i svar-skjemaet
+  const [svarTekst, setSvarTekst] = useState("");
 
   // useEffect kjører koden inni seg en gang når komponenten er klar
   // tom array på slutten betyr "ingen avhengigheter", altså ingen variabler som skal triggere denne koden på nytt når de endres.
-  // når komponenten er klar, gå inn i useeffect og hent melidgnene fra backend
+  // når komponenten er klar, gå inn i useeffect og hent meldingene fra backend
   useEffect(() => {
     const token = sessionStorage.getItem("token");
 
@@ -31,11 +37,11 @@ function Innboks() {
         // verify_token i FastAPI forventer tokenet i Authorization-headeren
         // på bavkend så bare sjekker den om det er riktig bruker med riktig token
         // også joiner den meldingene i databasen med brukernavn sånn at vi også får hvem som har sendt den
-        //uten å sende nytt kall 
+        // uten å sende nytt kall 
         "Authorization": `Bearer ${token}`
       }
     })
-      .then((res) => res.json()) //så gjør vi om dataen til JSON så den er lettere å jobbe emd
+      .then((res) => res.json())
       .then((data) => { 
         setMeldinger(data.meldinger);
 
@@ -44,47 +50,75 @@ function Innboks() {
           setValgtId(data.meldinger[0].meldingID);
         }
 
-        setLaster(false); // når dataen er hentent så skrus av den spinneren
+        setLaster(false); // når dataen er hentet så skrurs av spinneren
       })
       .catch((feil) => {
-        //hvis noe er feil i databasen(kallet ikke funker), så skryr av spinneren og viser feilmelding i konsollen
+        // hvis noe er feil i databasen(kallet ikke funker), så skrys av spinneren og vises feilmelding i konsollen
         console.error("Kunne ikke hente meldinger:", feil);
         setLaster(false);
       });
   }, []);
 
-  //Nå skal det finnes valgt melding i listen
-  //Dette oppdateres automatisk når bruker klikker på en melding
+  // Nå skal det finnes valgt melding i listen
+  // Dette oppdateres automatisk når bruker klikker på en melding
   // valgtId er det som finner fram riktig melding i listen
   const valgtMelding = meldinger.find((m) => m.meldingID === valgtId);
 
   // Denne funksjonen markerer en melding som lest når den blir klikket på
-  //Den gjør det med å kalle PATHCH endpointen i bavkend som oppdaterer feltet som lest i db
+  // Den gjør det med å kalle PATCH endpointen i bavkend som oppdaterer feltet som lest i db
   function merkSomLest(meldingID) {
     const token = sessionStorage.getItem("token");
 
     fetch(`http://localhost:8000/meldinger/${meldingID}/lest`, {
       method: "PATCH",
-      headers: { "Authorization": `Bearer ${token}` } //sjekker at det er riktig bruker fortsatt ! sikkerhet er viktig
+      headers: { "Authorization": `Bearer ${token}` }
     })
       .then(() => {
         // oppdaterer meldingen i useState sånn at den blir lest i UI uten å måtte hente listen på nytt
-        setMeldinger((prev) => //finner riktig melding i listen 
-          prev.map((m) => // prev.map prøver å finne riktig melding (m) i listen ved å sjekke om m.meldingID er lik meldingID som vi sendte inn i funksjonen
-            m.meldingID === meldingID ? { ...m, lest: 1 } : m //så oppdaterer den feltet lest til 1 (lest) ellers så lar den meldingen være som den er
+        setMeldinger((prev) =>
+          prev.map((m) =>
+            m.meldingID === meldingID ? { ...m, lest: 1 } : m
           )
         );
       })
-      .catch((feil) => console.error("Kunne ikke merke som lest:", feil)); //tilfelle noe går galt i kallet
+      .catch((feil) => console.error("Kunne ikke merke som lest:", feil));
   }
 
-  //Nå er det funksjonen som kjører når en melding blir klikket på i listen
+  // Nå er det funksjonen som kjører når en melding blir klikket på i listen
   function velgMelding(melding) {
     setValgtId(melding.meldingID);
+    setVisSvarSkjema(false); // lukk svarskjema når man bytter melding
+    setSvarTekst("");
     // meldingen blir kun lest når den klikkes på, ikke når den bare vises i listen
-    //  så kjører funksjonen merkSomLest som oppdaterer både front og back
+    // så kjører funksjonen merkSomLest som oppdaterer både front og back
     if (melding.lest === 0) {
       merkSomLest(melding.meldingID);
+    }
+  }
+
+  // sendSvar sender et svar til avsenderen av den valgte meldingen
+  // mottakerID er avsenderID fra den valgte meldingen siden vi svarer tilbake
+  // overskriften prefikses med "Re:" som er standard konvensjon for svar
+  async function sendSvar() {
+    const token = sessionStorage.getItem("token");
+
+    const respons = await fetch("http://localhost:8000/meldinger", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        mottakerID: valgtMelding.avsenderID,
+        overskrift: `Re: ${valgtMelding.overskrift}`,
+        innhold: svarTekst
+      })
+    });
+
+    if (respons.ok) {
+      // Skjul skjemaet og nullstill teksten etter sending
+      setVisSvarSkjema(false);
+      setSvarTekst("");
     }
   }
 
@@ -175,22 +209,57 @@ function Innboks() {
               <div className={styles.meldingsBunn}>
                 <div className={styles.avsenderInfo}>
                   <div className={styles.avsenderAvatar}>
-                    {/* Forkort initialene til to bokstaver*/}
+                    {/* Forkort initialene til to bokstaver */}
                     {valgtMelding.avsender_navn.split(" ").map((n) => n[0]).join("")}
                   </div>
                   <div>
                     <div className={styles.avsenderLabel}>Fra</div>
-                    <div className={styles.avsenderNavn}>{valgtMelding.avsender_navn}</div> 
-                    <div className={styles.meldingsDato}>{formaterDato(valgtMelding.sendt_dato)}</div> {/* Vis dato under navnet */}
+                    <div className={styles.avsenderNavn}>{valgtMelding.avsender_navn}</div>
+                    <div className={styles.meldingsDato}>{formaterDato(valgtMelding.sendt_dato)}</div>
                   </div>
                 </div>
 
-                <button className={styles.svarKnapp}>
+                {/* Svar-knapp som åpner skjemaet */}
+                <button
+                  className={styles.svarKnapp}
+                  onClick={() => setVisSvarSkjema(true)}
+                >
                   <Reply size={18} strokeWidth={1.8} />
-                  Svar avsender {/* Vis "Svar avsender" på større skjermer, og bare "Svar" på mindre skjermer for å spare plass */}
-                  {/*her må vi bygge på litt ekstra funksjonalitet for å faktisk kunne svare på meldinger !!!!!! */}
+                  Svar avsender
                 </button>
               </div>
+
+              {/* Svar-skjema vises kun når visSvarSkjema er true */}
+              {visSvarSkjema && (
+                <div className={styles.svarSkjema}>
+                  <p className={styles.svarTil}>Svar til: {valgtMelding.avsender_navn}</p>
+                  <textarea
+                    className={styles.svarTextarea}
+                    placeholder="Skriv ditt svar her..."
+                    value={svarTekst}
+                    onChange={(e) => setSvarTekst(e.target.value)}
+                    rows={5}
+                  />
+                  <div className={styles.svarKnapper}>
+                    <button
+                      className={styles.sendKnapp}
+                      onClick={sendSvar}
+                      disabled={svarTekst.trim() === ""}
+                    >
+                      Send svar
+                    </button>
+                    <button
+                      className={styles.avbrytKnapp}
+                      onClick={() => {
+                        setVisSvarSkjema(false);
+                        setSvarTekst("");
+                      }}
+                    >
+                      Avbryt
+                    </button>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </main>

@@ -39,7 +39,7 @@
   font-weight: 700;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
   cursor: pointer;
-  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease; /*litt fancy med 3D-effekt på knappen */
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
   box-shadow: 0 4px 14px rgba(10, 173, 173, 0.25);
   width: 100%;
 }
@@ -110,7 +110,7 @@
   color: #1a2e2e;
 }
 
-/* Liten blå sirkel som viser at denne meldingen ikke er elst ennå */
+/* Liten blå sirkel som viser at denne meldingen ikke er lest ennå */
 .ulestDot {
   width: 8px;
   height: 8px;
@@ -139,7 +139,7 @@
   margin-top: 2px;
 }
 
-/*Store meldingskjsermen for lesing */
+/*Store meldingsskjermen for lesing */
 .meldingsVisning {
   background: #ffffff;
   border: 1.5px solid #d0ecec;
@@ -260,4 +260,93 @@
   gap: 16px;
   color: #8aabab;
   font-size: 15px;
+}
+
+/* Svar-skjema som vises når man trykker på svar-knappen */
+.svarSkjema {
+  margin-top: 24px;
+  padding: 24px;
+  background: #f0fafa;
+  border: 1.5px solid #d0ecec;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.svarTil {
+  font-size: 13px;
+  font-weight: 700;
+  color: #5a8080;
+  margin: 0;
+}
+
+.svarTextarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid #d0ecec;
+  border-radius: 10px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  color: #1a2e2e;
+  background: #ffffff;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.18s ease;
+  box-sizing: border-box;
+}
+
+.svarTextarea:focus {
+  border-color: #0aadad;
+}
+
+.svarTextarea::placeholder {
+  color: #8aabab;
+}
+
+/* Knapperad for send og avbryt */
+.svarKnapper {
+  display: flex;
+  gap: 12px;
+}
+
+.sendKnapp {
+  padding: 12px 28px;
+  background: #0aadad;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.sendKnapp:hover:not(:disabled) {
+  background: #089090;
+  transform: translateY(-1px);
+}
+
+.sendKnapp:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.avbrytKnapp {
+  padding: 12px 28px;
+  background: transparent;
+  color: #5a8080;
+  border: 1.5px solid #d0ecec;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.avbrytKnapp:hover {
+  background: #e8f7f7;
+  border-color: #0aadad;
 }

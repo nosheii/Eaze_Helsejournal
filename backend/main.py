@@ -447,6 +447,7 @@ def hent_meldinger(bruker = Depends(verify_token)):
                 m.innhold,
                 m.sendt_dato,
                 m.lest,
+                m.avsenderID,
                 COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as avsender_navn
             FROM melding m
             JOIN user u ON m.avsenderID = u.userID
