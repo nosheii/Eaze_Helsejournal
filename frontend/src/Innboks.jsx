@@ -27,6 +27,26 @@ function Innboks() {
   // svarTekst er staten som holder teksten brukeren skriver i svar-skjemaet
   const [svarTekst, setSvarTekst] = useState("");
 
+  //boolean som styrer om den nytt meldingskjema skal vises eller ikke.
+  //Stater som false sånn at det ikke vises før brukeren har trykket på knappen
+  const [visNyMelding, setVisNyMelding] = useState (false);
+
+  //useState for å holde søketeksten i søkefeltet for meldinger, starter som en tom streng
+  const [sokeTekst, setSokeTekst] = useState("");
+
+  //useState for å holde resultatene av søket, starter som en tom array]
+  const [sokeResultater, setSokeResultater] = useState([]); 
+
+  //denne holder på den valgte mottakeren i ny meldingsskjema.
+  //starter som null slik at ingen mottaker er valgt før brukeren velger en
+  const [valgtMottaker, setValgtMottaker] = useState(null);
+
+  // denne holder på den nye overskriften i ny meldingsskjema, starter som en tom streng
+  const [nyOverskrift, setNyOverskrift] = useState("");
+
+  // holder på det nye innholdet i meldingsskjema, starter som en tom streng
+  const [nyInnhold, setNyInnhold] = useState("");
+
   // useEffect kjører koden inni seg en gang når komponenten er klar
   // tom array på slutten betyr "ingen avhengigheter", altså ingen variabler som skal triggere denne koden på nytt når de endres.
   // når komponenten er klar, gå inn i useeffect og hent meldingene fra backend
