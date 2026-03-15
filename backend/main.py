@@ -425,6 +425,40 @@ def ny_vaksine(vaksine_data: VaksineRequest, bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+@app.get("/meldinger/sendt")
+def hent_sendte_meldinger(bruker = Depends(verify_token)):
+    """
+    Her henter jeg alle meldinger som pålogget bruker har sendt.
+    Jeg joiner både ansatt og pasient tabellen, for å vise mottakerens navn i respons
+    Uansett om det er lege eller pasient
+    Så slipper frontend å gjøre en ekstra request for å hente mottaker navn basert på userid
+    
+    """
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                m.meldingID,
+                m.overskrift,
+                m.innhold,
+                m.sendt_dato,
+                m.lest,
+                m.avsenderID,
+                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as mottaker_navn
+            FROM melding m
+            JOIN user u ON m.mottakerID = u.userID
+            LEFT JOIN ansatt a ON u.ansattID = a.ansattID
+            LEFT JOIN pasient p ON u.fnr = p.fnr
+            WHERE m.avsenderID = ?
+            ORDER BY m.sendt_dato DESC
+        """, (bruker["userID"],))
+
+        meldinger = cursor.fetchall()
+        return {"meldinger": [dict(m) for m in meldinger]}
+    finally:
+        connection.close()
+
 @app.get("/meldinger")
 def hent_meldinger(bruker = Depends(verify_token)):
     """

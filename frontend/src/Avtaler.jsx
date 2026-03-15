@@ -1,6 +1,6 @@
+//NORA AL-TAY
 import { useState, useEffect } from 'react'
 import styles from './Avtaler.module.css'
-// NORA
 // hjelpefunksjon for å hjelpe med å parse datoene som kommer fra backend, hvis de kommer i ulike formater
 function parseDato(tidspunkt) {
     if (tidspunkt && tidspunkt.includes(".")) { // Hvis tidspunktet inneholder punktum, antar vi at det er i formatet "dd.mm.åååå"
@@ -23,9 +23,9 @@ function AvtaleKort({ avtale, tidligere }) { //denne komponenten brukes til å r
         ? avtale.kommentar.slice(0, 120) + "..."  //hvis den er lengre enn 120, slice den ned til 120 og legg til prikk prikk prikk på slutten for å vise at det er mer tekst der.
         : avtale.kommentar //men hvis kommentaren er kortere enn 120, vis hele
 
-        // her kommer selve renderingen av avtale kortet
-    return ( 
-        <div className={`${styles.avtaleKort} ${tidligere ? styles.avtaleKortTidligere : ""}`}> 
+    // her kommer selve renderingen av avtale kortet
+    return (
+        <div className={`${styles.avtaleKort} ${tidligere ? styles.avtaleKortTidligere : ""}`}>
             <div className={styles.avtaleHeader}>
                 {/* pasientNavn vises for lege, legeNavn vises for pasient bruker || for å vise det som finnes */}
                 <span className={styles.pasientNavn}>{avtale.pasientNavn || avtale.legeNavn}</span>
@@ -51,8 +51,8 @@ function AvtaleKort({ avtale, tidligere }) { //denne komponenten brukes til å r
 }
 
 function Avtaler({ rolle }) { //her er hovedkomponenten til hele avtaler siden, den har ansvar for å hente avtalene og dele dem opp
-                    // i både kommende og tidligere, og også for å håndtere den "hvis alle" knappen nederst for tidlgiere avtaler
-                    // rolle-propen bestemmer hvilken URL vi henter fra — lege eller pasient
+    // i både kommende og tidligere, og også for å håndtere den "hvis alle" knappen nederst for tidlgiere avtaler
+    // rolle-propen bestemmer hvilken URL vi henter fra — lege eller pasient
     const [avtaler, setAvtaler] = useState([]) // usestate for å lagre avtalene som hentes fra backend, starter som en tom array før dataen kommer inn
     const [visAlle, setVisAlle] = useState(false) //usestate starter som fale for å vise at vi bare viser de 3 første tidlgiere avtalene
 
@@ -69,9 +69,9 @@ function Avtaler({ rolle }) { //her er hovedkomponenten til hele avtaler siden, 
                 "Authorization": `Bearer ${token}`
             }
         })
-        .then(response => response.json()) //når vi får svar fra backend, så parse til json
-        .then(data => setAvtaler(data.avtaler)) //avtaler settes i state sån at vi kan bruke de til å rendre avtale kortene
-        .catch(error => console.error("Kunne ikke hente avtaler:", error)) //hvis det er en feil i kallet, så logg det i konsollen
+            .then(response => response.json()) //når vi får svar fra backend, så parse til json
+            .then(data => setAvtaler(data.avtaler)) //avtaler settes i state sån at vi kan bruke de til å rendre avtale kortene
+            .catch(error => console.error("Kunne ikke hente avtaler:", error)) //hvis det er en feil i kallet, så logg det i konsollen
     }, [rolle]) // rolle er en avhengighet her — hvis rollen endres, hent på nytt
 
     function toggleVisAlle() { //denne funksjonen håndterer klikket på "se alle" knappen nederst for tidligere avtaler

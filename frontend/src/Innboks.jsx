@@ -1,3 +1,4 @@
+//NORA AL-TAY
 // Innboks.jsx
 // Denne komponenten henter meldinger fra backend og viser dem i en to-kolonne-layout.
 // Venstre side er en liste over meldinger, høyre side viser den valgte meldingen.
