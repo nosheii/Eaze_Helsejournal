@@ -41,32 +41,19 @@ function Journal({ rolle }) {
       .then((res) => res.json())
       .then((data) => {
         console.log("Journal data:", data);
-        if (data.journaler && data.journaler.length > 0) {
-            const j = data.journaler[0];
-            setJournalNr(j.journalNr); 
-            setPasient({
-                fnr: j.fnr,
-                navn: `${j.etterNavn}, ${j.forNavn}`,
-                detaljer: j.fnr
-            });
-        } else {
-            // Ingen journal funnet — opprett en ny
-            const token = sessionStorage.getItem("token");
-            fetch("http://127.0.0.1:8000/journal", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ fnr })
-            })
-            .then(() => {
-                // Hent journalen på nytt etter opprettelse
-                window.location.reload();
-            });
+        if (data.journaler && data.journaler.length > 0 && data.journaler[0].forNavn !== null) {
+          const j = data.journaler[0];
+          setJournalNr(j.journalNr);
+          setPasient({
+            fnr: j.fnr,
+            navn: `${j.etterNavn}, ${j.forNavn}`,
+            detaljer: j.fnr
+          });
         }
+        // Oppretter ikke journal automatisk lenger
+        // JournalSok passer heller på å sjekke at pasienten fatkisk finnes
         setLaster(false);
-    })
+      })
   }, [fnr]); // [fnr] betyr: kjør på nytt hvis fnr i URL-en endrer seg
 
 
@@ -136,11 +123,11 @@ function Journal({ rolle }) {
         )}
 
         {valgtFane === "pasientMed" && (
-          <JournalMedikament fnr={fnr} rolle={rolle}/>
+          <JournalMedikament fnr={fnr} rolle={rolle} />
         )}
 
         {valgtFane === "pasientVak" && (
-          <JournalVaksiner fnr={fnr} rolle={rolle}/>
+          <JournalVaksiner fnr={fnr} rolle={rolle} />
         )}
 
         {valgtFane === "pasientDok" && (

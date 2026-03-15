@@ -11,24 +11,31 @@ function JournalSok() {
     async function handleSok() {
         setLaster(true)
         setFeilmelding("")
+
         try {
             const token = sessionStorage.getItem("token")
+
             const respons = await fetch(`http://127.0.0.1:8000/journal/${fnr}`, {
                 method: "GET",
-                headers: { "Authorization": `Bearer ${token}` }
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             })
+
             const data = await respons.json()
+
             if (respons.ok) {
-                // Sjekk at listen faktisk inneholder noe før vi navigerer
-                // En tom liste betyr at pasienten ikke har journaler eller ikke finnes
-                if (data.journaler) {
+                // Sjekk at listen inneholder noe OG at pasienten faktisk finnes (forNavn ikke null)
+                // Uten denne sjekken kan man havne på journalsiden for fnr som ikke tilhører noen pasient
+                if (data.journaler && data.journaler.length > 0 && data.journaler[0].forNavn !== null) {
                     navigate(`/journal/${fnr}`)
                 } else {
-                    setFeilmelding("Fant ingen pasient med dette fødselsnummeret, prøv igjen")
+                    setFeilmelding("Fant ingen pasient med dette fødselsnummeret")
                 }
             } else {
                 setFeilmelding(data.detail || "Fant ingen pasient med dette fødselsnummeret")
             }
+
         } catch (error) {
             setFeilmelding("Kunne ikke koble til server. Prøv igjen.")
         } finally {
@@ -43,8 +50,8 @@ function JournalSok() {
 
     return (
         <div className={styles.side}>
-            <h2 className={styles.tittel}>Søk på pasient</h2>
             <div className={styles.kort}>
+                <h2 className={styles.tittel}>Søk etter pasient</h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className={styles.felt}>
