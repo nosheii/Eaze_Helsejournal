@@ -96,6 +96,30 @@ def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection.close()
     return {"status":"Success!"}
 
+@app.get("/brukere/søk")
+def søk_brukere(navn: str, bruker = Depends(krever_lege)):
+    """" Søker etter pasienter basert på navn. Dette er kun tilgjengelig for leger.
+    Her brukes en SQL-spørring med LIKE for å finne pasienter der fornavn eller etternavn matcher søket.
+    """
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                u.userID,
+                p.forNavn || ' ' || p.etterNavn as navn,
+                p.fnr
+            FROM user u
+            JOIN pasient p ON u.fnr = p.fnr
+            WHERE (p.forNavn || ' ' || p.etterNavn) LIKE ?
+            ORDER BY p.etterNavn ASC
+        """, (f"%{navn}%",))
+
+        resultater = cursor.fetchall()
+        return {"resultater": [dict(r) for r in resultater]}
+    finally:
+        connection.close()
+
 @app.get("/avtaler/mine")
 def hent_mine_avtaler(bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -432,7 +456,7 @@ def hent_sendte_meldinger(bruker = Depends(verify_token)):
     Jeg joiner både ansatt og pasient tabellen, for å vise mottakerens navn i respons
     Uansett om det er lege eller pasient
     Så slipper frontend å gjøre en ekstra request for å hente mottaker navn basert på userid
-    
+
     """
     connection = getConnection()
     cursor = connection.cursor()
