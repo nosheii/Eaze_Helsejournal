@@ -24,6 +24,8 @@ def seed():
     # Rekkefølgen er viktig, må slette i riktig retning av
     # foreign key relasjonene, barn før foreldre.
     # user peker på ansatt og pasient, så user slettes først.
+    cursor.execute("DELETE FROM melding WHERE avsenderID IN (SELECT userID FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '21267788', '123456', '987654'))")
+    cursor.execute("DELETE FROM melding WHERE mottakerID IN (SELECT userID FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '21267788', '123456', '987654'))")
     cursor.execute("DELETE FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '21267788', '123456', '987654')")
     cursor.execute("DELETE FROM dokument WHERE journalNr IN (SELECT journalNr FROM journal WHERE fnr IN ('21267788', '123456', '987654'))")
     cursor.execute("DELETE FROM diagnose WHERE journalNr IN (SELECT journalNr FROM journal WHERE fnr IN ('21267788', '123456', '987654'))")
@@ -35,7 +37,7 @@ def seed():
     print("✓ Ryddet opp gamle testdata")
 
 
-    # Dr. Hansen opprettes 
+    # Dr. Hansen opprettes
     cursor.execute("""
         INSERT INTO ansatt (mail, navn)
         VALUES (?, ?)
@@ -105,6 +107,24 @@ def seed():
         VALUES (?, ?, NULL, ?)
     """, ("987654", hash_password("pasientAurora"), "987654"))
     print("✓ Opprettet bruker: 987654 / pasientAurora")
+
+
+    # Hent userID-er for å kunne sende meldinger mellom brukere
+    # Vi kan ikke bruke lastrowid her siden vi ikke vet rekkefølgen
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = 'dr_hansen'")
+    user_id_hansen = cursor.fetchone()["userID"]
+
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = 'dr_ghulam'")
+    user_id_ghulam = cursor.fetchone()["userID"]
+
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = '21267788'")
+    user_id_mumtaz = cursor.fetchone()["userID"]
+
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = '123456'")
+    user_id_tilda = cursor.fetchone()["userID"]
+
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = '987654'")
+    user_id_aurora = cursor.fetchone()["userID"]
 
 
     # En journal til hver pasient, opprettet av en lege sånn at siden ikke kræsjer
@@ -217,6 +237,26 @@ def seed():
             VALUES (?, ?, ?, ?)
         """, ("987654", lege_id, tidspunkt, kommentar))
     print("✓ Opprettet testavtaler for Aurora Krogstad (2 kommende, 3 tidligere)")
+
+
+    # Testmeldinger fra leger til pasienter og tilbake
+    meldinger = [
+        (user_id_hansen, user_id_mumtaz,  "Oppfølging etter blodprøve",    "Hei Mumtaz, blodprøvene dine viser normale verdier. Ingen videre tiltak er nødvendig, men vi anbefaler en ny kontroll om seks måneder. Ta gjerne kontakt hvis du har spørsmål."),
+        (user_id_hansen, user_id_mumtaz,  "Resept fornyet",                 "Hei, jeg har nå fornyet resepten din på Paracet. Den er klar til henting på apoteket fra i morgen. Husk å ta medisinen som foreskrevet."),
+        (user_id_mumtaz, user_id_hansen,  "Spørsmål om medisin",            "Hei Dr. Hansen, jeg har merket at jeg blir litt svimmel etter å ha tatt den nye medisinen. Er dette normalt, eller bør jeg komme inn til en time?"),
+        (user_id_ghulam, user_id_tilda,   "Resultater fra siste kontroll",  "Hei Tilda, kolesterolverdiene dine har gått ned siden sist, noe som er veldig positivt. Fortsett med den samme dietten og mosjon. Vi sees til neste kontroll i desember."),
+        (user_id_tilda,  user_id_ghulam,  "Timebestilling",                 "Hei Dr. Ghulam, jeg lurer på om det er mulig å få time tidligere enn planlagt. Jeg har hatt litt vondt i brystet de siste dagene og ønsker å få det sjekket."),
+        (user_id_hansen, user_id_aurora,  "Velkommen som pasient",          "Hei Aurora, velkommen til Eaze legesenter! Jeg er Dr. Hansen og vil være din fastlege. Ikke nøl med å ta kontakt hvis du har spørsmål eller trenger hjelp."),
+        (user_id_ghulam, user_id_aurora,  "Hudundersøkelse resultater",     "Hei Aurora, undersøkelsen viste ingen tegn til alvorlige forandringer. Vi anbefaler likevel at du bruker solkrem daglig og holder øye med eventuelle nye flekker."),
+        (user_id_aurora, user_id_hansen,  "Spørsmål om henvisning",         "Hei Dr. Hansen, jeg har fått beskjed fra Dr. Ghulam om at jeg muligens trenger en henvisning. Kan du hjelpe meg med dette?"),
+    ]
+
+    for avsender, mottaker, overskrift, innhold in meldinger:
+        cursor.execute("""
+            INSERT INTO melding (avsenderID, mottakerID, overskrift, innhold)
+            VALUES (?, ?, ?, ?)
+        """, (avsender, mottaker, overskrift, innhold))
+    print("✓ Opprettet testmeldinger mellom leger og pasienter")
 
 
     connection.commit()
