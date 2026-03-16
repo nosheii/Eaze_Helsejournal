@@ -29,13 +29,13 @@ function Innboks() {
 
   //boolean som styrer om den nytt meldingskjema skal vises eller ikke.
   //Stater som false sånn at det ikke vises før brukeren har trykket på knappen
-  const [visNyMelding, setVisNyMelding] = useState (false);
+  const [visNyMelding, setVisNyMelding] = useState(false);
 
   //useState for å holde søketeksten i søkefeltet for meldinger, starter som en tom streng
   const [sokeTekst, setSokeTekst] = useState("");
 
   //useState for å holde resultatene av søket, starter som en tom array]
-  const [sokeResultater, setSokeResultater] = useState([]); 
+  const [sokeResultater, setSokeResultater] = useState([]);
 
   //denne holder på den valgte mottakeren i ny meldingsskjema.
   //starter som null slik at ingen mottaker er valgt før brukeren velger en
@@ -63,7 +63,7 @@ function Innboks() {
       }
     })
       .then((res) => res.json())
-      .then((data) => { 
+      .then((data) => {
         setMeldinger(data.meldinger);
 
         // når vi først ser meldingene så viser den første melding i listen automatisk
@@ -140,6 +140,50 @@ function Innboks() {
       // Skjul skjemaet og nullstill teksten etter sending
       setVisSvarSkjema(false);
       setSvarTekst("");
+    }
+  }
+
+  // Denne funksjonen håndterer søk etter brukere når de vil sende ny melding
+  async function søkEtterBruker(tekst) {
+    setSokeTekst(tekst) // oppdaterer søketeskten i state sånn at den vises i søkefeltet
+    if (tekst.length < 2) { //søketeksten må være minst 2 tegn for å gjøre søk.
+      setSokeResultater([])
+      return
+    }
+    const token = sessionStorage.getItem("token") //token for å autentisere kallet til backend
+    const respons = await fetch(`http://localhost:8000/brukere/søk?navn=${tekst}`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    })
+    const data = await respons.json()
+    setSokeResultater(data.resultater) // oppdaterer søkeResultater i state med resultatene fra backend sånn at de kan vises i UI
+  }
+
+  // Denne funksjonen er veldig lik sendSvar, men bare at den sender en helt ny melding 
+  // Til den valgte mottakeren i stedet for at avsender er den meldingen som er valgt fra før av.
+  async function sendNyMelding() {
+    const token = sessionStorage.getItem("token"); //verifiserer token for autentisering av kallet fra backend
+    const respons = await fetch("http://localhost:8000/meldinger", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        mottakerID: valgtMottaker.userID,
+        overskrift: nyOverskrift,
+        innhold: nyInnhold
+      })
+    });
+
+    if (respons.ok) {
+      // Hvis melding blir sendt, lukk skjema og nullstill alle state variabler vi brukte.
+      // Dette er viktig for å tømme skjema og gjøre det klart for neste gang en bruker vil sende ny melding
+      setVisNyMelding(false);
+      setNyOverskrift("");
+      setNyInnhold("");
+      setValgtMottaker(null);
+      setSokeTekst("");
+      setSokeResultater([]);
     }
   }
 
