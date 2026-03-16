@@ -199,34 +199,28 @@ function Innboks() {
       minute: "2-digit"
     });
   }
-
   return (
     <div className={styles.side}>
       <div className={styles.layout}>
 
-        {/* VENSTRE: tiny sidebar */}
+        {/* VENSTRE: sidebar */}
         <aside className={styles.sidebar}>
-          <button className={styles.nyMeldingKnapp}>
+          <button
+            className={styles.nyMeldingKnapp}
+            onClick={() => setVisNyMelding(true)}
+          >
             <PenSquare size={18} strokeWidth={1.8} />
             Skriv ny melding
           </button>
 
           <div className={styles.meldingListe}>
-            {/* Spinneren som laster og venter på backend */}
-            {laster && (
-              <div className={styles.laster}>Henter meldinger...</div>
-            )}
-
-            {/* Viser tom-melding hvis listen er tom etter lasting */}
+            {laster && <div className={styles.laster}>Henter meldinger...</div>}
             {!laster && meldinger.length === 0 && (
               <div className={styles.ingenMeldinger}>Ingen meldinger</div>
             )}
-
-            {/* Render ett kort per melding i listen */}
             {meldinger.map((melding) => {
               const erValgt = melding.meldingID === valgtId;
               const kortKlasse = `${styles.meldingKort} ${erValgt ? styles.meldingKortAktiv : ""}`;
-
               return (
                 <button
                   key={melding.meldingID}
@@ -235,12 +229,10 @@ function Innboks() {
                 >
                   <div className={styles.kortTopp}>
                     <span className={styles.kortAvsender}>{melding.avsender_navn}</span>
-                    {/* Vis blå-prikk kun hvis meldingen er ulest (lest === 0) */}
                     {melding.lest === 0 && <span className={styles.ulestDot} />}
                   </div>
                   <span className={styles.kortOverskrift}>{melding.overskrift}</span>
                   <span className={styles.kortForhåndsvisning}>
-                    {/* Vis kun de første 60 tegnene som forhåndsvisning så det ikke blir for langt */}
                     {melding.innhold.slice(0, 60)}...
                   </span>
                   <span className={styles.kortDato}>{formaterDato(melding.sendt_dato)}</span>
@@ -250,31 +242,111 @@ function Innboks() {
           </div>
         </aside>
 
-        {/* HØYRE: større meldingsvisning*/}
+        {/* HØYRE: meldingsvisning */}
         <main className={styles.meldingsVisning}>
-          {/* Vis tomt state hvis ingenting er valgt ennå */}
-          {!valgtMelding && !laster && (
+
+          {/* Ny melding skjema */}
+          {visNyMelding && (
+            <div className={styles.nyMeldingSkjema}>
+              <h3 className={styles.nyMeldingTittel}>Ny melding</h3>
+
+              <div className={styles.nyMeldingFelt}>
+                <label>Til</label>
+                {valgtMottaker ? (
+                  <div className={styles.mottakerChip}>
+                    <span>{valgtMottaker.navn}</span>
+                    <button onClick={() => {
+                      setValgtMottaker(null);
+                      setSokeTekst("");
+                    }}>✕</button>
+                  </div>
+                ) : (
+                  <div className={styles.søkeKontainer}>
+                    <input
+                      className={styles.nyMeldingInput}
+                      placeholder="Søk etter navn..."
+                      value={sokeTekst}
+                      onChange={(e) => søkEtterBruker(e.target.value)}
+                    />
+                    {sokeResultater.length > 0 && (
+                      <div className={styles.søkeDropdown}>
+                        {sokeResultater.map((bruker) => (
+                          <button
+                            key={bruker.userID}
+                            className={styles.søkeResultat}
+                            onClick={() => {
+                              setValgtMottaker(bruker);
+                              setSokeResultater([]);
+                              setSokeTekst("");
+                            }}
+                          >
+                            {bruker.navn}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.nyMeldingFelt}>
+                <label>Overskrift</label>
+                <input
+                  className={styles.nyMeldingInput}
+                  placeholder="Skriv overskrift..."
+                  value={nyOverskrift}
+                  onChange={(e) => setNyOverskrift(e.target.value)}
+                />
+              </div>
+
+              <div className={styles.nyMeldingFelt}>
+                <label>Melding</label>
+                <textarea
+                  className={styles.nyMeldingTextarea}
+                  placeholder="Skriv din melding her..."
+                  value={nyInnhold}
+                  onChange={(e) => setNyInnhold(e.target.value)}
+                  rows={5}
+                />
+              </div>
+
+              <div className={styles.svarKnapper}>
+                <button
+                  className={styles.sendKnapp}
+                  onClick={sendNyMelding}
+                  disabled={!valgtMottaker || nyOverskrift.trim() === "" || nyInnhold.trim() === ""}
+                >
+                  Send melding
+                </button>
+                <button
+                  className={styles.avbrytKnapp}
+                  onClick={() => setVisNyMelding(false)}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Tomt state */}
+          {!valgtMelding && !laster && !visNyMelding && (
             <div className={styles.tomtState}>
               <Inbox size={48} strokeWidth={1.2} />
               <p>Ingen melding valgt</p>
             </div>
           )}
 
-          {/* Vis den valgte meldingen når den er valgt */}
-          {valgtMelding && (
+          {/* Valgt melding */}
+          {valgtMelding && !visNyMelding && (
             <>
               <div className={styles.meldingsHeader}>
                 <h2 className={styles.meldingsOverskrift}>{valgtMelding.overskrift}</h2>
                 <div className={styles.skillelinje} />
               </div>
-
-              {/* white-space: pre-line i CSS gjør at \n rendres som linjeskift */}
               <p className={styles.meldingsInnhold}>{valgtMelding.innhold}</p>
-
               <div className={styles.meldingsBunn}>
                 <div className={styles.avsenderInfo}>
                   <div className={styles.avsenderAvatar}>
-                    {/* Forkort initialene til to bokstaver */}
                     {valgtMelding.avsender_navn.split(" ").map((n) => n[0]).join("")}
                   </div>
                   <div>
@@ -283,8 +355,6 @@ function Innboks() {
                     <div className={styles.meldingsDato}>{formaterDato(valgtMelding.sendt_dato)}</div>
                   </div>
                 </div>
-
-                {/* Svar-knapp som åpner skjemaet */}
                 <button
                   className={styles.svarKnapp}
                   onClick={() => setVisSvarSkjema(true)}
@@ -294,7 +364,6 @@ function Innboks() {
                 </button>
               </div>
 
-              {/* Svar-skjema vises kun når visSvarSkjema er true */}
               {visSvarSkjema && (
                 <div className={styles.svarSkjema}>
                   <p className={styles.svarTil}>Svar til: {valgtMelding.avsender_navn}</p>
@@ -328,10 +397,8 @@ function Innboks() {
             </>
           )}
         </main>
-
       </div>
     </div>
   );
 }
-
 export default Innboks;
