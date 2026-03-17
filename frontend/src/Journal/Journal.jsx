@@ -135,7 +135,7 @@ function Journal({ rolle }) {
         )}
 
         {valgtFane === "pasientHis" && (
-          <JournalHistorikk fnr={fnr} />
+          <JournalHistorikk fnr={fnr} rolle={rolle} />
         )}
 
       </div>

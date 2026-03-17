@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from "./Journalhistorikk.module.css"
 
-function JournalHistorikk({ fnr }) {
+function JournalHistorikk({ fnr, rolle }) {
     const [avtaler, setAvtaler] = useState([])
     const [feilmelding, setFeilmelding] = useState("")
     const [laster, setLaster] = useState(true)
@@ -62,7 +62,6 @@ function JournalHistorikk({ fnr }) {
             })
             const data = await respons.json()
             if (respons.ok) {
-                // Lukk skjema, nullstill felter og hent oppdatert liste
                 setVisSkjema(false)
                 setNyttTidspunkt("")
                 setNyKommentar("")
@@ -134,12 +133,11 @@ function JournalHistorikk({ fnr }) {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h2 className={styles.tittel}>Besøkshistorikk</h2>
-                <button
-                    className={styles.nyAvtaleKnapp}
-                    onClick={() => setVisSkjema(!visSkjema)}
-                >
-                    {visSkjema ? "Avbryt" : "+ Ny avtale"}
-                </button>
+                {rolle === "lege" && (
+                    <button className={styles.nyAvtaleKnapp} onClick={() => setVisSkjema(!visSkjema)}>
+                        {visSkjema ? "Avbryt" : "+ Ny avtale"}
+                    </button>
+                )}
             </div>
 
             {visSkjema && (
@@ -177,49 +175,47 @@ function JournalHistorikk({ fnr }) {
                             <span className={styles.avtaleTidspunkt}>{avtale.tidspunkt}</span>
                             <span className={styles.avtaleLege}>{avtale.legeNavn}</span>
                             <span className={styles.avtaleKommentar}>{avtale.kommentar || "Ingen kommentar"}</span>
-                            <div className={styles.avtaleKnapper}>
-                                <button 
-                                    className={styles.endreKnapp} 
-                                    onClick={() => {
+                            {rolle === "lege" && (
+                                <div className={styles.avtaleKnapper}>
+                                    <button className={styles.endreKnapp} onClick={() => {
                                         setRedigertAvtaleID(avtale.avtaleID)
                                         setRedigertTidspunkt(avtale.tidspunkt)
                                         setRedigertKommentar(avtale.kommentar || "")
-                                    }}
-                                >Endre</button>
-                                <button className={styles.slettKnapp} onClick={() => slettAvtale(avtale.avtaleID)}>Slett</button>
-                            </div>
-                                {/* Hvis denne avtalen er den som redigeres, vis redigeringsskjemaet */}
-                                    {redigertAvtaleID === avtale.avtaleID && (
-                                        <form className={styles.skjema} onSubmit={endreAvtale}>
-                                            <div className={styles.skjemaFelt}>
-                                                <label>Endre Tidspunkt</label>
-                                                <input
-                                                    type="datetime-local"
-                                                    value={redigertTidspunkt}
-                                                    onChange={(e) => setRedigertTidspunkt(e.target.value)}
-                                                    required
-                                                />
-                                            </div>
-                                            <div className={styles.skjemaFelt}>
-                                                <label>Endre Kommentar</label>
-                                                <input
-                                                    type="text"
-                                                    value={redigertKommentar}
-                                                    onChange={(e) => setRedigertKommentar(e.target.value)}
-                                                    placeholder="Valgfri kommentar"
-                                                />
-                                            </div>
-                                            {lagreError && <p style={{ color: "red" }}>{lagreError}</p>}
-                                            <div className={styles.avtaleKnapper}>
-                                                <button className={styles.lagreKnapp} type="submit">Lagre endring</button>
-                                                <button 
-                                                    className={styles.endreKnapp} 
-                                                    type="button"
-                                                    onClick={() => setRedigertAvtaleID(null)}
-                                                >Avbryt</button>
-                                            </div>
-                                        </form>
-                                    )}
+                                    }}>Endre</button>
+                                    <button className={styles.slettKnapp} onClick={() => slettAvtale(avtale.avtaleID)}>Slett</button>
+                                </div>
+                            )}
+                            {rolle === "lege" && redigertAvtaleID === avtale.avtaleID && (
+                                <form className={styles.endreSkjema} onSubmit={endreAvtale}>
+                                    <div className={styles.skjemaFelt}>
+                                        <label>Endre Tidspunkt</label>
+                                        <input
+                                            type="datetime-local"
+                                            value={redigertTidspunkt}
+                                            onChange={(e) => setRedigertTidspunkt(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.skjemaFelt}>
+                                        <label>Endre Kommentar</label>
+                                        <input
+                                            type="text"
+                                            value={redigertKommentar}
+                                            onChange={(e) => setRedigertKommentar(e.target.value)}
+                                            placeholder="Valgfri kommentar"
+                                        />
+                                    </div>
+                                    {lagreError && <p style={{ color: "red" }}>{lagreError}</p>}
+                                    <div className={styles.endreKnapper}>
+                                        <button className={styles.lagreKnapp} type="submit">Lagre endring</button>
+                                        <button
+                                            className={styles.endreKnapp}
+                                            type="button"
+                                            onClick={() => setRedigertAvtaleID(null)}
+                                        >Avbryt</button>
+                                    </div>
+                                </form>
+                            )}
                         </div>
                     ))
                 )}

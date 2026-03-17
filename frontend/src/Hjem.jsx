@@ -47,7 +47,7 @@ function Hjem({ rolle, brukerinfo }) {
     const pasientWidgets = [
         { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les meldinger fra legen din", filled: false, path: "/innboks" },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Avtaler", description: "Se og bestill timer", filled: false, path: "/avtaler" },
-        { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se din egen journal", filled: false, path: "/journal" },
+        { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se din egen journal", filled: false, path: `/journal/${brukerinfo?.fnr}` },
         { icon: <Pill size={36} strokeWidth={1.8} />, title: "Resept", description: "Se dine resepter", filled: false, path: "/resept" },
         { icon: <User size={36} strokeWidth={1.8} />, title: "Min profil", description: "Se og oppdater dine opplysninger", filled: true, path: "/profil" },
         { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },

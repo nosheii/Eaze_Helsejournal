@@ -169,7 +169,13 @@ def hent_pasient_avtaler(bruker = Depends(verify_token)):
         connection.close()
 
 @app.get("/avtaler/{fnr}")
-def hent_avtaler(fnr: str, bruker = Depends(krever_lege)):
+def hent_avtaler(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Du kan bare se dine egne avtaler"
+            )
     connection = getConnection()
     cursor = connection.cursor()
     try:
