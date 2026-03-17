@@ -13,7 +13,7 @@ import JournalOmPasient from "./JournalOmPasient";
 import JournalMedikament from "./JournalMedikament";
 import JournalVaksiner from "./JournalVaksiner";
 import JournalDokumenter from "./JournalDokumenter";
-import JournalHistorikk from "./JournalHistorikk";
+import JournalHistorikk from "./Journalhistorikk";
 
 function Journal({ rolle }) {
   const [valgtFaneParams, setValgtFane] = useSearchParams();

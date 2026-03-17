@@ -1,0 +1,67 @@
+.container {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: #1a2e2e;
+}
+
+.tittel {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a2e2e;
+    margin-bottom: 24px;
+}
+
+.seksjon {
+    margin-bottom: 28px;
+}
+
+.seksjonTittel {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #007185;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid #007185;
+}
+
+.ingenAvtaler {
+    color: #2a4040;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.avtaleKort {
+    background: #ffffff;
+    border-left: 3px solid #0aadad;
+    border-radius: 4px;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px 12px;
+}
+
+.avtaleTidspunkt {
+    font-weight: 700;
+    font-size: 14px;
+    color: #007185;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.avtaleLege {
+    font-size: 14px;
+    color: #1a2e2e;
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.avtaleKommentar {
+    font-size: 13px;
+    color: #4a6060;
+    font-style: italic;
+    grid-column: 2;
+    grid-row: 2;
+}
