@@ -12,6 +12,11 @@ function JournalHistorikk({ fnr }) {
     const [nyKommentar, setNyKommentar] = useState("")
     const [lagreError, setLagreError] = useState("")
 
+    // Redigerings-states
+    const [redigertAvtaleID, setRedigertAvtaleID] = useState(null)
+    const [redigertTidspunkt, setRedigertTidspunkt] = useState("")
+    const [redigertKommentar, setRedigertKommentar] = useState("")
+
     useEffect(() => {
         hentAvtaler()
     }, [fnr])
@@ -64,6 +69,54 @@ function JournalHistorikk({ fnr }) {
                 hentAvtaler()
             } else {
                 setLagreError(data.detail || "Kunne ikke opprette avtale")
+            }
+        } catch (error) {
+            setLagreError("Kunne ikke koble til server. Prøv igjen.")
+        }
+    }
+
+    async function slettAvtale(avtaleID) {
+        try {
+            const token = sessionStorage.getItem("token")
+            const respons = await fetch(`http://127.0.0.1:8000/avtaler/${avtaleID}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            })
+            if (respons.ok) {
+                hentAvtaler()
+            } else {
+                const data = await respons.json()
+                setFeilmelding(data.detail || "Kunne ikke slette avtale")
+            }
+        } catch (error) {
+            setFeilmelding("Kunne ikke koble til server. Prøv igjen.")
+        }
+    }
+
+    async function endreAvtale(e) {
+        e.preventDefault()
+        setLagreError("")
+        try {
+            const token = sessionStorage.getItem("token")
+            const respons = await fetch(`http://127.0.0.1:8000/avtaler/${redigertAvtaleID}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    tidspunkt: redigertTidspunkt,
+                    kommentar: redigertKommentar
+                })
+            })
+            const data = await respons.json()
+            if (respons.ok) {
+                setRedigertAvtaleID(null)
+                setRedigertTidspunkt("")
+                setRedigertKommentar("")
+                hentAvtaler()
+            } else {
+                setLagreError(data.detail || "Kunne ikke endre avtale")
             }
         } catch (error) {
             setLagreError("Kunne ikke koble til server. Prøv igjen.")
@@ -124,6 +177,49 @@ function JournalHistorikk({ fnr }) {
                             <span className={styles.avtaleTidspunkt}>{avtale.tidspunkt}</span>
                             <span className={styles.avtaleLege}>{avtale.legeNavn}</span>
                             <span className={styles.avtaleKommentar}>{avtale.kommentar || "Ingen kommentar"}</span>
+                            <div className={styles.avtaleKnapper}>
+                                <button 
+                                    className={styles.endreKnapp} 
+                                    onClick={() => {
+                                        setRedigertAvtaleID(avtale.avtaleID)
+                                        setRedigertTidspunkt(avtale.tidspunkt)
+                                        setRedigertKommentar(avtale.kommentar || "")
+                                    }}
+                                >Endre</button>
+                                <button className={styles.slettKnapp} onClick={() => slettAvtale(avtale.avtaleID)}>Slett</button>
+                            </div>
+                                {/* Hvis denne avtalen er den som redigeres, vis redigeringsskjemaet */}
+                                    {redigertAvtaleID === avtale.avtaleID && (
+                                        <form className={styles.skjema} onSubmit={endreAvtale}>
+                                            <div className={styles.skjemaFelt}>
+                                                <label>Endre Tidspunkt</label>
+                                                <input
+                                                    type="datetime-local"
+                                                    value={redigertTidspunkt}
+                                                    onChange={(e) => setRedigertTidspunkt(e.target.value)}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className={styles.skjemaFelt}>
+                                                <label>Endre Kommentar</label>
+                                                <input
+                                                    type="text"
+                                                    value={redigertKommentar}
+                                                    onChange={(e) => setRedigertKommentar(e.target.value)}
+                                                    placeholder="Valgfri kommentar"
+                                                />
+                                            </div>
+                                            {lagreError && <p style={{ color: "red" }}>{lagreError}</p>}
+                                            <div className={styles.avtaleKnapper}>
+                                                <button className={styles.lagreKnapp} type="submit">Lagre endring</button>
+                                                <button 
+                                                    className={styles.endreKnapp} 
+                                                    type="button"
+                                                    onClick={() => setRedigertAvtaleID(null)}
+                                                >Avbryt</button>
+                                            </div>
+                                        </form>
+                                    )}
                         </div>
                     ))
                 )}
