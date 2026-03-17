@@ -65,3 +65,85 @@
     grid-column: 2;
     grid-row: 2;
 }
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.nyAvtaleKnapp {
+    padding: 8px 16px;
+    background: #0aadad;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.nyAvtaleKnapp:hover {
+    background: #007185;
+}
+
+.skjema {
+    background: #ffffff;
+    border: 1px solid #c8e8e8;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skjemaFelt {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.skjemaFelt label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #007185;
+}
+
+.skjemaFelt input {
+    padding: 8px 12px;
+    border: 1px solid #c8e8e8;
+    border-radius: 4px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: #1a2e2e;
+    outline: none;
+}
+
+.skjemaFelt input:focus {
+    border-color: #0aadad;
+}
+
+.lagreKnapp {
+    padding: 8px 16px;
+    background: #007185;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    align-self: flex-start;
+}
+
+.lagreKnapp:hover {
+    background: #0aadad;
+}
