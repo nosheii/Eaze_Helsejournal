@@ -4,7 +4,7 @@ body {
 }
 
 .navbar {
-    background: #0097b2;
+    background: #0a9bb5;
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
@@ -19,22 +19,23 @@ body {
 }
 
 .navbar-logo {
-    height: 40px;
+    height: 50px;
     width: auto;
 }
 
 .navbar-links {
     display: flex;
-    gap: 2rem;
-    align-items: ;
+    gap: 3rem;
+    align-items: center;
     flex: 1;
-    justify-content: center;
+    justify-content: right;
 }
 
 .navbar-link {
-    color: white;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: rgb(255, 255, 255);
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     transition: opacity 0.2s;
 }
 
@@ -53,13 +54,15 @@ body {
 }
 
 .navbar-user-name {
-    color: white;
-    font-size: 1rem;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 1.3rem;
 }
 
 .navbar-profile-img {
     width: 45px;
     height: 45px;
+    border: 2px solid #007185 ;
     border-radius: 50%;
     object-fit: cover;
 }
