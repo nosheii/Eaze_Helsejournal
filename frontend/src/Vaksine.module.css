@@ -23,13 +23,14 @@
     padding: 10px 20px;
 }
 .vaksineKnapp {
-    background-color: #77c6d3;
-    color: #000000;
-    font-size: 14px;
-    border: 1.5px solid #007185;
-    font-weight: bold;
+    background: #0aadad;
+    color: #ffffff;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
     padding: 10px 20px;
-    border-radius: 10px;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
