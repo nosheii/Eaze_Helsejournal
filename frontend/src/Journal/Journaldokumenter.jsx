@@ -269,7 +269,7 @@ function JournalDokumenter({ journalNr }) {
                                         <span>{dok.legeNavn || "—"}</span>
                                     </div>
                                     <div className={styles.detaljerMidt}>
-                                        <span><strong>Klokkeslett opprettet:</strong></span>
+                                        <span><strong>Dato opprettet:</strong></span>
                                         <span>{dok.opprettetDato}</span>
                                     </div>
                                     <button className={styles.apneKnapp} onClick={() => setApentDokument(dok)}>Åpne</button>
