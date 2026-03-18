@@ -1,3 +1,5 @@
+// Tilda Løvold - 273803
+
 import { useState, useEffect } from 'react'
 import styles from "./Journalhistorikk.module.css"
 
