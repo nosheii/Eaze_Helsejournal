@@ -1,0 +1,29 @@
+.side {
+    display: flex;
+    flex-direction: row;
+
+    align-content: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+
+}
+
+.kort {
+    background: darkgrey;
+    border: 1.5px solid grey;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 500px;
+    list-style-position: inside;
+}
+
+.tittel {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    color: #000000;
+    padding-bottom: 10px;
+    font-weight: 400;
+    text-decoration: underline;
+}
