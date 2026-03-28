@@ -50,7 +50,7 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
 
             <Routes>
                 <Route path="/hjem" element={<Hjem rolle={rolle} brukerinfo={brukerinfo} />} />
-                <Route path="/innboks" element={<Innboks />} />
+                <Route path="/innboks" element={<Innboks rolle={rolle} />} />
                 <Route path="/avtaler" element={<Avtaler rolle={rolle} />} />
                 <Route path="/vaksine" element={<Vaksine rolle={rolle} brukerinfo={brukerinfo} />} />
                 <Route path="/journal" element={<JournalSok />} />
