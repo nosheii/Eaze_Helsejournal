@@ -157,19 +157,20 @@ function Innboks({ rolle }) {
   // Denne funksjonen handterer sok etter brukere nar legen vil sende ny melding
   // pasienter bruker ikke denne funksjonen siden de henter legene sine direkte via hentMineLeger
   async function sokEtterBruker(tekst) {
-    setSokeTekst(tekst) // oppdaterer soketeksten i state sann at den vises i sokefeltet
-    if (tekst.length < 2) { // soketeksten ma vare minst 2 tegn for a gjore sok
+    setSokeTekst(tekst)
+    if (tekst.length < 2) {
       setSokeResultater([])
       return
     }
-    const token = sessionStorage.getItem("token") // token for a autentisere kallet til backend
-    const respons = await fetch(`http://localhost:8000/brukere/sok?navn=${tekst}`, {
+    const token = sessionStorage.getItem("token")
+    const respons = await fetch(`http://localhost:8000/brukere/søk?navn=${tekst}`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
     const data = await respons.json()
-    setSokeResultater(data.resultater) // oppdaterer sokeResultater i state med resultatene fra backend sann at de kan vises i UI
+    // sjekker at data.resultater faktisk finnes før vi setter state
+    // hvis kallet feiler returnerer backend ikke en resultater-liste og da krasjer siden
+    setSokeResultater(data.resultater ?? [])
   }
-
   // Denne funksjonen henter pasientens leger fra backend nar ny melding skjemaet apnes
   // den kalles kun for pasienter siden de ikke kan soke fritt blant alle brukere
   // pasienter kan bare sende meldinger til leger de har hatt avtaler med
