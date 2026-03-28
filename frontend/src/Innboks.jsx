@@ -4,21 +4,23 @@
 // Venstre side er en liste over meldinger, høyre side viser den valgte meldingen.
 
 // bruker useState og useEffect fra React for å håndtere state og sideeffekter
-// useState = huske verdier mellom re-renders altså når noe oppdateres på siden (f.eks. når vi får data fra backend)
-// useEffect = gjøre noe én gang når komponenten lastes inn som å hente fra bavkend
+// useState = huske verdier mellom re-renders altså når noe oppdateres på siden (f.eks. naar noe oppdateres pa siden)
+// useEffect = gjore noe en gang nar komponenten lastes inn som a hente fra backend
 import { useState, useEffect } from "react";
 import { Reply, PenSquare, Inbox, MailOpen, SendHorizonal } from "lucide-react";
 import styles from "./Innboks.module.css";
 
-function Innboks() {
-  // meldinger starter som en tom liste, men den vil fylles inn etterhvert når vi får data fra backend
+// rolle-propen brukes til a bestemme hvilket sokeendepunkt vi skal bruke
+// lege soker etter pasienter via /brukere/sok, pasient henter sine leger via /brukere/mine-leger
+function Innboks({ rolle }) {
+  // meldinger starter som en tom liste, men den vil fylles inn etterhvert nar vi far data fra backend
   const [meldinger, setMeldinger] = useState([]);
 
-  // valgtId betyr hvilken melding som er valgt i listen for øyeblikket (den som vises akk nå)
-  // det at den er null i starten betyr bare ingen melding valgt ennå (mens siden loader)
+  // valgtId betyr hvilken melding som er valgt i listen for oyeblikket (den som vises akk na)
+  // det at den er null i starten betyr bare ingen melding valgt enna (mens siden loader)
   const [valgtId, setValgtId] = useState(null);
 
-  // laster er en bolean som sier at den venter på data fra backend
+  // laster er en bolean som sier at den venter pa data fra backend
   const [laster, setLaster] = useState(true);
 
   // visSvarSkjema er en boolean som styrer om svar-skjemaet vises eller ikke
@@ -28,36 +30,36 @@ function Innboks() {
   const [svarTekst, setSvarTekst] = useState("");
 
   //boolean som styrer om den nytt meldingskjema skal vises eller ikke.
-  //Stater som false sånn at det ikke vises før brukeren har trykket på knappen
+  //Stater som false sann at det ikke vises for brukeren har trykket pa knappen
   const [visNyMelding, setVisNyMelding] = useState(false);
 
-  //useState for å holde søketeksten i søkefeltet for meldinger, starter som en tom streng
+  //useState for a holde soketeksten i sokefeltet for meldinger, starter som en tom streng
   const [sokeTekst, setSokeTekst] = useState("");
 
-  //useState for å holde resultatene av søket, starter som en tom array]
+  //useState for a holde resultatene av soket, starter som en tom array
   const [sokeResultater, setSokeResultater] = useState([]);
 
-  //denne holder på den valgte mottakeren i ny meldingsskjema.
-  //starter som null slik at ingen mottaker er valgt før brukeren velger en
+  //denne holder pa den valgte mottakeren i ny meldingsskjema.
+  //starter som null slik at ingen mottaker er valgt for brukeren velger en
   const [valgtMottaker, setValgtMottaker] = useState(null);
 
-  // denne holder på den nye overskriften i ny meldingsskjema, starter som en tom streng
+  // denne holder pa den nye overskriften i ny meldingsskjema, starter som en tom streng
   const [nyOverskrift, setNyOverskrift] = useState("");
 
-  // holder på det nye innholdet i meldingsskjema, starter som en tom streng
+  // holder pa det nye innholdet i meldingsskjema, starter som en tom streng
   const [nyInnhold, setNyInnhold] = useState("");
 
-  // Denne styrer om utboks skal vises eller ikke, akkurat som visNyMelding og visSvarSkjema, 
-  // starter som false sånn at den ikke vises før brukeren klikker på utboks-knappen
+  // Denne styrer om utboks skal vises eller ikke, akkurat som visNyMelding og visSvarSkjema,
+  // starter som false sann at den ikke vises for brukeren klikker pa utboks-knappen
   const [visUtboks, setVisUtboks] = useState(false);
 
-  // useEffect kjører koden inni seg en gang når komponenten er klar
-  // visUtboks er lagt til i dependency-arrayen sånn at useEffect kjører på nytt når vi bytter mellom innboks og utboks
-  // når komponenten er klar, gå inn i useeffect og hent meldingene fra backend
+  // useEffect kjorer koden inni seg en gang nar komponenten er klar
+  // visUtboks er lagt til i dependency-arrayen sann at useEffect kjorer pa nytt nar vi bytter mellom innboks og utboks
+  // nar komponenten er klar, ga inn i useeffect og hent meldingene fra backend
   useEffect(() => {
     const token = sessionStorage.getItem("token");
 
-    // velg riktig URL basert på om vi viser utboks eller innboks
+    // velg riktig URL basert pa om vi viser utboks eller innboks
     const url = visUtboks
       ? "http://localhost:8000/meldinger/sendt"
       : "http://localhost:8000/meldinger"
@@ -65,9 +67,9 @@ function Innboks() {
     fetch(url, {
       headers: {
         // verify_token i FastAPI forventer tokenet i Authorization-headeren
-        // på bavkend så bare sjekker den om det er riktig bruker med riktig token
-        // også joiner den meldingene i databasen med brukernavn sånn at vi også får hvem som har sendt den
-        // uten å sende nytt kall 
+        // pa backend sa bare sjekker den om det er riktig bruker med riktig token
+        // ogsa joiner den meldingene i databasen med brukernavn sann at vi ogsa far hvem som har sendt den
+        // uten a sende nytt kall
         "Authorization": `Bearer ${token}`
       }
     })
@@ -75,27 +77,27 @@ function Innboks() {
       .then((data) => {
         setMeldinger(data.meldinger);
 
-        // når vi først ser meldingene så viser den første melding i listen automatisk
+        // nar vi forst ser meldingene sa viser den forste melding i listen automatisk
         if (data.meldinger.length > 0) {
           setValgtId(data.meldinger[0].meldingID);
         }
 
-        setLaster(false); // når dataen er hentet så skrurs av spinneren
+        setLaster(false); // nar dataen er hentet sa skrurs av spinneren
       })
       .catch((feil) => {
-        // hvis noe er feil i databasen(kallet ikke funker), så skrys av spinneren og vises feilmelding i konsollen
+        // hvis noe er feil i databasen(kallet ikke funker), sa skrys av spinneren og vises feilmelding i konsollen
         console.error("Kunne ikke hente meldinger:", feil);
         setLaster(false);
       });
-  }, [visUtboks]); // kjør på nytt når visUtboks endrer seg
+  }, [visUtboks]); // kjor pa nytt nar visUtboks endrer seg
 
-  // Nå skal det finnes valgt melding i listen
-  // Dette oppdateres automatisk når bruker klikker på en melding
+  // Na skal det finnes valgt melding i listen
+  // Dette oppdateres automatisk nar bruker klikker pa en melding
   // valgtId er det som finner fram riktig melding i listen
   const valgtMelding = meldinger.find((m) => m.meldingID === valgtId);
 
-  // Denne funksjonen markerer en melding som lest når den blir klikket på
-  // Den gjør det med å kalle PATCH endpointen i bavkend som oppdaterer feltet som lest i db
+  // Denne funksjonen markerer en melding som lest nar den blir klikket pa
+  // Den gjor det med a kalle PATCH endpointen i backend som oppdaterer feltet som lest i db
   function merkSomLest(meldingID) {
     const token = sessionStorage.getItem("token");
 
@@ -104,7 +106,7 @@ function Innboks() {
       headers: { "Authorization": `Bearer ${token}` }
     })
       .then(() => {
-        // oppdaterer meldingen i useState sånn at den blir lest i UI uten å måtte hente listen på nytt
+        // oppdaterer meldingen i useState sann at den blir lest i UI uten a matte hente listen pa nytt
         setMeldinger((prev) =>
           prev.map((m) =>
             m.meldingID === meldingID ? { ...m, lest: 1 } : m
@@ -114,13 +116,13 @@ function Innboks() {
       .catch((feil) => console.error("Kunne ikke merke som lest:", feil));
   }
 
-  // Nå er det funksjonen som kjører når en melding blir klikket på i listen
+  // Na er det funksjonen som kjorer nar en melding blir klikket pa i listen
   function velgMelding(melding) {
     setValgtId(melding.meldingID);
-    setVisSvarSkjema(false); // lukk svarskjema når man bytter melding
+    setVisSvarSkjema(false); // lukk svarskjema nar man bytter melding
     setSvarTekst("");
-    // meldingen blir kun lest når den klikkes på, ikke når den bare vises i listen
-    // så kjører funksjonen merkSomLest som oppdaterer både front og back
+    // meldingen blir kun lest nar den klikkes pa, ikke nar den bare vises i listen
+    // sa kjorer funksjonen merkSomLest som oppdaterer bade front og back
     if (melding.lest === 0) {
       merkSomLest(melding.meldingID);
     }
@@ -152,25 +154,38 @@ function Innboks() {
     }
   }
 
-  // Denne funksjonen håndterer søk etter brukere når de vil sende ny melding
-  async function søkEtterBruker(tekst) {
-    setSokeTekst(tekst) // oppdaterer søketeskten i state sånn at den vises i søkefeltet
-    if (tekst.length < 2) { //søketeksten må være minst 2 tegn for å gjøre søk.
+  // Denne funksjonen handterer sok etter brukere nar legen vil sende ny melding
+  // pasienter bruker ikke denne funksjonen siden de henter legene sine direkte via hentMineLeger
+  async function sokEtterBruker(tekst) {
+    setSokeTekst(tekst) // oppdaterer soketeksten i state sann at den vises i sokefeltet
+    if (tekst.length < 2) { // soketeksten ma vare minst 2 tegn for a gjore sok
       setSokeResultater([])
       return
     }
-    const token = sessionStorage.getItem("token") //token for å autentisere kallet til backend
-    const respons = await fetch(`http://localhost:8000/brukere/søk?navn=${tekst}`, {
+    const token = sessionStorage.getItem("token") // token for a autentisere kallet til backend
+    const respons = await fetch(`http://localhost:8000/brukere/sok?navn=${tekst}`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
     const data = await respons.json()
-    setSokeResultater(data.resultater) // oppdaterer søkeResultater i state med resultatene fra backend sånn at de kan vises i UI
+    setSokeResultater(data.resultater) // oppdaterer sokeResultater i state med resultatene fra backend sann at de kan vises i UI
   }
 
-  // Denne funksjonen er veldig lik sendSvar, men bare at den sender en helt ny melding 
-  // Til den valgte mottakeren i stedet for at avsender er den meldingen som er valgt fra før av.
+  // Denne funksjonen henter pasientens leger fra backend nar ny melding skjemaet apnes
+  // den kalles kun for pasienter siden de ikke kan soke fritt blant alle brukere
+  // pasienter kan bare sende meldinger til leger de har hatt avtaler med
+  async function hentMineLeger() {
+    const token = sessionStorage.getItem("token") // token for a autentisere kallet til backend
+    const respons = await fetch("http://localhost:8000/brukere/mine-leger", {
+      headers: { "Authorization": `Bearer ${token}` }
+    })
+    const data = await respons.json()
+    setSokeResultater(data.resultater) // bruker samme sokeResultater state for a vise legene i dropdown
+  }
+
+  // Denne funksjonen er veldig lik sendSvar, men bare at den sender en helt ny melding
+  // Til den valgte mottakeren i stedet for at avsender er den meldingen som er valgt fra for av.
   async function sendNyMelding() {
-    const token = sessionStorage.getItem("token"); //verifiserer token for autentisering av kallet fra backend
+    const token = sessionStorage.getItem("token"); // verifiserer token for autentisering av kallet fra backend
     const respons = await fetch("http://localhost:8000/meldinger", {
       method: "POST",
       headers: {
@@ -186,7 +201,7 @@ function Innboks() {
 
     if (respons.ok) {
       // Hvis melding blir sendt, lukk skjema og nullstill alle state variabler vi brukte.
-      // Dette er viktig for å tømme skjema og gjøre det klart for neste gang en bruker vil sende ny melding
+      // Dette er viktig for a tomme skjema og gjore det klart for neste gang en bruker vil sende ny melding
       setVisNyMelding(false);
       setNyOverskrift("");
       setNyInnhold("");
@@ -196,8 +211,8 @@ function Innboks() {
     }
   }
 
-  // denne er for å formatere dato fra backend til lesbar norsk stil
-  // backend returnerer en ISO-streng som ser ut som "2024-06-01T12:34:56, og denne funksjonen gjør den om til "1. juni 2024, 12:34"
+  // denne er for a formatere dato fra backend til lesbar norsk stil
+  // backend returnerer en ISO-streng som ser ut som "2024-06-01T12:34:56, og denne funksjonen gjor den om til "1. juni 2024, 12:34"
   function formaterDato(datoStreng) {
     const dato = new Date(datoStreng);
     return dato.toLocaleDateString("nb-NO", {
@@ -213,19 +228,23 @@ function Innboks() {
     <div className={styles.side}>
       <div className={styles.layout}>
 
-        {/* VENSTRE: sidebar */}
         <aside className={styles.sidebar}>
+          {/* nar knappen klikkes, apne ny melding skjema */}
+          {/* for pasienter henter vi legene deres med en gang skjemaet apnes siden de ikke kan soke selv */}
           <button
             className={styles.nyMeldingKnapp}
-            onClick={() => setVisNyMelding(true)}
+            onClick={() => {
+              setVisNyMelding(true);
+              if (rolle === "pasient") hentMineLeger();
+            }}
           >
             <PenSquare size={18} strokeWidth={1.8} />
             Skriv ny melding
           </button>
 
           {/* Innboks og utboks toggle-knapper */}
-          {/* setValgtId(null) nullstiller valgt melding når vi bytter mellom innboks og utboks */}
-          {/* uten dette vil React prøve å vise den forrige meldingen med feil feltnamn og krasje */}
+          {/* setValgtId(null) nullstiller valgt melding nar vi bytter mellom innboks og utboks */}
+          {/* uten dette vil React prove a vise den forrige meldingen med feil feltnavn og krasje */}
           <div className={styles.utOginnBoks}>
             <button
               className={styles.innboksKnapp}
@@ -275,10 +294,8 @@ function Innboks() {
           </div>
         </aside>
 
-        {/* HØYRE: meldingsvisning */}
         <main className={styles.meldingsVisning}>
 
-          {/* Ny melding skjema */}
           {visNyMelding && (
             <div className={styles.nyMeldingSkjema}>
               <h3 className={styles.nyMeldingTittel}>Ny melding</h3>
@@ -291,22 +308,29 @@ function Innboks() {
                     <button onClick={() => {
                       setValgtMottaker(null);
                       setSokeTekst("");
-                    }}>✕</button>
+                      {/* hvis pasient, vis legene igjen etter at chip fjernes sann at de kan velge pa nytt */ }
+                      if (rolle === "pasient") hentMineLeger();
+                    }}>x</button>
                   </div>
                 ) : (
-                  <div className={styles.søkeKontainer}>
-                    <input
-                      className={styles.nyMeldingInput}
-                      placeholder="Søk etter navn..."
-                      value={sokeTekst}
-                      onChange={(e) => søkEtterBruker(e.target.value)}
-                    />
+                  <div className={styles.sokeKontainer}>
+                    {/* sokefeltet vises kun for leger siden pasienter henter legene sine direkte */}
+                    {/* pasienter ser bare en dropdown med sine leger nar skjemaet apnes */}
+                    {rolle !== "pasient" && (
+                      <input
+                        className={styles.nyMeldingInput}
+                        placeholder="Sok etter navn..."
+                        value={sokeTekst}
+                        onChange={(e) => sokEtterBruker(e.target.value)}
+                      />
+                    )}
+                    {/* dropdown med sokeresultater vises for bade lege og pasient */}
                     {sokeResultater.length > 0 && (
-                      <div className={styles.søkeDropdown}>
+                      <div className={styles.sokeDropdown}>
                         {sokeResultater.map((bruker) => (
                           <button
                             key={bruker.userID}
-                            className={styles.søkeResultat}
+                            className={styles.sokeResultat}
                             onClick={() => {
                               setValgtMottaker(bruker);
                               setSokeResultater([]);
@@ -361,7 +385,6 @@ function Innboks() {
             </div>
           )}
 
-          {/* Tomt state */}
           {!valgtMelding && !laster && !visNyMelding && (
             <div className={styles.tomtState}>
               <Inbox size={48} strokeWidth={1.2} />
@@ -369,7 +392,6 @@ function Innboks() {
             </div>
           )}
 
-          {/* Valgt melding */}
           {valgtMelding && !visNyMelding && (
             <>
               <div className={styles.meldingsHeader}>
@@ -380,7 +402,7 @@ function Innboks() {
               <div className={styles.meldingsBunn}>
                 <div className={styles.avsenderInfo}>
                   <div className={styles.avsenderAvatar}>
-                    {/* Vis initialer basert på om vi er i innboks eller utboks */}
+                    {/* Vis initialer basert pa om vi er i innboks eller utboks */}
                     {visUtboks
                       ? valgtMelding.mottaker_navn.split(" ").map((n) => n[0]).join("")
                       : valgtMelding.avsender_navn.split(" ").map((n) => n[0]).join("")

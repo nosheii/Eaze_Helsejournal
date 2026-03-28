@@ -447,11 +447,11 @@
 }
 
 /* Søke dropdown med resultater */
-.søkeKontainer {
+.sokeKontainer {
   position: relative;
 }
 
-.søkeDropdown {
+.sokeDropdown {
   position: absolute;
   top: 100%;
   left: 0;
@@ -465,7 +465,7 @@
   margin-top: 4px;
 }
 
-.søkeResultat {
+.sokeResultat {
   display: block;
   width: 100%;
   padding: 12px 16px;
@@ -479,7 +479,7 @@
   transition: background 0.15s ease;
 }
 
-.søkeResultat:hover {
+.sokeResultat:hover {
   background: #e8f7f7;
   color: #0aadad;
 }
