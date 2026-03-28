@@ -483,3 +483,56 @@
   background: #e8f7f7;
   color: #0aadad;
 }
+
+.utOginnBoks {
+  display: flex;
+  gap: 10px;
+}
+
+.innboksKnapp {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 10px 20px;
+  background: #c4ebeb;
+  color: #058181;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 4px 14px rgba(10, 173, 173, 0.25);
+  width: 50%;
+}
+
+.innboksKnapp:hover {
+  background: #6ed7d7;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px #03595959;
+}
+
+.utboksKnapp {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 10px 20px;
+  background: #c4ebeb;
+  color: #058181;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 4px 14px rgba(10, 173, 173, 0.25);
+  width: 50%;
+}
+
+.utboksKnapp:hover {
+  background: #6ed7d7;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px #03595959;
+}

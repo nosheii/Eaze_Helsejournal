@@ -96,7 +96,8 @@ def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection.close()
     return {"status":"Success!"}
 
-@app.get("/brukere/søk")
+@app.get("/brukere/søk") # Endpoint for å søke etter pasienter basert på navn,
+    #krever at brukeren er en lege (krever_lege). Denne brukes i innboks søkefunksjonen 
 def søk_brukere(navn: str, bruker = Depends(krever_lege)):
     """" Søker etter pasienter basert på navn. Dette er kun tilgjengelig for leger.
     Her brukes en SQL-spørring med LIKE for å finne pasienter der fornavn eller etternavn matcher søket.
@@ -114,6 +115,26 @@ def søk_brukere(navn: str, bruker = Depends(krever_lege)):
             WHERE (p.forNavn || ' ' || p.etterNavn) LIKE ?
             ORDER BY p.etterNavn ASC
         """, (f"%{navn}%",))
+
+        resultater = cursor.fetchall()
+        return {"resultater": [dict(r) for r in resultater]}
+    finally:
+        connection.close()
+
+@app.get("/brukere/mine-leger") # Endpoint for å hente alle leger som har hatt avtaler med innlogget pasient
+def hent_mine_leger(bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT DISTINCT
+                u.userID,
+                a.navn
+            FROM avtale av
+            JOIN ansatt a ON av.ansattID = a.ansattID
+            JOIN user u ON u.ansattID = a.ansattID
+            WHERE av.fnr = ?
+        """, (bruker["brukerinfo"]["fnr"],))
 
         resultater = cursor.fetchall()
         return {"resultater": [dict(r) for r in resultater]}
@@ -452,6 +473,33 @@ def ny_vaksine(vaksine_data: VaksineRequest, bruker = Depends(krever_lege)):
             "vaksineID": cursor.lastrowid
         }
     
+    finally:
+        connection.close()
+
+@app.get("/meldinger/sendt")
+def hent_sendte_meldinger(bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                m.meldingID,
+                m.overskrift,
+                m.innhold,
+                m.sendt_dato,
+                m.lest,
+                m.avsenderID,
+                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as mottaker_navn
+            FROM melding m
+            JOIN user u ON m.mottakerID = u.userID
+            LEFT JOIN ansatt a ON u.ansattID = a.ansattID
+            LEFT JOIN pasient p ON u.fnr = p.fnr
+            WHERE m.avsenderID = ?
+            ORDER BY m.sendt_dato DESC
+        """, (bruker["userID"],))
+
+        meldinger = cursor.fetchall()
+        return {"meldinger": [dict(m) for m in meldinger]}
     finally:
         connection.close()
 

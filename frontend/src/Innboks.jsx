@@ -7,7 +7,7 @@
 // useState = huske verdier mellom re-renders altså når noe oppdateres på siden (f.eks. når vi får data fra backend)
 // useEffect = gjøre noe én gang når komponenten lastes inn som å hente fra bavkend
 import { useState, useEffect } from "react";
-import { Reply, PenSquare, Inbox } from "lucide-react";
+import { Reply, PenSquare, Inbox, MailOpen, SendHorizonal } from "lucide-react";
 import styles from "./Innboks.module.css";
 
 function Innboks() {
@@ -47,13 +47,22 @@ function Innboks() {
   // holder på det nye innholdet i meldingsskjema, starter som en tom streng
   const [nyInnhold, setNyInnhold] = useState("");
 
+  // Denne styrer om utboks skal vises eller ikke, akkurat som visNyMelding og visSvarSkjema, 
+  // starter som false sånn at den ikke vises før brukeren klikker på utboks-knappen
+  const [visUtboks, setVisUtboks] = useState(false);
+
   // useEffect kjører koden inni seg en gang når komponenten er klar
-  // tom array på slutten betyr "ingen avhengigheter", altså ingen variabler som skal triggere denne koden på nytt når de endres.
+  // visUtboks er lagt til i dependency-arrayen sånn at useEffect kjører på nytt når vi bytter mellom innboks og utboks
   // når komponenten er klar, gå inn i useeffect og hent meldingene fra backend
   useEffect(() => {
     const token = sessionStorage.getItem("token");
 
-    fetch("http://localhost:8000/meldinger", {
+    // velg riktig URL basert på om vi viser utboks eller innboks
+    const url = visUtboks
+      ? "http://localhost:8000/meldinger/sendt"
+      : "http://localhost:8000/meldinger"
+
+    fetch(url, {
       headers: {
         // verify_token i FastAPI forventer tokenet i Authorization-headeren
         // på bavkend så bare sjekker den om det er riktig bruker med riktig token
@@ -78,7 +87,7 @@ function Innboks() {
         console.error("Kunne ikke hente meldinger:", feil);
         setLaster(false);
       });
-  }, []);
+  }, [visUtboks]); // kjør på nytt når visUtboks endrer seg
 
   // Nå skal det finnes valgt melding i listen
   // Dette oppdateres automatisk når bruker klikker på en melding
@@ -199,6 +208,7 @@ function Innboks() {
       minute: "2-digit"
     });
   }
+
   return (
     <div className={styles.side}>
       <div className={styles.layout}>
@@ -212,6 +222,26 @@ function Innboks() {
             <PenSquare size={18} strokeWidth={1.8} />
             Skriv ny melding
           </button>
+
+          {/* Innboks og utboks toggle-knapper */}
+          {/* setValgtId(null) nullstiller valgt melding når vi bytter mellom innboks og utboks */}
+          {/* uten dette vil React prøve å vise den forrige meldingen med feil feltnamn og krasje */}
+          <div className={styles.utOginnBoks}>
+            <button
+              className={styles.innboksKnapp}
+              onClick={() => { setVisUtboks(false); setValgtId(null); }}
+            >
+              <Inbox size={20} strokeWidth={1.3} />
+              Innboks
+            </button>
+            <button
+              className={styles.utboksKnapp}
+              onClick={() => { setVisUtboks(true); setValgtId(null); }}
+            >
+              <SendHorizonal size={20} strokeWidth={1.3} />
+              Utboks
+            </button>
+          </div>
 
           <div className={styles.meldingListe}>
             {laster && <div className={styles.laster}>Henter meldinger...</div>}
@@ -228,7 +258,10 @@ function Innboks() {
                   onClick={() => velgMelding(melding)}
                 >
                   <div className={styles.kortTopp}>
-                    <span className={styles.kortAvsender}>{melding.avsender_navn}</span>
+                    {/* I utboksen viser vi hvem meldingen ble sendt til, i innboksen hvem som sendte den */}
+                    <span className={styles.kortAvsender}>
+                      {visUtboks ? melding.mottaker_navn : melding.avsender_navn}
+                    </span>
                     {melding.lest === 0 && <span className={styles.ulestDot} />}
                   </div>
                   <span className={styles.kortOverskrift}>{melding.overskrift}</span>
@@ -347,21 +380,31 @@ function Innboks() {
               <div className={styles.meldingsBunn}>
                 <div className={styles.avsenderInfo}>
                   <div className={styles.avsenderAvatar}>
-                    {valgtMelding.avsender_navn.split(" ").map((n) => n[0]).join("")}
+                    {/* Vis initialer basert på om vi er i innboks eller utboks */}
+                    {visUtboks
+                      ? valgtMelding.mottaker_navn.split(" ").map((n) => n[0]).join("")
+                      : valgtMelding.avsender_navn.split(" ").map((n) => n[0]).join("")
+                    }
                   </div>
                   <div>
-                    <div className={styles.avsenderLabel}>Fra</div>
-                    <div className={styles.avsenderNavn}>{valgtMelding.avsender_navn}</div>
+                    {/* I utboksen viser vi "Til" i stedet for "Fra" */}
+                    <div className={styles.avsenderLabel}>{visUtboks ? "Til" : "Fra"}</div>
+                    <div className={styles.avsenderNavn}>
+                      {visUtboks ? valgtMelding.mottaker_navn : valgtMelding.avsender_navn}
+                    </div>
                     <div className={styles.meldingsDato}>{formaterDato(valgtMelding.sendt_dato)}</div>
                   </div>
                 </div>
-                <button
-                  className={styles.svarKnapp}
-                  onClick={() => setVisSvarSkjema(true)}
-                >
-                  <Reply size={18} strokeWidth={1.8} />
-                  Svar avsender
-                </button>
+                {/* Svar-knappen vises kun i innboksen, ikke i utboksen */}
+                {!visUtboks && (
+                  <button
+                    className={styles.svarKnapp}
+                    onClick={() => setVisSvarSkjema(true)}
+                  >
+                    <Reply size={18} strokeWidth={1.8} />
+                    Svar avsender
+                  </button>
+                )}
               </div>
 
               {visSvarSkjema && (
