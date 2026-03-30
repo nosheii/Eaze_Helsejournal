@@ -9,7 +9,7 @@
 .vaksineKort {
     align-items: flex-start;
     background-color: #ffffff;
-    border: 1.3px solid #707272;
+  border: 1.3px solid #36a6ba;
     border-radius: 5px;
     width: 100%;
     max-width: 100%;
@@ -39,7 +39,7 @@
 }
 .vaksineHeader h2 {
     background-color: #d9d9d9;
-    font-size: 23px;
+    font-size: 20px;
     font-weight: bold;
     margin: 0;
     padding-left: 120px;
