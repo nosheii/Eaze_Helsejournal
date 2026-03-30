@@ -1,5 +1,4 @@
 // Viser informasjon om nettsiden og hvordan den fungerer, litt om oss :)
-// Lege har knapp for å legge til vaksine
 
 import styles from "./Informasjon.module.css";
 
