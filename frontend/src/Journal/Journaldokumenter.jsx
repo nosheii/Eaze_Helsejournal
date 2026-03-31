@@ -14,7 +14,7 @@ const tomtSkjema = {
     kommentar: "",
 };
 
-function JournalDokumenter({ journalNr }) {
+function JournalDokumenter({ journalNr, fnr }) {
     const token = sessionStorage.getItem("token");
 
     const [dokumenter, setDokumenter] = useState([]);
@@ -27,10 +27,22 @@ function JournalDokumenter({ journalNr }) {
     const [skjema, setSkjema] = useState(tomtSkjema);
     const [lagrer, setLagrer] = useState(false);
     const [apentDokument, setApentDokument] = useState(null);
+    const [kritiskInfo, setKritiskInfo] = useState([]);
+    const [visKritisk, setVisKritisk] = useState(false);
 
     useEffect(() => {
         if (journalNr) hentDokumenter();
     }, [journalNr]);
+
+    useEffect(() => {
+        if (!fnr) return;
+        fetch(`${API}/pasient/${fnr}/info`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(data => setKritiskInfo(data.kritisk_info))
+            .catch(() => {});
+    }, [fnr]);
 
     async function hentDokumenter() {
         setLaster(true);
@@ -87,6 +99,26 @@ function JournalDokumenter({ journalNr }) {
         return true;
     });
 
+    const kritiskInfoBlokk = (
+        <div className={styles.skjemaHoyre}>
+            <span className={styles.kritiskInfoTittel}>Kritisk info:</span>
+            <button
+                className={styles.kritiskKnapp}
+                onClick={() => setVisKritisk(!visKritisk)}
+            >
+                {visKritisk ? "▲ Skjul" : "▼ Vis kritisk info"}
+            </button>
+            {visKritisk && (
+                <ul className={styles.kritiskListe}>
+                    {kritiskInfo.length === 0
+                        ? <li>Ingen kritisk info registrert</li>
+                        : kritiskInfo.map((item, i) => <li key={i}>{item}</li>)
+                    }
+                </ul>
+            )}
+        </div>
+    );
+
     // --- Opprett skjema ---
     if (visSkjema) {
         return (
@@ -112,16 +144,7 @@ function JournalDokumenter({ journalNr }) {
                             <option>Resept</option>
                         </select>
                     </div>
-
-                    <div className={styles.skjemaHoyre}>
-                        <span className={styles.kritiskInfoTittel}>Kritisk info:</span>
-                        <div className={styles.kritiskKnapper}>
-                            <button className={styles.kritiskKnapp}>Allergi</button>
-                            <button className={styles.kritiskKnapp}>HLR</button>
-                            <button className={styles.kritiskKnapp}>Smitte</button>
-                        </div>
-                        <p className={styles.kritiskInfoTekst}>Ingen kritisk info registrert enda</p>
-                    </div>
+                    {kritiskInfoBlokk}
                 </div>
 
                 <div className={styles.soapGrid}>
@@ -175,14 +198,7 @@ function JournalDokumenter({ journalNr }) {
                         <p><strong>Dokumentnavn:</strong> {innhold.dokumentnavn}</p>
                         <p><strong>Kategori:</strong> {innhold.kategori}</p>
                     </div>
-                    <div className={styles.skjemaHoyre}>
-                        <span className={styles.kritiskInfoTittel}>Kritisk info:</span>
-                        <div className={styles.kritiskKnapper}>
-                            <button className={styles.kritiskKnapp}>Allergi</button>
-                            <button className={styles.kritiskKnapp}>HLR</button>
-                            <button className={styles.kritiskKnapp}>Smitte</button>
-                        </div>
-                    </div>
+                    {kritiskInfoBlokk}
                 </div>
 
                 <div className={styles.soapGrid}>
@@ -228,8 +244,8 @@ function JournalDokumenter({ journalNr }) {
                     value={tilFilter}
                     onChange={(e) => setTilFilter(e.target.value)}
                 />
-                <button className={styles.filterLogo}>{<Funnel />} </button>
-                <button className={styles.filterKnapp}>Filter </button>
+                <button className={styles.filterLogo}>{<Funnel />}</button>
+                <button className={styles.filterKnapp}>Filter</button>
             </div>
 
             <div className={styles.listeHeader}>
