@@ -1,4 +1,3 @@
-from multiprocessing.dummy import connection
 from os import name
 import sqlite3
 
@@ -132,7 +131,7 @@ def init_db():
 )
 """)
 
-connection.execute("""
+    connection.execute("""
     CREATE TABLE IF NOT EXISTS pasient_info (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     fnr         TEXT NOT NULL,
@@ -141,8 +140,8 @@ connection.execute("""
     FOREIGN KEY (fnr) REFERENCES pasient(fnr)
 )
 """)
-connection.commit()
-connection.close()
+    connection.commit()
+    connection.close()
 
     
 
