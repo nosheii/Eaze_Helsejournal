@@ -6,7 +6,7 @@ from jose import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
-from typing import Optional
+from typing import Optional, List
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
@@ -473,6 +473,51 @@ def ny_vaksine(vaksine_data: VaksineRequest, bruker = Depends(krever_lege)):
             "vaksineID": cursor.lastrowid
         }
     
+    finally:
+        connection.close()
+
+class PasientInfoRequest(BaseModel):
+    om_pasient: List[str]
+    kritisk_info: List[str]
+
+@app.get("/pasient/{fnr}/info")
+def hent_pasient_info(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(status_code=403, detail="Du kan bare se din egen info")
+    
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(
+            "SELECT kategori, innhold FROM pasient_info WHERE fnr = ?", (fnr,)
+        )
+        rader = cursor.fetchall()
+        return {
+            "om_pasient":   [r["innhold"] for r in rader if r["kategori"] == "om_pasient"],
+            "kritisk_info": [r["innhold"] for r in rader if r["kategori"] == "kritisk_info"]
+        }
+    finally:
+        connection.close()
+
+@app.put("/pasient/{fnr}/info")
+def oppdater_pasient_info(fnr: str, data: PasientInfoRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("DELETE FROM pasient_info WHERE fnr = ?", (fnr,))
+        for innhold in data.om_pasient:
+            cursor.execute(
+                "INSERT INTO pasient_info (fnr, kategori, innhold) VALUES (?, 'om_pasient', ?)",
+                (fnr, innhold)
+            )
+        for innhold in data.kritisk_info:
+            cursor.execute(
+                "INSERT INTO pasient_info (fnr, kategori, innhold) VALUES (?, 'kritisk_info', ?)",
+                (fnr, innhold)
+            )
+        connection.commit()
+        return {"status": "ok"}
     finally:
         connection.close()
 
