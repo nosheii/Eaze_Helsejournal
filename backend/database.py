@@ -134,12 +134,12 @@ def init_db():
 
 connection.execute("""
     CREATE TABLE IF NOT EXISTS pasient_info (
-        id          INTEGER PRIMARY KEY AUTOINCREMENT,
-        fnr         TEXT NOT NULL,
-        kategori    TEXT NOT NULL,
-        innhold     TEXT NOT NULL,
-        FOREIGN KEY (fnr) REFERENCES pasient(fnr)
-    )
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    fnr         TEXT NOT NULL,
+    kategori    TEXT NOT NULL,
+    innhold     TEXT NOT NULL,
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr)
+)
 """)
     connection.commit()
     connection.close()
