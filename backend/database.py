@@ -141,8 +141,8 @@ connection.execute("""
     FOREIGN KEY (fnr) REFERENCES pasient(fnr)
 )
 """)
-    connection.commit()
-    connection.close()
+connection.commit()
+connection.close()
 
     
 
