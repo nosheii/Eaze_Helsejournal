@@ -83,6 +83,25 @@ class AvtaleOppdaterRequest(BaseModel):
     tidspunkt: str
     kommentar: str = None
 
+class ReseptRequest(BaseModel):
+    fnr: str
+    mediNavn: str
+    dosering: str
+    mengde: str
+    reiterasjoner: int = 0
+    utlopsdato: str
+    kommentar: str = None
+
+class ReseptOppdaterRequest(BaseModel):
+    mediNavn: str
+    dosering: str
+    mengde: str
+    reiterasjoner: int = 0
+    utlopsdato: str
+    kommentar: str = None
+    status: str = "aktiv"
+
+
 @app.post("/leggTilPas") # Endpoint for å legge til en ny pasient
 def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection = getConnection()
@@ -672,6 +691,97 @@ def merk_som_lest(meldingID: int, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+@app.get("/resept/{fnr}") # Henter alle resepter for en pasient
+def hent_resept(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Du kan bare se dine egne resepter"
+            )
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                r.reseptID,
+                r.mediNavn,
+                r.dosering,
+                r.mengde,
+                r.reiterasjoner,
+                r.utlopsdato,
+                r.kommentar,
+                r.status,
+                r.opprettetDato,
+                a.navn as legeNavn
+            FROM resept r
+            LEFT JOIN ansatt a ON r.ansattID = a.ansattID
+            WHERE r.fnr = ?
+            ORDER BY r.opprettetDato DESC
+        """, (fnr,))
+        resepter = cursor.fetchall()
+        return {"resepter": [dict(r) for r in resepter]}
+    finally:
+        connection.close()
+
+@app.post("/resept") # Oppretter en ny resept, krever at brukeren er en lege
+def opprett_resept(resept_data: ReseptRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            resept_data.fnr,
+            bruker["brukerinfo"]["ansattID"],
+            resept_data.mediNavn,
+            resept_data.dosering,
+            resept_data.mengde,
+            resept_data.reiterasjoner,
+            resept_data.utlopsdato,
+            resept_data.kommentar
+        ))
+        connection.commit()
+        return {"status": "Resept opprettet!", "reseptID": cursor.lastrowid}
+    finally:
+        connection.close()
+
+@app.put("/resept/{reseptID}") # Endrer en eksisterende resept, krever at brukeren er en lege
+def oppdater_resept(reseptID: int, resept_data: ReseptOppdaterRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            UPDATE resept
+            SET mediNavn = ?, dosering = ?, mengde = ?, reiterasjoner = ?, utlopsdato = ?, kommentar = ?, status = ?
+            WHERE reseptID = ?
+        """, (
+            resept_data.mediNavn,
+            resept_data.dosering,
+            resept_data.mengde,
+            resept_data.reiterasjoner,
+            resept_data.utlopsdato,
+            resept_data.kommentar,
+            resept_data.status,
+            reseptID
+        ))
+        connection.commit()
+        return {"status": "Resept oppdatert!"}
+    finally:
+        connection.close()
+
+@app.delete("/resept/{reseptID}") # Sletter en resept, krever at brukeren er en lege
+def slett_resept(reseptID: int, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("DELETE FROM resept WHERE reseptID = ?", (reseptID,))
+        connection.commit()
+        return {"status": "Resept slettet!"}
+    finally:
+        connection.close()
+        
 # Hemmelighet for å signere JWT tokens - VIKTIG: Bytt dette til noe hemmelig i produksjon!
 SECRET_KEY = "din-hemmelige-nokkel-som-ingen-andre-skal-vite-om-123"
 ALGORITHM = "HS256"

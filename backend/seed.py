@@ -258,22 +258,45 @@ def seed():
         """, (avsender, mottaker, overskrift, innhold))
     print("✓ Opprettet testmeldinger mellom leger og pasienter")
 
-    # Legger inn testresepter for pasienten #
-    resepter = [
+    # Testresepter for Tilda Løvold (123456) - skrevet av Dr. Hansen
+    resepter_tilda = [
         ("Paracet 500 mg tabletter", "1-2 tabletter ved behov, maks 3 ganger daglig", "20 stk", 2, "2026-09-10", "Følg pakningsvedlegg. Ikke kombiner med annen paracetamol.", "aktiv"),
         ("Nasonex nesespray 50 µg/dose", "1 spray i hvert nesebor morgen og kveld", "1 flaske", 1, "2026-10-23", "Ved tett nese og allergi", "aktiv"),
         ("Sobril 10 mg tabletter", "1 tablett ved behov (maks 3 pr dag)", "25 stk", 0, "2026-11-23", "Korttidsbruk ved angst. Ikke kjør bil etter inntak.", "aktiv"),
         ("Ibux 400 mg tabletter", "1 tablett 3 ganger daglig", "30 stk", 1, "2024-05-01", "Ta med mat", "arkivert"),
     ]
-
-    for mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status in resepter:
+    for mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status in resepter_tilda:
         cursor.execute("""
             INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, ("123456", ansatt_id, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
-
+        """, ("123456", ansatt_id_hansen, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
     print("✓ Opprettet testresepter for Tilda Løvold")
-    
+
+    # Testresepter for Mumtaz Cade (21267788) - skrevet av Dr. Ghulam
+    resepter_mumtaz = [
+        ("Metformin 500 mg tabletter", "1 tablett 2 ganger daglig", "60 stk", 3, "2026-12-01", "Ta med mat. Kontroller blodsukkeret regelmessig.", "aktiv"),
+        ("Lisinopril 10 mg tabletter", "1 tablett daglig", "30 stk", 2, "2026-08-15", "Blodtrykksmedisinen. Ikke slutt brått.", "aktiv"),
+        ("Voltaren 50 mg tabletter", "1 tablett 3 ganger daglig", "20 stk", 0, "2024-03-10", "Kortvarig bruk mot smerter", "arkivert"),
+    ]
+    for mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status in resepter_mumtaz:
+        cursor.execute("""
+            INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, ("21267788", ansatt_id_ghulam, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
+    print("✓ Opprettet testresepter for Mumtaz Cade")
+
+    # Testresepter for Aurora Krogstad (987654) - skrevet av Dr. Hansen
+    resepter_aurora = [
+        ("Cetirizin 10 mg tabletter", "1 tablett daglig ved behov", "30 stk", 1, "2026-07-20", "Mot allergisymptomer", "aktiv"),
+        ("Prednisolon 5 mg tabletter", "Som foreskrevet", "20 stk", 0, "2024-11-30", "Kortvarig kur", "arkivert"),
+    ]
+    for mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status in resepter_aurora:
+        cursor.execute("""
+            INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, ("987654", ansatt_id_hansen, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
+    print("✓ Opprettet testresepter for Aurora Krogstad")
+
     connection.commit()
     connection.close()
 
