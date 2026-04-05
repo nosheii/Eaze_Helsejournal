@@ -207,7 +207,7 @@ function JournalMedikament({ fnr, rolle }) {
             {/* Ny resept-knapp (kun lege) */}
             {rolle === "lege" && aktivFane === "aktiv" && (
                 <button className={styles.nyKnapp} onClick={() => setVisSkjema(!visSkjema)}>
-                    {visSkjema ? "Avbryt" : "+ Aktiver resept"}
+                    {visSkjema ? "Avbryt" : "+ Legg til nytt resept"}
                 </button>
             )}
 
@@ -228,7 +228,7 @@ function JournalMedikament({ fnr, rolle }) {
                             <input type="text" value={nyMengde} onChange={(e) => setNyMengde(e.target.value)} required placeholder="F.eks. 20 stk" />
                         </div>
                         <div className={styles.skjemaFelt}>
-                            <label>Reiterasjoner</label>
+                            <label>Antall uttak</label>
                             <input type="number" value={nyReiterasjoner} onChange={(e) => setNyReiterasjoner(parseInt(e.target.value))} min="0" />
                         </div>
                         <div className={styles.skjemaFelt}>
@@ -255,7 +255,7 @@ function JournalMedikament({ fnr, rolle }) {
                             <th>Medikament</th>
                             <th>Dosering</th>
                             <th>Mengde</th>
-                            {rolle === "lege" && <th>Reiterasjoner</th>}
+                            {rolle === "lege" && <th>Antall uttak</th>}
                             <th>Utløpsdato</th>
                             <th>Kommentar</th>
                             {rolle === "lege" && <th>Status</th>}
@@ -285,11 +285,11 @@ function JournalMedikament({ fnr, rolle }) {
                                                     setRedigertUtlopsdato(resept.utlopsdato)
                                                     setRedigertKommentar(resept.kommentar || "")
                                                     setRedigertStatus(resept.status)
-                                                }}>✏️ Rediger</button>
-                                                <button className={styles.slettKnapp} onClick={() => slettResept(resept.reseptID)}>🗑️ Slett</button>
+                                                }}>Rediger</button>
+                                                <button className={styles.slettKnapp} onClick={() => slettResept(resept.reseptID)}> Slett</button>
                                             </div>
                                         ) : (
-                                            <button className={styles.fornydKnapp} onClick={() => fornydResept(resept)}>Forny</button>
+                                            <button className={styles.fornyKnapp} onClick={() => fornyResept(resept)}>Be om fornyelse</button>
                                         )}
                                     </td>
                                 </tr>
@@ -311,7 +311,7 @@ function JournalMedikament({ fnr, rolle }) {
                                                         <input type="text" value={redigertMengde} onChange={(e) => setRedigertMengde(e.target.value)} required />
                                                     </div>
                                                     <div className={styles.skjemaFelt}>
-                                                        <label>Reiterasjoner</label>
+                                                        <label>Antall uttak</label>
                                                         <input type="number" value={redigertReiterasjoner} onChange={(e) => setRedigertReiterasjoner(parseInt(e.target.value))} min="0" />
                                                     </div>
                                                     <div className={styles.skjemaFelt}>
