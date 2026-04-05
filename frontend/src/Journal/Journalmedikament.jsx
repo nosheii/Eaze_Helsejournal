@@ -29,6 +29,12 @@ function JournalMedikament({ fnr, rolle }) {
     const [redigertKommentar, setRedigertKommentar] = useState("")
     const [redigertStatus, setRedigertStatus] = useState("aktiv")
 
+    // Fornyelse-states
+    const [visFornyModal, setVisFornyModal] = useState(false)
+    const [valgtResept, setValgtResept] = useState(null)
+    const [fornyMelding, setFornyMelding] = useState("")
+    const [sendtSuksess, setSendtSuksess] = useState(false)
+
     useEffect(() => {
         hentResepter()
     }, [fnr])
@@ -145,14 +151,10 @@ function JournalMedikament({ fnr, rolle }) {
         }
     }
 
-    async function fornydResept(resept) {
+    async function fornyResept() {
         try {
             const token = sessionStorage.getItem("token")
 
-            // Hent brukerens userID fra token for å finne legens userID
-            const tokenData = JSON.parse(atob(token.split('.')[1]))
-
-            // Hent legens userID fra backend
             const legeRespons = await fetch(`http://127.0.0.1:8000/bruker/lege/${fnr}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             })
@@ -166,15 +168,24 @@ function JournalMedikament({ fnr, rolle }) {
                 },
                 body: JSON.stringify({
                     mottakerID: legeData.userID,
-                    overskrift: `Fornyelse av resept: ${resept.mediNavn}`,
-                    innhold: `Jeg ønsker å fornye resepten min på ${resept.mediNavn} (${resept.dosering}). Vennligst ta kontakt hvis du trenger mer informasjon.`
+                    overskrift: `Forespørsel om fornyelse: ${valgtResept.mediNavn}`,
+                    innhold: fornyMelding
                 })
             })
             if (respons.ok) {
-                alert("Forespørsel om fornyelse sendt til legen din!")
+                setSendtSuksess(true)
+                setTimeout(() => {
+                    setVisFornyModal(false)
+                    setSendtSuksess(false)
+                    setValgtResept(null)
+                    setFornyMelding("")
+                }, 2000)
+            } else {
+                const data = await respons.json()
+                setLagreError(data.detail || "Kunne ikke sende forespørsel")
             }
         } catch (error) {
-            alert("Kunne ikke sende forespørsel. Prøv igjen.")
+            setLagreError("Kunne ikke koble til server. Prøv igjen.")
         }
     }
 
@@ -286,10 +297,14 @@ function JournalMedikament({ fnr, rolle }) {
                                                     setRedigertKommentar(resept.kommentar || "")
                                                     setRedigertStatus(resept.status)
                                                 }}>Rediger</button>
-                                                <button className={styles.slettKnapp} onClick={() => slettResept(resept.reseptID)}> Slett</button>
+                                                <button className={styles.slettKnapp} onClick={() => slettResept(resept.reseptID)}>Slett</button>
                                             </div>
                                         ) : (
-                                            <button className={styles.fornyKnapp} onClick={() => fornyResept(resept)}>Be om fornyelse</button>
+                                            <button className={styles.fornydKnapp} onClick={() => {
+                                                setValgtResept(resept)
+                                                setFornyMelding(`Hei, jeg ønsker å fornye resepten min på ${resept.mediNavn} (${resept.dosering}). \n\nVennligst ta kontakt hvis du trenger mer informasjon.`)
+                                                setVisFornyModal(true)
+                                            }}>Be om fornyelse</button>
                                         )}
                                     </td>
                                 </tr>
@@ -343,6 +358,32 @@ function JournalMedikament({ fnr, rolle }) {
                         ))}
                     </tbody>
                 </table>
+            )}
+
+            {/* Popup for fornyelse */}
+            {visFornyModal && (
+                <div className={styles.popupBakgrunn} onClick={() => setVisFornyModal(false)}>
+                    <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
+                        <h3 className={styles.popupTittel}>Be om fornyelse</h3>
+                        <p className={styles.popupUnderTittel}>
+                            Melding sendes til din fastlege. Du kan redigere den før sending.
+                        </p>
+                        <textarea
+                            className={styles.popupTextarea}
+                            value={fornyMelding}
+                            onChange={(e) => setFornyMelding(e.target.value)}
+                            rows={5}
+                        />
+                        {sendtSuksess && (
+                            <p className={styles.suksess}>✓ Forespørsel sendt til legen din!</p>
+                        )}
+                        {lagreError && <p style={{ color: "red" }}>{lagreError}</p>}
+                        <div className={styles.popupKnapper}>
+                            <button className={styles.lagreKnapp} onClick={fornyResept}>Send forespørsel</button>
+                            <button className={styles.avbrytKnapp} onClick={() => setVisFornyModal(false)}>Avbryt</button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     )

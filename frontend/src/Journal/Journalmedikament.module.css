@@ -245,20 +245,80 @@
     background: #fdf2f0;
 }
 
-.fornyKnapp {
-    padding: 4px 10px;
+.fornydKnapp {
+    padding: 5px 10px;
     background: #0aadad;
     color: #ffffff;
     border: none;
     border-radius: 4px;
     font-family: 'Nunito', 'Segoe UI', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s ease;
     white-space: nowrap;
 }
 
-.fornyKnapp:hover {
+.fornydKnapp:hover {
     background: #007185;
+}
+
+/* Fornyelse-popup */
+.popupBakgrunn {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 32px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.popupTittel {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a2e2e;
+    margin: 0;
+}
+
+.popupUnderTittel {
+    font-size: 13px;
+    color: #4a6060;
+    margin: 0;
+}
+
+.popupTextarea {
+    padding: 10px 14px;
+    border: 1px solid #c8e8e8;
+    border-radius: 4px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: #1a2e2e;
+    outline: none;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.popupTextarea:focus {
+    border-color: #0aadad;
+}
+
+.popupKnapper {
+    display: flex;
+    gap: 8px;
 }

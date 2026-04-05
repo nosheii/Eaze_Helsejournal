@@ -782,6 +782,25 @@ def slett_resept(reseptID: int, bruker = Depends(krever_lege)):
     finally:
         connection.close()
         
+@app.get("/bruker/lege/{fnr}")
+def hent_lege_for_pasient(fnr: str, bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT u.userID 
+            FROM user u
+            JOIN journal j ON u.ansattID = j.ansattID
+            WHERE j.fnr = ?
+            LIMIT 1
+        """, (fnr,))
+        lege = cursor.fetchone()
+        if not lege:
+            raise HTTPException(status_code=404, detail="Fant ingen lege for denne pasienten")
+        return {"userID": lege["userID"]}
+    finally:
+        connection.close()
+
 # Hemmelighet for å signere JWT tokens - VIKTIG: Bytt dette til noe hemmelig i produksjon!
 SECRET_KEY = "din-hemmelige-nokkel-som-ingen-andre-skal-vite-om-123"
 ALGORITHM = "HS256"
