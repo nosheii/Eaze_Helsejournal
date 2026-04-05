@@ -258,7 +258,22 @@ def seed():
         """, (avsender, mottaker, overskrift, innhold))
     print("✓ Opprettet testmeldinger mellom leger og pasienter")
 
+    # Legger inn testresepter for pasienten #
+    resepter = [
+        ("Paracet 500 mg tabletter", "1-2 tabletter ved behov, maks 3 ganger daglig", "20 stk", 2, "2026-09-10", "Følg pakningsvedlegg. Ikke kombiner med annen paracetamol.", "aktiv"),
+        ("Nasonex nesespray 50 µg/dose", "1 spray i hvert nesebor morgen og kveld", "1 flaske", 1, "2026-10-23", "Ved tett nese og allergi", "aktiv"),
+        ("Sobril 10 mg tabletter", "1 tablett ved behov (maks 3 pr dag)", "25 stk", 0, "2026-11-23", "Korttidsbruk ved angst. Ikke kjør bil etter inntak.", "aktiv"),
+        ("Ibux 400 mg tabletter", "1 tablett 3 ganger daglig", "30 stk", 1, "2024-05-01", "Ta med mat", "arkivert"),
+    ]
 
+    for mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status in resepter:
+        cursor.execute("""
+            INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, ("123456", ansatt_id, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
+
+    print("✓ Opprettet testresepter for Tilda Løvold")
+    
     connection.commit()
     connection.close()
 
