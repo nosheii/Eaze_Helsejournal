@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import styles from "./JournalOmPasient.module.css";
 
-function JournalOmPasient({ fnr }) {
+function JournalOmPasient({ fnr, rolle }) {
     const [omPasient, setOmPasient] = useState([]);
     const [kritiskInfo, setKritiskInfo] = useState([]);
     const [laster, setLaster] = useState(true);
     const [feil, setFeil] = useState(null);
     const [redigerer, setRedigerer] = useState(false);
+    
 
 
     const token = sessionStorage.getItem("token");
@@ -88,13 +89,14 @@ function JournalOmPasient({ fnr }) {
                     </li>
                 ))}
             </ul>
-            {redigerer && <button onClick={() => setKritiskInfo([...kritiskInfo, ""])}>+ Legg til</button>}
+           {redigerer && <button onClick={() => setKritiskInfo([...kritiskInfo, ""])}>+ Legg til</button>}
         </div>
 
-        {redigerer
-            ? <button onClick={lagre}>Lagre</button>
-            : <button onClick={() => setRedigerer(true)}>Rediger</button>
-        }
+        {rolle !== "pasient" && (
+            redigerer
+                ? <button onClick={lagre}>Lagre</button>
+                : <button onClick={() => setRedigerer(true)}>Rediger</button>
+        )}
     </div>
 );
 }

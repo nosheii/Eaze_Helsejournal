@@ -119,8 +119,8 @@ function Journal({ rolle }) {
             kan hente riktige data fra backend */}
 
         {valgtFane === "pasientInfo" && (
-          <JournalOmPasient fnr={fnr} />
-        )}
+          <JournalOmPasient fnr={fnr} rolle={rolle} />
+        )}  
 
         {valgtFane === "pasientMed" && (
           <JournalMedikament fnr={fnr} rolle={rolle} />
@@ -131,8 +131,8 @@ function Journal({ rolle }) {
         )}
 
         {valgtFane === "pasientDok" && (
-          <JournalDokumenter journalNr={journalNr} fnr={fnr} />
-        )}  
+          <JournalDokumenter journalNr={journalNr} fnr={fnr} rolle={rolle} />
+      )}
 
         {valgtFane === "pasientHis" && (
           <JournalHistorikk fnr={fnr} rolle={rolle} />

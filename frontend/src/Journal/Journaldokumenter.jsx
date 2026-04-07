@@ -14,7 +14,7 @@ const tomtSkjema = {
     kommentar: "",
 };
 
-function JournalDokumenter({ journalNr, fnr }) {
+function JournalDokumenter({ journalNr, fnr, rolle }) {
     const token = sessionStorage.getItem("token");
 
     const [dokumenter, setDokumenter] = useState([]);
@@ -225,9 +225,11 @@ function JournalDokumenter({ journalNr, fnr }) {
 
     return (
         <div className={styles.kontainer}>
-            <button className={styles.opprettKnapp} onClick={() => setVisSkjema(true)}>
-                Opprett nytt dokument +
+            {rolle !== "pasient" && (
+                <button className={styles.opprettKnapp} onClick={() => setVisSkjema(true)}>
+             Opprett nytt dokument +
             </button>
+            )}
 
             <div className={styles.filterRad}>
                 <span className={styles.filterLabel}>Finn dokument fra periode:</span>
