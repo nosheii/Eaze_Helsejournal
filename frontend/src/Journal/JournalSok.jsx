@@ -1,3 +1,4 @@
+// Tilda Løvold - 273803
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './JournalSok.module.css'

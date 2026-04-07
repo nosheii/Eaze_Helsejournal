@@ -140,8 +140,28 @@ def init_db():
     FOREIGN KEY (fnr) REFERENCES pasient(fnr)
 )
 """)
+    
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS resept (
+    reseptID        INTEGER PRIMARY KEY AUTOINCREMENT,
+    fnr             TEXT NOT NULL,
+    ansattID        INTEGER NOT NULL,
+    mediNavn        TEXT NOT NULL,
+    dosering        TEXT NOT NULL,
+    mengde          TEXT NOT NULL,
+    reiterasjoner   INTEGER DEFAULT 0,
+    utlopsdato      TEXT NOT NULL,
+    kommentar       TEXT,
+    status          TEXT NOT NULL DEFAULT 'aktiv',
+    opprettetDato   TEXT NOT NULL DEFAULT (date('now')),
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+    )
+""")
+    
     connection.commit()
     connection.close()
+
 
     
 
