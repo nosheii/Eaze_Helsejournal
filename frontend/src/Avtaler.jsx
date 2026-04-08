@@ -1,4 +1,5 @@
-//NORA AL-TAY
+//NORA AL-TAY - 146274
+//Avtaler.jsx
 import { useState, useEffect } from 'react'
 import styles from './Avtaler.module.css'
 // hjelpefunksjon for å hjelpe med å parse datoene som kommer fra backend, hvis de kommer i ulike formater

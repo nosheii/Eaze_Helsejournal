@@ -133,3 +133,19 @@
     color: #5a8080;
     line-height: 1.4;
 }
+
+.ikonWrapper {
+    position: relative;
+    display: inline-flex;
+}
+
+.ulestDot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    background-color: #e53e3e;
+    border-radius: 50%;
+    border: 2px solid white;
+}
