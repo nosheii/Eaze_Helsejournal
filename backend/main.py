@@ -542,39 +542,11 @@ def oppdater_pasient_info(fnr: str, data: PasientInfoRequest, bruker = Depends(k
 
 @app.get("/meldinger/sendt")
 def hent_sendte_meldinger(bruker = Depends(verify_token)):
-    connection = getConnection()
-    cursor = connection.cursor()
-    try:
-        cursor.execute("""
-            SELECT
-                m.meldingID,
-                m.overskrift,
-                m.innhold,
-                m.sendt_dato,
-                m.lest,
-                m.avsenderID,
-                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as mottaker_navn
-            FROM melding m
-            JOIN user u ON m.mottakerID = u.userID
-            LEFT JOIN ansatt a ON u.ansattID = a.ansattID
-            LEFT JOIN pasient p ON u.fnr = p.fnr
-            WHERE m.avsenderID = ?
-            ORDER BY m.sendt_dato DESC
-        """, (bruker["userID"],))
-
-        meldinger = cursor.fetchall()
-        return {"meldinger": [dict(m) for m in meldinger]}
-    finally:
-        connection.close()
-
-@app.get("/meldinger/sendt")
-def hent_sendte_meldinger(bruker = Depends(verify_token)):
     """
     Her henter jeg alle meldinger som pålogget bruker har sendt.
     Jeg joiner både ansatt og pasient tabellen, for å vise mottakerens navn i respons
     Uansett om det er lege eller pasient
     Så slipper frontend å gjøre en ekstra request for å hente mottaker navn basert på userid
-
     """
     connection = getConnection()
     cursor = connection.cursor()
@@ -611,6 +583,9 @@ def hent_meldinger(bruker = Depends(verify_token)):
     COALESCE betyr "bruk den første verdien som ikke er NULL".
     Vi bruker det fordi avsenderen kan være enten en lege (navn fra ansatt-tabellen)
     eller en pasient (navn fra pasient-tabellen), og vi vil alltid få ett navn tilbake.
+
+    p.fnr er lagt til i SELECT slik at legen kan se fødselsnummeret til pasienten
+    som sendte meldingen direkte i innboksen.
     """
     connection = getConnection()
     cursor = connection.cursor()
@@ -624,7 +599,8 @@ def hent_meldinger(bruker = Depends(verify_token)):
                 m.sendt_dato,
                 m.lest,
                 m.avsenderID,
-                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as avsender_navn
+                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as avsender_navn,
+                p.fnr as avsender_fnr
             FROM melding m
             JOIN user u ON m.avsenderID = u.userID
             LEFT JOIN ansatt a ON u.ansattID = a.ansattID
@@ -942,6 +918,3 @@ async def login(login_data: LoginRequest):
         
     finally:
         connection.close()
-
-
-

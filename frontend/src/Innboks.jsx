@@ -1,4 +1,4 @@
-//NORA AL-TAY - 146274
+//NORA AL-TAY
 // Innboks.jsx
 // Denne komponenten henter meldinger fra backend og viser dem i en to-kolonne-layout.
 // Venstre side er en liste over meldinger, høyre side viser den valgte meldingen.
@@ -225,6 +225,15 @@ function Innboks({ rolle }) {
     });
   }
 
+  // Hjelpefunksjon som returnerer avsendernavnet med fnr hvis brukeren er lege og avsenderen er en pasient
+  // avsender_fnr er null hvis avsenderen er en lege, så sjekker det før det viser fnr
+  function visAvsenderNavn(melding) {
+    if (!visUtboks && rolle === "lege" && melding.avsender_fnr) {
+      return `${melding.avsender_navn} (${melding.avsender_fnr})`;
+    }
+    return visUtboks ? melding.mottaker_navn : melding.avsender_navn;
+  }
+
   return (
     <div className={styles.side}>
       <div className={styles.layout}>
@@ -278,9 +287,8 @@ function Innboks({ rolle }) {
                   onClick={() => velgMelding(melding)}
                 >
                   <div className={styles.kortTopp}>
-                    {/* I utboksen viser vi hvem meldingen ble sendt til, i innboksen hvem som sendte den */}
                     <span className={styles.kortAvsender}>
-                      {visUtboks ? melding.mottaker_navn : melding.avsender_navn}
+                      {visAvsenderNavn(melding)}
                     </span>
                     {melding.lest === 0 && <span className={styles.ulestDot} />}
                   </div>
@@ -413,7 +421,7 @@ function Innboks({ rolle }) {
                     {/* I utboksen viser vi "Til" i stedet for "Fra" */}
                     <div className={styles.avsenderLabel}>{visUtboks ? "Til" : "Fra"}</div>
                     <div className={styles.avsenderNavn}>
-                      {visUtboks ? valgtMelding.mottaker_navn : valgtMelding.avsender_navn}
+                      {visAvsenderNavn(valgtMelding)}
                     </div>
                     <div className={styles.meldingsDato}>{formaterDato(valgtMelding.sendt_dato)}</div>
                   </div>
