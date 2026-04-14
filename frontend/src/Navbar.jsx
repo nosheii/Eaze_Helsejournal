@@ -14,6 +14,7 @@ function Navbar({ brukerinfo, onLoggUt }) {
                     <Link to="/innboks" className="navbar-link">Innboks</Link>
                     <Link to="/avtaler" className="navbar-link">Avtaler</Link>
                     <Link to="/journal" className="navbar-link">Journal</Link>
+                    <Link to="/informasjon" className="navbar-link">Informasjon</Link>
                 </div>
             </div>
             

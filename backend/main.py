@@ -6,7 +6,7 @@ from jose import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
-from typing import Optional
+from typing import Optional, List
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
@@ -60,6 +60,11 @@ class Pasient(BaseModel): # Definerer en Pydantic-modell for Pasient som brukes 
 class JournalRequest(BaseModel): # Modell for å opprette en journal, inneholder fnr til pasienten og ansattID til legen som oppretter journalen
     fnr: str
 
+class VaksineRequest(BaseModel):
+    fnr: str
+    vaksineNavn: str
+    dato: str
+
 class DokumentRequest(BaseModel):
     journalNr: int
     tekst: str
@@ -68,6 +73,34 @@ class MeldingRequest(BaseModel):
     mottakerID: int
     overskrift: str
     innhold: str
+
+class AvtaleRequest(BaseModel):
+    fnr: str
+    tidspunkt: str
+    kommentar: str = None
+
+class AvtaleOppdaterRequest(BaseModel):
+    tidspunkt: str
+    kommentar: str = None
+
+class ReseptRequest(BaseModel):
+    fnr: str
+    mediNavn: str
+    dosering: str
+    mengde: str
+    reiterasjoner: int = 0
+    utlopsdato: str
+    kommentar: str = None
+
+class ReseptOppdaterRequest(BaseModel):
+    mediNavn: str
+    dosering: str
+    mengde: str
+    reiterasjoner: int = 0
+    utlopsdato: str
+    kommentar: str = None
+    status: str = "aktiv"
+
 
 @app.post("/leggTilPas") # Endpoint for å legge til en ny pasient
 def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
@@ -81,6 +114,181 @@ def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
     connection.commit()
     connection.close()
     return {"status":"Success!"}
+
+@app.get("/brukere/søk") # Endpoint for å søke etter pasienter basert på navn,
+    #krever at brukeren er en lege (krever_lege). Denne brukes i innboks søkefunksjonen 
+def søk_brukere(navn: str, bruker = Depends(krever_lege)):
+    """" Søker etter pasienter basert på navn. Dette er kun tilgjengelig for leger.
+    Her brukes en SQL-spørring med LIKE for å finne pasienter der fornavn eller etternavn matcher søket.
+    """
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                u.userID,
+                p.forNavn || ' ' || p.etterNavn as navn,
+                p.fnr
+            FROM user u
+            JOIN pasient p ON u.fnr = p.fnr
+            WHERE (p.forNavn || ' ' || p.etterNavn) LIKE ?
+            ORDER BY p.etterNavn ASC
+        """, (f"%{navn}%",))
+
+        resultater = cursor.fetchall()
+        return {"resultater": [dict(r) for r in resultater]}
+    finally:
+        connection.close()
+
+@app.get("/brukere/mine-leger") # Endpoint for å hente alle leger som har hatt avtaler med innlogget pasient
+def hent_mine_leger(bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT DISTINCT
+                u.userID,
+                a.navn
+            FROM avtale av
+            JOIN ansatt a ON av.ansattID = a.ansattID
+            JOIN user u ON u.ansattID = a.ansattID
+            WHERE av.fnr = ?
+        """, (bruker["brukerinfo"]["fnr"],))
+
+        resultater = cursor.fetchall()
+        return {"resultater": [dict(r) for r in resultater]}
+    finally:
+        connection.close()
+
+@app.get("/avtaler/mine")
+def hent_mine_avtaler(bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    #Endpoint for å hente alle avtaler der innlogget lege er ansattID.
+    #Joiner pasient tabellen for å få med pasientens navn i responsen, sånn at vi slipper
+    #å gjøre en ekstra request fra frontend for å hente pasientnavnet basert på fnr for hver avtale
+    try: 
+        cursor.execute(""" 
+            SELECT
+                a.avtaleID,
+                a.fnr,
+                a.tidspunkt,
+                a.kommentar,
+                p.forNavn || ' ' || p.etterNavn as pasientNavn
+            FROM avtale a
+            LEFT JOIN pasient p ON a.fnr = p.fnr
+            WHERE a.ansattID = ?
+            ORDER BY a.tidspunkt ASC
+        """, (bruker["brukerinfo"]["ansattID"],))
+
+        avtaler = cursor.fetchall()
+        return {"avtaler": [dict(a) for a in avtaler]}
+    finally:
+        connection.close()
+
+@app.get("/avtaler/pasient")
+def hent_pasient_avtaler(bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                a.avtaleID,
+                a.fnr,
+                a.tidspunkt,
+                a.kommentar,
+                ans.navn as legeNavn
+            FROM avtale a
+            LEFT JOIN ansatt ans ON a.ansattID = ans.ansattID
+            WHERE a.fnr = ?
+            ORDER BY a.tidspunkt ASC
+        """, (bruker["brukerinfo"]["fnr"],))
+        avtaler = cursor.fetchall()
+        return {"avtaler": [dict(a) for a in avtaler]}
+    finally:
+        connection.close()
+
+@app.get("/avtaler/{fnr}")
+def hent_avtaler(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Du kan bare se dine egne avtaler"
+            )
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                a.avtaleID,
+                a.tidspunkt,
+                a.kommentar,
+                ans.navn as legeNavn
+            FROM avtale a
+            LEFT JOIN ansatt ans ON a.ansattID = ans.ansattID
+            WHERE a.fnr = ?
+            ORDER BY a.tidspunkt ASC
+        """, (fnr,))
+        avtaler = cursor.fetchall()
+        return {"avtaler": [dict(a) for a in avtaler]}
+    finally:
+        connection.close()
+
+@app.post("/avtaler") # Oppretter en ny avtale, krever at brukeren er en lege
+def opprett_avtale(avtale_data: AvtaleRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            INSERT INTO avtale (fnr, ansattID, tidspunkt, kommentar)
+            VALUES (?, ?, ?, ?)
+        """, (
+            avtale_data.fnr,
+            bruker["brukerinfo"]["ansattID"],
+            avtale_data.tidspunkt,
+            avtale_data.kommentar
+        ))
+        connection.commit()
+        return {"status": "Avtale opprettet!", "avtaleID": cursor.lastrowid}
+
+    finally:
+        connection.close()
+
+@app.put("/avtaler/{avtaleID}") # Endrer en eksisterende avtale, krever at brukeren er en lege
+def oppdater_avtale(avtaleID: int, avtale_data: AvtaleOppdaterRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE avtale
+            SET tidspunkt = ?, kommentar = ?
+            WHERE avtaleID = ?
+        """, (
+            avtale_data.tidspunkt,
+            avtale_data.kommentar,
+            avtaleID
+        ))
+        connection.commit()
+        return {"status": "Avtale oppdatert!"}
+
+    finally:
+        connection.close()
+
+@app.delete("/avtaler/{avtaleID}") # Sletter en avtale, krever at brukeren er en lege
+def slett_avtale(avtaleID: int, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("DELETE FROM avtale WHERE avtaleID = ?", (avtaleID,))
+        connection.commit()
+        return {"status": "Avtale slettet!"}
+
+    finally:
+        connection.close()
 
 @app.get("/journal") # Endpoint for å hente alle journaler, krever at brukeren er en lege (krever_lege)
 def hent_alle_journaler(bruker = Depends(krever_lege)):
@@ -233,6 +441,138 @@ def hent_dokumenter(journalNr: int, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+@app.get("/vaksine/{fnr}") # henter vaksiner fra fødselsnummer
+def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Du kan bare se dine egne vaksiner"
+            )
+    connection = getConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT 
+                v.vaksineID,
+                v.vaksineNavn,
+                v.dato,
+                a.navn as legeNavn
+            FROM vaksine v
+            LEFT JOIN ansatt a ON v.ansattID = a.ansattID
+            WHERE v.fnr = ?
+            ORDER BY v.dato DESC
+        """, (fnr,))
+        
+        vaksine = cursor.fetchall()
+        return {"vaksine": [dict(v) for v in vaksine]}
+    
+    finally:
+        connection.close()
+
+@app.post("/vaksine") # oppretter vaksine
+def ny_vaksine(vaksine_data: VaksineRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO vaksine (fnr, vaksineNavn, dato, ansattID)
+            VALUES (?, ?, ?, ?)
+        """, (
+            vaksine_data.fnr,
+            vaksine_data.vaksineNavn,
+            vaksine_data.dato,
+            bruker["brukerinfo"]["ansattID"]
+        ))
+        
+        connection.commit()
+        return {
+            "status": "Vaksine opprettet!",
+            "vaksineID": cursor.lastrowid
+        }
+    
+    finally:
+        connection.close()
+
+class PasientInfoRequest(BaseModel):
+    om_pasient: List[str]
+    kritisk_info: List[str]
+
+@app.get("/pasient/{fnr}/info")
+def hent_pasient_info(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(status_code=403, detail="Du kan bare se din egen info")
+    
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(
+            "SELECT kategori, innhold FROM pasient_info WHERE fnr = ?", (fnr,)
+        )
+        rader = cursor.fetchall()
+        return {
+            "om_pasient":   [r["innhold"] for r in rader if r["kategori"] == "om_pasient"],
+            "kritisk_info": [r["innhold"] for r in rader if r["kategori"] == "kritisk_info"]
+        }
+    finally:
+        connection.close()
+
+@app.put("/pasient/{fnr}/info")
+def oppdater_pasient_info(fnr: str, data: PasientInfoRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("DELETE FROM pasient_info WHERE fnr = ?", (fnr,))
+        for innhold in data.om_pasient:
+            cursor.execute(
+                "INSERT INTO pasient_info (fnr, kategori, innhold) VALUES (?, 'om_pasient', ?)",
+                (fnr, innhold)
+            )
+        for innhold in data.kritisk_info:
+            cursor.execute(
+                "INSERT INTO pasient_info (fnr, kategori, innhold) VALUES (?, 'kritisk_info', ?)",
+                (fnr, innhold)
+            )
+        connection.commit()
+        return {"status": "ok"}
+    finally:
+        connection.close()
+
+@app.get("/meldinger/sendt")
+def hent_sendte_meldinger(bruker = Depends(verify_token)):
+    """
+    Her henter jeg alle meldinger som pålogget bruker har sendt.
+    Jeg joiner både ansatt og pasient tabellen, for å vise mottakerens navn i respons
+    Uansett om det er lege eller pasient
+    Så slipper frontend å gjøre en ekstra request for å hente mottaker navn basert på userid
+    """
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                m.meldingID,
+                m.overskrift,
+                m.innhold,
+                m.sendt_dato,
+                m.lest,
+                m.avsenderID,
+                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as mottaker_navn
+            FROM melding m
+            JOIN user u ON m.mottakerID = u.userID
+            LEFT JOIN ansatt a ON u.ansattID = a.ansattID
+            LEFT JOIN pasient p ON u.fnr = p.fnr
+            WHERE m.avsenderID = ?
+            ORDER BY m.sendt_dato DESC
+        """, (bruker["userID"],))
+
+        meldinger = cursor.fetchall()
+        return {"meldinger": [dict(m) for m in meldinger]}
+    finally:
+        connection.close()
+
 @app.get("/meldinger")
 def hent_meldinger(bruker = Depends(verify_token)):
     """
@@ -243,6 +583,9 @@ def hent_meldinger(bruker = Depends(verify_token)):
     COALESCE betyr "bruk den første verdien som ikke er NULL".
     Vi bruker det fordi avsenderen kan være enten en lege (navn fra ansatt-tabellen)
     eller en pasient (navn fra pasient-tabellen), og vi vil alltid få ett navn tilbake.
+
+    p.fnr er lagt til i SELECT slik at legen kan se fødselsnummeret til pasienten
+    som sendte meldingen direkte i innboksen.
     """
     connection = getConnection()
     cursor = connection.cursor()
@@ -255,7 +598,9 @@ def hent_meldinger(bruker = Depends(verify_token)):
                 m.innhold,
                 m.sendt_dato,
                 m.lest,
-                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as avsender_navn
+                m.avsenderID,
+                COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as avsender_navn,
+                p.fnr as avsender_fnr
             FROM melding m
             JOIN user u ON m.avsenderID = u.userID
             LEFT JOIN ansatt a ON u.ansattID = a.ansattID
@@ -319,6 +664,116 @@ def merk_som_lest(meldingID: int, bruker = Depends(verify_token)):
         connection.commit()
         return {"status": "Merket som lest"}
 
+    finally:
+        connection.close()
+
+@app.get("/resept/{fnr}") # Henter alle resepter for en pasient
+def hent_resept(fnr: str, bruker = Depends(verify_token)):
+    if bruker.get("rolle") == "pasient":
+        if bruker.get("brukerinfo", {}).get("fnr") != fnr:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Du kan bare se dine egne resepter"
+            )
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT
+                r.reseptID,
+                r.mediNavn,
+                r.dosering,
+                r.mengde,
+                r.reiterasjoner,
+                r.utlopsdato,
+                r.kommentar,
+                r.status,
+                r.opprettetDato,
+                a.navn as legeNavn
+            FROM resept r
+            LEFT JOIN ansatt a ON r.ansattID = a.ansattID
+            WHERE r.fnr = ?
+            ORDER BY r.opprettetDato DESC
+        """, (fnr,))
+        resepter = cursor.fetchall()
+        return {"resepter": [dict(r) for r in resepter]}
+    finally:
+        connection.close()
+
+@app.post("/resept") # Oppretter en ny resept, krever at brukeren er en lege
+def opprett_resept(resept_data: ReseptRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            resept_data.fnr,
+            bruker["brukerinfo"]["ansattID"],
+            resept_data.mediNavn,
+            resept_data.dosering,
+            resept_data.mengde,
+            resept_data.reiterasjoner,
+            resept_data.utlopsdato,
+            resept_data.kommentar
+        ))
+        connection.commit()
+        return {"status": "Resept opprettet!", "reseptID": cursor.lastrowid}
+    finally:
+        connection.close()
+
+@app.put("/resept/{reseptID}") # Endrer en eksisterende resept, krever at brukeren er en lege
+def oppdater_resept(reseptID: int, resept_data: ReseptOppdaterRequest, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            UPDATE resept
+            SET mediNavn = ?, dosering = ?, mengde = ?, reiterasjoner = ?, utlopsdato = ?, kommentar = ?, status = ?
+            WHERE reseptID = ?
+        """, (
+            resept_data.mediNavn,
+            resept_data.dosering,
+            resept_data.mengde,
+            resept_data.reiterasjoner,
+            resept_data.utlopsdato,
+            resept_data.kommentar,
+            resept_data.status,
+            reseptID
+        ))
+        connection.commit()
+        return {"status": "Resept oppdatert!"}
+    finally:
+        connection.close()
+
+@app.delete("/resept/{reseptID}") # Sletter en resept, krever at brukeren er en lege
+def slett_resept(reseptID: int, bruker = Depends(krever_lege)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("DELETE FROM resept WHERE reseptID = ?", (reseptID,))
+        connection.commit()
+        return {"status": "Resept slettet!"}
+    finally:
+        connection.close()
+        
+@app.get("/bruker/lege/{fnr}")
+def hent_lege_for_pasient(fnr: str, bruker = Depends(verify_token)):
+    connection = getConnection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT u.userID 
+            FROM user u
+            JOIN journal j ON u.ansattID = j.ansattID
+            WHERE j.fnr = ?
+            LIMIT 1
+        """, (fnr,))
+        lege = cursor.fetchone()
+        if not lege:
+            raise HTTPException(status_code=404, detail="Fant ingen lege for denne pasienten")
+        return {"userID": lege["userID"]}
     finally:
         connection.close()
 
@@ -463,6 +918,3 @@ async def login(login_data: LoginRequest):
         
     finally:
         connection.close()
-
-
-

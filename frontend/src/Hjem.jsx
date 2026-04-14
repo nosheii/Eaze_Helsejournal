@@ -1,9 +1,10 @@
-import { Mail, Calendar, NotebookPen, User, Info } from "lucide-react";
-import { useState } from "react";
+// Hjem.jsx
+import { Mail, Calendar, NotebookPen, User, Pill, Info } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Hjem.module.css";
 
-function Widget({ icon, title, description, onClick, filled = false }) {
+function Widget({ icon, title, description, onClick, filled = false, harUlest = false }) {
     const [hovered, setHovered] = useState(false);
     const kortKlasse = `${styles.widget} ${hovered ? styles.widgetHover : ""}`;
     const ikonKlasse = `${styles.ikonSirkel} ${filled ? styles.ikonSirkelFilled : styles.ikonSirkelOutline}`;
@@ -15,8 +16,11 @@ function Widget({ icon, title, description, onClick, filled = false }) {
             onMouseLeave={() => setHovered(false)}
             className={kortKlasse}
         >
-            <div className={ikonKlasse}>
-                {icon}
+            <div className={styles.ikonWrapper}>
+                <div className={ikonKlasse}>
+                    {icon}
+                </div>
+                {harUlest && <span className={styles.ulestDot} />}
             </div>
             <div>
                 <div className={styles.widgetTittel}>{title}</div>
@@ -28,13 +32,27 @@ function Widget({ icon, title, description, onClick, filled = false }) {
 
 function Hjem({ rolle, brukerinfo }) {
     const navigate = useNavigate();
+    const [harUlesteMeldinger, setHarUlesteMeldinger] = useState(false);
+
+    useEffect(() => {
+        const token = sessionStorage.getItem("token");
+        fetch("http://localhost:8000/meldinger", {
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                const harUlest = data.meldinger.some((m) => m.lest === 0);
+                setHarUlesteMeldinger(harUlest);
+            })
+            .catch((feil) => console.error("Kunne ikke sjekke uleste:", feil));
+    }, []);
 
     const idag = new Date();
     const dagManed = idag.toLocaleDateString("nb-NO", { day: "numeric", month: "long" });
     const visningsnavn = brukerinfo?.navn ?? rolle;
 
     const legeWidgets = [
-        { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les nye meldinger", filled: false, path: "/innboks" },
+        { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les nye meldinger", filled: false, path: "/innboks", harUlest: harUlesteMeldinger },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Kalender", description: "Se kommende timer og påminnelser", filled: false, path: "/avtaler" },
         { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se og les journaler", filled: false, path: "/journal" },
         { icon: <User size={36} strokeWidth={1.8} />, title: "Min info", description: "Se og oppdater informasjon", filled: true, path: "/profil" },
@@ -42,9 +60,10 @@ function Hjem({ rolle, brukerinfo }) {
     ];
 
     const pasientWidgets = [
-        { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les meldinger fra legen din", filled: false, path: "/innboks" },
+        { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les meldinger fra legen din", filled: false, path: "/innboks", harUlest: harUlesteMeldinger },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Avtaler", description: "Se og bestill timer", filled: false, path: "/avtaler" },
-        { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se din egen journal", filled: false, path: "/journal" },
+        { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se din egen journal", filled: false, path: `/journal/${brukerinfo?.fnr}` },
+        { icon: <Pill size={36} strokeWidth={1.8} />, title: "Resept", description: "Se dine resepter", filled: false, path: "/resept" },
         { icon: <User size={36} strokeWidth={1.8} />, title: "Min profil", description: "Se og oppdater dine opplysninger", filled: true, path: "/profil" },
         { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },
     ];
@@ -80,12 +99,18 @@ function Hjem({ rolle, brukerinfo }) {
                             title={w.title}
                             description={w.description}
                             filled={w.filled}
+                            harUlest={w.harUlest ?? false}
                             onClick={() => navigate(w.path)}
                         />
                     ))}
                 </div>
 
             </div>
+        <footer className={styles.footer}>
+            <span className={styles.footerNavn}>Eaze</span>
+            <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+            <span className={styles.footerAar}>© 2026</span>
+        </footer>
         </div>
     );
 }

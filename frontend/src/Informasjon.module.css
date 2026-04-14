@@ -1,0 +1,23 @@
+.informasjonSide {
+  background-color: #ecfcff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
+  height: 100vh;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+.informasjonTittel {
+  font-size: 1.5em;
+
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.informasjonBoks {
+  background-color: #ffffff;
+  border: 1.3px solid #36a6ba;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 800px;
+  padding: 2em;
+}

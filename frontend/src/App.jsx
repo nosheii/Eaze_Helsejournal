@@ -9,6 +9,8 @@ import Avtaler from './Avtaler'
 import Journal from './Journal/Journal'
 import { Navigate } from 'react-router-dom'
 import JournalSok from './Journal/JournalSok'
+import Vaksine from './Vaksine'
+import Informasjon from './Informasjon' 
 
 
 
@@ -49,11 +51,14 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
 
             <Routes>
                 <Route path="/hjem" element={<Hjem rolle={rolle} brukerinfo={brukerinfo} />} />
-                <Route path="/innboks" element={<Innboks />} />
-                <Route path="/avtaler" element={<Avtaler />} />
+                <Route path="/innboks" element={<Innboks rolle={rolle} />} />
+                <Route path="/avtaler" element={<Avtaler rolle={rolle} />} />
+                <Route path="/vaksine" element={<Vaksine rolle={rolle} brukerinfo={brukerinfo} />} />
+                <Route path="/informasjon" element={<Informasjon />} />
                 <Route path="/journal" element={<JournalSok />} />
-                <Route path="/journal/:fnr" element={<Journal />} />
+                <Route path="/journal/:fnr" element={<Journal rolle={rolle} />} />
                 <Route path="*" element={<Navigate to="/hjem" />} />
+                
             </Routes>
         </BrowserRouter>
     )

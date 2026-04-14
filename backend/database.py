@@ -1,4 +1,3 @@
-from multiprocessing.dummy import connection
 from os import name
 import sqlite3
 
@@ -110,21 +109,58 @@ def init_db():
 )
 """)
     connection.execute("""
-    CREATE TABLE IF NOT EXISTS vaksiner (
+    CREATE TABLE IF NOT EXISTS Vaksiner (
         vaksineID INTEGER PRIMARY KEY AUTOINCREMENT,
         vaksineNavn TEXT NOT NULL,
         fnr TEXT NOT NULL,
         dato TEXT NOT NULL,
-        ansattID INTEGER,
         FOREIGN KEY (fnr) REFERENCES pasient(fnr),
         FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
-    )
+)
+""")
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS avtale (
+    avtaleID    INTEGER PRIMARY KEY AUTOINCREMENT,
+    fnr         TEXT NOT NULL,
+    ansattID    INTEGER NOT NULL,
+    tidspunkt   TEXT NOT NULL,
+    kommentar   TEXT,
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+)
 """)
 
-
-
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS pasient_info (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    fnr         TEXT NOT NULL,
+    kategori    TEXT NOT NULL,
+    innhold     TEXT NOT NULL,
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr)
+)
+""")
+    
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS resept (
+    reseptID        INTEGER PRIMARY KEY AUTOINCREMENT,
+    fnr             TEXT NOT NULL,
+    ansattID        INTEGER NOT NULL,
+    mediNavn        TEXT NOT NULL,
+    dosering        TEXT NOT NULL,
+    mengde          TEXT NOT NULL,
+    reiterasjoner   INTEGER DEFAULT 0,
+    utlopsdato      TEXT NOT NULL,
+    kommentar       TEXT,
+    status          TEXT NOT NULL DEFAULT 'aktiv',
+    opprettetDato   TEXT NOT NULL DEFAULT (date('now')),
+    FOREIGN KEY (fnr) REFERENCES pasient(fnr),
+    FOREIGN KEY (ansattID) REFERENCES ansatt(ansattID)
+    )
+""")
+    
     connection.commit()
     connection.close()
+
 
     
 

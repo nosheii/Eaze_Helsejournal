@@ -5,7 +5,7 @@
 // å holde det mer ryddig og mindre kaotisk
 
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import styles from "./Journal.module.css";
 
 // Her importeres underkomponentene for hver fane.
@@ -13,10 +13,11 @@ import JournalOmPasient from "./JournalOmPasient";
 import JournalMedikament from "./JournalMedikament";
 import JournalVaksiner from "./JournalVaksiner";
 import JournalDokumenter from "./JournalDokumenter";
-import JournalHistorikk from "./JournalHistorikk";
+import JournalHistorikk from "./Journalhistorikk";
 
-function Journal() {
-  const [valgtFane, setValgtFane] = useState("pasientInfo");
+function Journal({ rolle }) {
+  const [valgtFaneParams, setValgtFane] = useSearchParams();
+  const valgtFane = valgtFaneParams.get("fane") || "pasientInfo"; // Hent "fane" fra URL-en, default til "pasientInfo" hvis ikke satt
 
   // useParams henter fnr fra URL-en, f.eks. /journal/21267788 → fnr = "21267788"
   const { fnr } = useParams();
@@ -24,6 +25,8 @@ function Journal() {
   // useState for å lagre pasientdata fra backend
   const [pasient, setPasient] = useState(null);
   const [laster, setLaster] = useState(true);
+  // useState for å lagre journalnummeret som skal sendes til JournalDokumenter
+  const [journalNr, setJournalNr] = useState(null);
 
   // useEffect henter pasientinfo fra backend når komponenten lastes inn
   // eller når fnr i URL-en endrer seg (derfor har vi [fnr] i dependency-arrayen)
@@ -37,23 +40,22 @@ function Journal() {
     })
       .then((res) => res.json())
       .then((data) => {
-        // Backend returnerer en liste med journaler — vi henter pasientinfo fra første rad
-        if (data.journaler && data.journaler.length > 0) {
+        console.log("Journal data:", data);
+        if (data.journaler && data.journaler.length > 0 && data.journaler[0].forNavn !== null) {
           const j = data.journaler[0];
+          setJournalNr(j.journalNr);
           setPasient({
             fnr: j.fnr,
             navn: `${j.etterNavn}, ${j.forNavn}`,
-            // Detaljer kan utvides med fødselsdato osv. når det finnes i databasen
             detaljer: j.fnr
           });
         }
+        // Oppretter ikke journal automatisk lenger
+        // JournalSok passer heller på å sjekke at pasienten fatkisk finnes
         setLaster(false);
       })
-      .catch((feil) => {
-        console.error("Kunne ikke hente pasientinfo:", feil);
-        setLaster(false);
-      });
   }, [fnr]); // [fnr] betyr: kjør på nytt hvis fnr i URL-en endrer seg
+
 
   return (
     <div className={styles.side}>
@@ -78,19 +80,19 @@ function Journal() {
           <div className={styles.faneRad}>
             <button
               className={`${styles.fane} ${valgtFane === "pasientInfo" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientInfo")}
+              onClick={() => setValgtFane({ fane: "pasientInfo" })}
             >
               Om pasient
             </button>
             <button
               className={`${styles.fane} ${valgtFane === "pasientMed" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientMed")}
+              onClick={() => setValgtFane({ "fane": "pasientMed" })}
             >
               Medikament
             </button>
             <button
               className={`${styles.fane} ${valgtFane === "pasientVak" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientVak")}
+              onClick={() => setValgtFane({ "fane": "pasientVak" })}
             >
               Vaksiner
             </button>
@@ -99,13 +101,13 @@ function Journal() {
           <div className={styles.faneRadTo}>
             <button
               className={`${styles.fane} ${valgtFane === "pasientDok" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientDok")}
+              onClick={() => setValgtFane({ "fane": "pasientDok" })}
             >
               Journaldokumenter
             </button>
             <button
               className={`${styles.fane} ${valgtFane === "pasientHis" ? styles.faneAktiv : ""}`}
-              onClick={() => setValgtFane("pasientHis")}
+              onClick={() => setValgtFane({ "fane": "pasientHis" })}
             >
               Besøkshistorikk
             </button>
@@ -117,23 +119,23 @@ function Journal() {
             kan hente riktige data fra backend */}
 
         {valgtFane === "pasientInfo" && (
-          <JournalOmPasient fnr={fnr} />
-        )}
+          <JournalOmPasient fnr={fnr} rolle={rolle} />
+        )}  
 
         {valgtFane === "pasientMed" && (
-          <JournalMedikament fnr={fnr} />
+          <JournalMedikament fnr={fnr} rolle={rolle} />
         )}
 
         {valgtFane === "pasientVak" && (
-          <JournalVaksiner fnr={fnr} />
+          <JournalVaksiner fnr={fnr} rolle={rolle} />
         )}
 
         {valgtFane === "pasientDok" && (
-          <JournalDokumenter fnr={fnr} />
-        )}
+          <JournalDokumenter journalNr={journalNr} fnr={fnr} rolle={rolle} />
+      )}
 
         {valgtFane === "pasientHis" && (
-          <JournalHistorikk fnr={fnr} />
+          <JournalHistorikk fnr={fnr} rolle={rolle} />
         )}
 
       </div>

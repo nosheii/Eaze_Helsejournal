@@ -1,3 +1,4 @@
+/* Tilda Løvold - 273803 */
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
 
 .side {
@@ -12,7 +13,8 @@
 }
 
 .kort {
-    background: #0097b2b9;
+    background: #c2c2c2;
+    border: 1.5px solid #8c8c8c;
     border-radius: 10px;
     padding: 2rem 2rem;
     width: 100%;
@@ -21,9 +23,9 @@
 }
 
 .tittel {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
     font-size: 2rem;
-    color: #01839a;
+    color: #000000;
     margin-bottom: 0.4rem;
     font-weight: 400;
 }
@@ -38,7 +40,7 @@
     font-weight: 500;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 0.5rem;
 }
 
@@ -78,11 +80,10 @@
 .knapp {
     width: 100%;
     padding: 0.9rem;
-    background: #01839a;
-    color: #f7f5f2;
-    border: none;
-    border-radius: 2px;
-    font-family: 'DM Sans', sans-serif;
+    background: #77c6d3;
+    border: 1.5px solid #007185;
+    border-radius: 10px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     letter-spacing: 0.1em;
@@ -93,7 +94,7 @@
 }
 
 .knapp:hover:not(:disabled) {
-    background: #2e2924;
+    background: #015e6e;
 }
 
 .knapp:active:not(:disabled) {

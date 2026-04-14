@@ -1,4 +1,5 @@
 /* Innboks.module.css */
+/* NORA AL-TAY - 146274 */
 
 /* Hele sden sin css*/
 .side {
@@ -39,7 +40,7 @@
   font-weight: 700;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
   cursor: pointer;
-  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease; /*litt fancy med 3D-effekt på knappen */
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
   box-shadow: 0 4px 14px rgba(10, 173, 173, 0.25);
   width: 100%;
 }
@@ -110,7 +111,7 @@
   color: #1a2e2e;
 }
 
-/* Liten blå sirkel som viser at denne meldingen ikke er elst ennå */
+/* Liten blå sirkel som viser at denne meldingen ikke er lest ennå */
 .ulestDot {
   width: 8px;
   height: 8px;
@@ -139,7 +140,7 @@
   margin-top: 2px;
 }
 
-/*Store meldingskjsermen for lesing */
+/*Store meldingsskjermen for lesing */
 .meldingsVisning {
   background: #ffffff;
   border: 1.5px solid #d0ecec;
@@ -260,4 +261,279 @@
   gap: 16px;
   color: #8aabab;
   font-size: 15px;
+}
+
+/* Svar-skjema som vises når man trykker på svar-knappen */
+.svarSkjema {
+  margin-top: 24px;
+  padding: 24px;
+  background: #f0fafa;
+  border: 1.5px solid #d0ecec;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.svarTil {
+  font-size: 13px;
+  font-weight: 700;
+  color: #5a8080;
+  margin: 0;
+}
+
+.svarTextarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid #d0ecec;
+  border-radius: 10px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  color: #1a2e2e;
+  background: #ffffff;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.18s ease;
+  box-sizing: border-box;
+}
+
+.svarTextarea:focus {
+  border-color: #0aadad;
+}
+
+.svarTextarea::placeholder {
+  color: #8aabab;
+}
+
+/* Knapperad for send og avbryt */
+.svarKnapper {
+  display: flex;
+  gap: 12px;
+}
+
+.sendKnapp {
+  padding: 12px 28px;
+  background: #0aadad;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.sendKnapp:hover:not(:disabled) {
+  background: #089090;
+  transform: translateY(-1px);
+}
+
+.sendKnapp:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.avbrytKnapp {
+  padding: 12px 28px;
+  background: transparent;
+  color: #5a8080;
+  border: 1.5px solid #d0ecec;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.avbrytKnapp:hover {
+  background: #e8f7f7;
+  border-color: #0aadad;
+}
+
+
+/* Ny melding skjema */
+.nyMeldingSkjema {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.nyMeldingTittel {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a2e2e;
+  margin: 0 0 8px 0;
+}
+
+.nyMeldingFelt {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nyMeldingFelt label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #5a8080;
+}
+
+.nyMeldingInput {
+  padding: 12px 14px;
+  border: 1.5px solid #d0ecec;
+  border-radius: 10px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  color: #1a2e2e;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.18s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nyMeldingInput:focus {
+  border-color: #0aadad;
+}
+
+.nyMeldingTextarea {
+  padding: 12px 14px;
+  border: 1.5px solid #d0ecec;
+  border-radius: 10px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  color: #1a2e2e;
+  background: #ffffff;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.18s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nyMeldingTextarea:focus {
+  border-color: #0aadad;
+}
+
+/* Mottaker chip som vises når en mottaker er valgt */
+.mottakerChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #e8f7f7;
+  border: 1.5px solid #0aadad;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0aadad;
+}
+
+.mottakerChip button {
+  background: none;
+  border: none;
+  color: #0aadad;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+}
+
+.mottakerChip button:hover {
+  color: #089090;
+}
+
+/* Søke dropdown med resultater */
+.sokeKontainer {
+  position: relative;
+}
+
+.sokeDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1.5px solid #d0ecec;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.sokeResultat {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: #1a2e2e;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sokeResultat:hover {
+  background: #e8f7f7;
+  color: #0aadad;
+}
+
+.utOginnBoks {
+  display: flex;
+  gap: 10px;
+}
+
+.innboksKnapp {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 10px 20px;
+  background: #c4ebeb;
+  color: #058181;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 4px 14px rgba(10, 173, 173, 0.25);
+  width: 50%;
+}
+
+.innboksKnapp:hover {
+  background: #6ed7d7;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px #03595959;
+}
+
+.utboksKnapp {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 10px 20px;
+  background: #c4ebeb;
+  color: #058181;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 4px 14px rgba(10, 173, 173, 0.25);
+  width: 50%;
+}
+
+.utboksKnapp:hover {
+  background: #6ed7d7;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px #03595959;
 }
