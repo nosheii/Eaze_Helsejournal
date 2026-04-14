@@ -1,5 +1,5 @@
 // Hjem.jsx
-import { Mail, Calendar, NotebookPen, User, Pill, Info } from "lucide-react";
+import { Mail, Calendar, NotebookPen, User, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Hjem.module.css";
@@ -63,7 +63,6 @@ function Hjem({ rolle, brukerinfo }) {
         { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les meldinger fra legen din", filled: false, path: "/innboks", harUlest: harUlesteMeldinger },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Avtaler", description: "Se og bestill timer", filled: false, path: "/avtaler" },
         { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se din egen journal", filled: false, path: `/journal/${brukerinfo?.fnr}` },
-        { icon: <Pill size={36} strokeWidth={1.8} />, title: "Resept", description: "Se dine resepter", filled: false, path: "/resept" },
         { icon: <User size={36} strokeWidth={1.8} />, title: "Min profil", description: "Se og oppdater dine opplysninger", filled: true, path: "/profil" },
         { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },
     ];
@@ -73,15 +72,12 @@ function Hjem({ rolle, brukerinfo }) {
     return (
         <div className={styles.side}>
             <div className={styles.innhold}>
-
                 <div className={styles.venstreSeksjon}>
                     <h1 className={styles.hilsen}>Hei, {visningsnavn}!</h1>
-
                     <div className={styles.kort}>
                         <div className={styles.dato}>{dagManed}</div>
                         <div className={styles.datoLabel}>I dag</div>
                     </div>
-
                     {rolle === "lege" && brukerinfo?.mail && (
                         <div className={styles.kort}>
                             <span className={styles.kortTittel}>Din info</span>
@@ -90,7 +86,6 @@ function Hjem({ rolle, brukerinfo }) {
                         </div>
                     )}
                 </div>
-
                 <div className={styles.widgetGrid}>
                     {widgets.map((w) => (
                         <Widget
@@ -104,13 +99,12 @@ function Hjem({ rolle, brukerinfo }) {
                         />
                     ))}
                 </div>
-
             </div>
-        <footer className={styles.footer}>
-            <span className={styles.footerNavn}>Eaze</span>
-            <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
-            <span className={styles.footerAar}>© 2026</span>
-        </footer>
+            <footer className={styles.footer}>
+                <span className={styles.footerNavn}>Eaze</span>
+                <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+                <span className={styles.footerAar}>© 2026</span>
+            </footer>
         </div>
     );
 }
