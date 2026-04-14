@@ -107,6 +107,11 @@ function Hjem({ rolle, brukerinfo }) {
                 </div>
 
             </div>
+        <footer className={styles.footer}>
+            <span className={styles.footerNavn}>Eaze</span>
+            <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+            <span className={styles.footerAar}>© 2026</span>
+        </footer>
         </div>
     );
 }

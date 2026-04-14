@@ -149,3 +149,34 @@
     border-radius: 50%;
     border: 2px solid white;
 }
+
+/* Footer styling */
+.footer {
+    margin-top: 150px;
+    margin-left: -48px;
+    margin-right: -48px;
+    padding: 50px 48px;
+    background: #007185;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+.footerNavn {
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.footerTekst {
+    font-size: 13px;
+    color: #d0f0f0;
+    font-weight: 400;
+}
+
+.footerAar {
+    font-size: 13px;
+    color: #d0f0f0;
+    font-weight: 400;
+}
