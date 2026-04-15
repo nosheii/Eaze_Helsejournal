@@ -4,8 +4,10 @@ import './Navbar.css'
 import logo from './assets/logo-eaze.png'
 import profilBilde from './assets/profil-bilde.jpg'
 
-function Navbar({ brukerinfo, onLoggUt }) {
+function Navbar({ brukerinfo, onLoggUt, rolle }) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  const journalPath = rolle === 'lege' ? '/journal' : `/journal/${brukerinfo.fnr}`
 
   return (
     <nav className="navbar">
@@ -15,7 +17,7 @@ function Navbar({ brukerinfo, onLoggUt }) {
           <Link to="/hjem" className="navbar-link">Hjem</Link>
           <Link to="/innboks" className="navbar-link">Innboks</Link>
           <Link to="/avtaler" className="navbar-link">Avtaler</Link>
-          <Link to="/journal" className="navbar-link">Journal</Link>
+          <Link to={journalPath} className="navbar-link">Journal</Link>
           <Link to="/informasjon" className="navbar-link">Informasjon</Link>
         </div>
       </div>

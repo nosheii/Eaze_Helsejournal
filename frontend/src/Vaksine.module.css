@@ -1,26 +1,16 @@
 .vaksineSide {
     background-color: #ecfcff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     font-family: 'Nunito', 'Segoe UI', sans-serif;;
 }
 .vaksineKort {
-    align-items: flex-start;
-    background-color: #ffffff;
-  border: 1.3px solid #36a6ba;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 100%;
+    color: #1a2e2e;
 }
 .vaksineHeader {
-    background-color: #d9d9d9;;
     display: flex;
     justify-content: space-between;
-    font-size: 24px;
     align-items: center;
-    padding: 10px 20px;
+    margin-bottom: 24px;
 }
 .vaksineKnapp {
     background: #0aadad;
@@ -29,20 +19,23 @@
     font-size: 18px;
     font-weight: 600;
     font-family: 'Nunito', 'Segoe UI', sans-serif;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
+    margin-bottom: 16px;
 }
 .vaksineKnapp:hover {
-    background:#0097b2;
+    background:#007185;
 }
 .vaksineHeader h2 {
-    background-color: #d9d9d9;
     font-size: 20px;
-    font-weight: bold;
-    margin: 0;
-    padding-left: 120px;
+    font-weight: 800;
+    color: #1a2e2e;
+    margin: 0;  
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
 }
 .vaksineTabell {
     width: 100%;
@@ -56,22 +49,28 @@
     margin-top: 0;
 }
 .vaksineTabell th {
-    text-align: center;
-    font-weight: normal;
-    padding: 10px;
-    border: 1.3px solid #ccc;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #007185;
+    background: #f0fafa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px;
+    border-bottom: 1.5px solid #007185;
+    padding-bottom: 6px;
 }
 .vaksineTabell td {
-    text-align: center;
-    background-color: rgb(255, 255, 255);
-    padding: 10px;
-    border: 1.3px solid #ccc;
+    text-align: left;
+    color: #1a2e2e;
+    padding: 12px 14px;
+    border-bottom: 1px solid #e0f0f0;
+
 }
 .dato {
-    text-align: center;
+    text-align: left;
 }
 .vaksineScrollbar {
-    background-color: #0097b2;
-    max-height: 150px;
+    max-height: 300px;
     overflow-y: auto;
 }
