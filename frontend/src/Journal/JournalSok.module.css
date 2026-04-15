@@ -13,8 +13,7 @@
 }
 
 .kort {
-    background: #c2c2c2;
-    border: 1.5px solid #8c8c8c;
+    background: #9fd1d1;
     border-radius: 10px;
     padding: 2rem 2rem;
     width: 100%;
@@ -80,8 +79,8 @@
 .knapp {
     width: 100%;
     padding: 0.9rem;
-    background: #77c6d3;
-    border: 1.5px solid #007185;
+    background: #0aadad;
+    border-color: #0aadad;
     border-radius: 10px;
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     font-size: 0.85rem;

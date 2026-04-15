@@ -1,5 +1,5 @@
 // Hjem.jsx
-import { Mail, Calendar, NotebookPen, User, Info } from "lucide-react";
+import { Mail, Calendar, NotebookPen, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Hjem.module.css";
