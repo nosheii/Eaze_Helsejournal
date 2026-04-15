@@ -14,7 +14,7 @@
 
 /* Pasientheader (den bolken hvor det står navn alder osv) */
 .pasientHeader {
-  margin-bottom: 24px;
+  margin-bottom: 15px;
   font-size: 18px;
   color: #1a2e2e;
 }
@@ -34,8 +34,9 @@
   border: 1.5px solid #007185;
   border-radius: 5px;
   overflow: hidden;
+  margin-top: 0;
   margin-bottom: 36px;
-  background: #ffffff;
+  background: #f0fafa;
 }
 
 /* Den øverste raden */
@@ -72,17 +73,17 @@
 }
 
 .fane:hover {
-  background: #e8f7f7;
+  background: #c9f3f3;
 }
 
 /*Den fanen som er trykket på får en mørkere blå ish farge */
 .faneAktiv {
-  background: #cccccc;
+  background: #9fd1d1;
   color: #000000;
   font-weight: 700;
 }
 
 /* og den blir enda mørkere hvis man hoverer over den*/
 .faneAktiv:hover {
-  background: #0097b2;
+  background: #70b4b4;
 }

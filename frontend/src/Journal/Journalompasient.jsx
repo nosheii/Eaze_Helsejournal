@@ -59,43 +59,45 @@ function JournalOmPasient({ fnr, rolle }) {
     if (feil) return <p>Feil: {feil}</p>;
 
     return (
-    <div className={styles.side}>
-        <div className={styles.kort}>
-            <h2 className={styles.tittel}><b>Om pasient:</b></h2>
-            <ul>
-                {omPasient.map((item, i) => (
-                    <li key={i}>
-                        {redigerer
-                            ? <><input value={item} onChange={(e) => oppdater(omPasient, setOmPasient, i, e.target.value)} />
-                               <button onClick={() => setOmPasient(omPasient.filter((_, j) => j !== i))}>Fjern</button></>
-                            : <span>{item}</span>
-                        }
-                    </li>
-                ))}
-            </ul>
-            {redigerer && <button onClick={() => setOmPasient([...omPasient, ""])}>+ Legg til</button>}
-        </div>
+    <div className={styles.wrapper}>
+        <div className={styles.side}>
+            <div className={styles.kort}>
+                <h2 className={styles.tittel}><b>Om pasient:</b></h2>
+                <ul>
+                    {omPasient.map((item, i) => (
+                        <li key={i}>
+                            {redigerer
+                                ? <><input value={item} onChange={(e) => oppdater(omPasient, setOmPasient, i, e.target.value)} />
+                                   <button onClick={() => setOmPasient(omPasient.filter((_, j) => j !== i))}>Fjern</button></>
+                                : <span>{item}</span>
+                            }
+                        </li>
+                    ))}
+                </ul>
+                {redigerer && <button onClick={() => setOmPasient([...omPasient, ""])}>+ Legg til</button>}
+            </div>
 
-        <div className={styles.kort}>
-            <h2 className={styles.tittel}><b>Kritisk info:</b></h2>
-            <ul>
-                {kritiskInfo.map((item, i) => (
-                    <li key={i}>
-                        {redigerer
-                            ? <><input value={item} onChange={(e) => oppdater(kritiskInfo, setKritiskInfo, i, e.target.value)} />
-                               <button onClick={() => setKritiskInfo(kritiskInfo.filter((_, j) => j !== i))}>Fjern</button></>
-                            : <span>{item}</span>
-                        }
-                    </li>
-                ))}
-            </ul>
-           {redigerer && <button onClick={() => setKritiskInfo([...kritiskInfo, ""])}>+ Legg til</button>}
+            <div className={styles.kort}>
+                <h2 className={styles.tittel}><b>Kritisk info:</b></h2>
+                <ul>
+                    {kritiskInfo.map((item, i) => (
+                        <li key={i}>
+                            {redigerer
+                                ? <><input value={item} onChange={(e) => oppdater(kritiskInfo, setKritiskInfo, i, e.target.value)} />
+                                   <button onClick={() => setKritiskInfo(kritiskInfo.filter((_, j) => j !== i))}>Fjern</button></>
+                                : <span>{item}</span>
+                            }
+                        </li>
+                    ))}
+                </ul>
+                {redigerer && <button onClick={() => setKritiskInfo([...kritiskInfo, ""])}>+ Legg til</button>}
+            </div>
         </div>
 
         {rolle !== "pasient" && (
             redigerer
-                ? <button onClick={lagre}>Lagre</button>
-                : <button onClick={() => setRedigerer(true)}>Rediger</button>
+                ? <button className={styles.redigerKnapp} onClick={lagre}>Lagre</button>
+                : <button className={styles.redigerKnapp} onClick={() => setRedigerer(true)}>Rediger</button>
         )}
     </div>
 );
