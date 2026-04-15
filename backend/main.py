@@ -560,6 +560,7 @@ def hent_sendte_meldinger(bruker = Depends(verify_token)):
                 m.lest,
                 m.avsenderID,
                 COALESCE(a.navn, p.forNavn || ' ' || p.etterNavn) as mottaker_navn
+                p.fnr as mottaker_fnr
             FROM melding m
             JOIN user u ON m.mottakerID = u.userID
             LEFT JOIN ansatt a ON u.ansattID = a.ansattID

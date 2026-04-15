@@ -227,9 +227,13 @@ function Innboks({ rolle }) {
 
   // Hjelpefunksjon som returnerer avsendernavnet med fnr hvis brukeren er lege og avsenderen er en pasient
   // avsender_fnr er null hvis avsenderen er en lege, så sjekker det før det viser fnr
+  // mottaker_fnr er null hvis mottakeren er en lege, så sjekker det for utboks også
   function visAvsenderNavn(melding) {
     if (!visUtboks && rolle === "lege" && melding.avsender_fnr) {
       return `${melding.avsender_navn} (${melding.avsender_fnr})`;
+    }
+    if (visUtboks && rolle === "lege" && melding.mottaker_fnr) {
+      return `${melding.mottaker_navn} (${melding.mottaker_fnr})`;
     }
     return visUtboks ? melding.mottaker_navn : melding.avsender_navn;
   }

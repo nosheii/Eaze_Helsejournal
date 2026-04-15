@@ -5,8 +5,6 @@ import logo from './assets/logo-eaze.png'
 import profilBilde from './assets/profil-bilde.jpg'
 
 function Navbar({ brukerinfo, onLoggUt, rolle }) {
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-
   const journalPath = rolle === 'lege' ? '/journal' : `/journal/${brukerinfo.fnr}`
 
   return (
@@ -23,21 +21,8 @@ function Navbar({ brukerinfo, onLoggUt, rolle }) {
       </div>
       <div className="navbar-right">
         <span className="navbar-user-name">{brukerinfo.navn}</span>
-        <div className="navbar-profile-wrapper">
-          <img
-            src={profilBilde}
-            alt="Profil"
-            className="navbar-profile-img"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-          />
-          {dropdownOpen && (
-            <div className="navbar-dropdown">
-              <Link to="/min-info" className="dropdown-item" onClick={() => setDropdownOpen(false)}>Min info</Link>
-              <Link to="/rediger-info" className="dropdown-item" onClick={() => setDropdownOpen(false)}>Rediger info</Link>
-              <button className="dropdown-item dropdown-loggut" onClick={onLoggUt}>Logg ut</button>
-            </div>
-          )}
-        </div>
+        <img src={profilBilde} alt="Profil" className="navbar-profile-img" />
+        <button className="navbar-loggut-btn" onClick={onLoggUt}>Logg ut</button>
       </div>
     </nav>
   )

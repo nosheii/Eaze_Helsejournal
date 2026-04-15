@@ -7,7 +7,7 @@
 .opprettKnapp {
     background: #0aadad;
     color: #ffffff;
-    border: 1.5px solid #007185;
+    border: 1.5px solid #0aadad;
     border-radius: 10px;
     padding: 10px 20px;
     font-size: 14px;
@@ -19,7 +19,7 @@
 }
 
 .opprettKnapp:hover {
-    background: #089090;
+    background: #007185;
 }
 
 /* Filterrad */
@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #cccccc;
+    background: #9fd1d1;
     border-radius: 10px;
     padding: 14px 20px;
     margin-bottom: 16px;
@@ -125,9 +125,9 @@
 
 .apneKnapp {
     margin-left: auto;
-    background: #77c6d3;
-    color: #000000;
-    border: solid 1.5px #007185;
+    background: #0aadad;
+    color: #ffffff;
+    border: solid 1.5px #0aadad;
     border-radius: 8px;
     padding: 8px 24px;
     font-size: 14px;
@@ -137,7 +137,7 @@
 }
 
 .apneKnapp:hover {
-    background: #089090;
+    background: #007185;
 }
 
 .ingenDokumenter {
@@ -223,7 +223,7 @@
 }
 
 .kritiskKnapp:hover {
-    background: #089090;
+    background: #007185;
 }
 
 .kritiskInfoTekst {
@@ -305,9 +305,9 @@
 }
 
 .lagreKnapp {
-    background: #77c6d3;
-    color: #000000;
-    border: 1.5px solid #007185;
+    background: #0aadad;
+    color: #ffffff;
+    border: 1.5px solid #0aadad;
     border-radius: 10px;
     padding: 10px 24px;
     font-size: 14px;
@@ -328,9 +328,9 @@
 }
 
 .avbrytKnapp {
-    background: #77c6d3;
-    color: #000000;
-    border: 1.5px solid #007185;
+    background: #0aadad;
+    color: #ffffff;
+    border: 1.5px solid #0aadad;
     border-radius: 10px;
     padding: 10px 24px;
     font-size: 14px;
@@ -342,5 +342,5 @@
 }
 
 .avbrytKnapp:hover {
-    background: #089090;
+    background: #007185;
 }
