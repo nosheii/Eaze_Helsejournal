@@ -1,3 +1,4 @@
+// Ana María Araya Flores, stundentnr 273762
 // Viser vaksinehistorikk for pasient
 // Lege har knapp for å legge til vaksine
 

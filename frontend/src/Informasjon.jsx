@@ -1,3 +1,4 @@
+// Ana María Araya Flores, stundentnr 273762
 // Viser informasjon om nettsiden og hvordan den fungerer, litt om oss :)
 
 import styles from "./Informasjon.module.css";
