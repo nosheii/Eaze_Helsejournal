@@ -5,14 +5,26 @@ import styles from "./Informasjon.module.css";
 function Informasjon() {
     return (
         <div className={styles.informasjonSide}>
-            <h1 className={styles.informasjonTittel}>Informasjon</h1>
+            <h1 className={styles.informasjonTittel}>Eaze - Helsejournal</h1>
             <div className={styles.informasjonBoks}>
-                <h2>Om EAZE</h2>    
-                <p>EAZE er en digital pasientjournal utviklet med tanke på både pasienter og helsepersonell, og har som mål å forbedre kommunikasjonen og samarbeidet mellom disse gruppene.
-                    Pasienter kan enkelt få tilgang til sin egen journal, mens helsepersonell kan bruke den til å dokumentere og dele informasjon om pasientens helse.</p>
-                <p>Vår pasientjournal er designet for å være brukervennlig og intuitiv, slik at både pasienter og helsepersonell kan navigere og bruke den uten problemer.
-                    Vi håper at vår pasientjournal kan bidra til å forbedre helsetjenester og gjøre det enklere for alle å få tilgang til viktig helseinformasjon.</p>
-                <p><strong> EAZE er et skoleprosjekt i emnet APP2000 tatt ved USN Ringerike skoleåret H2025/V2026.</strong></p>
+                <h2>Studentprosjekt ved USN. gruppe 11</h2>
+                <h3> Nora, Tilda, Sofie, Aurora, Ana María og Mumtaz.</h3>  
+                <p>Eaze er en moderne helsejournal-applikasjon utviklet som en del av et studentprosjekt ved USN. 
+                    Målet med Eaze har vært å lage et system som gjør kommunikasjonen mellom lege og pasient 
+                    enklere, mer oversiktlig og tilgjengelig for alle.</p>
+ 
+                <p>Navnet <strong> Eaze </strong> reflekterer kjerneverdien i prosjektet - enkelhet. Vi ønsket å lage en løsning 
+                som føles naturlig å bruke, uten unødvendig kompleksitet. Pasienter skal enkelt kunne holde 
+                seg oppdatert på egen helse, mens leger får et ryddig verktøy for å administrere journaler, 
+                resepter og avtaler.</p>
+ 
+                <p>Applikasjonen er bygget med et tydelig rollebasert system — leger og pasienter får ulike 
+                visninger og tilganger tilpasset deres behov. All kommunikasjon mellom frontend og backend 
+                er sikret med JWT-autentisering, og sensitive data er beskyttet mot uautorisert tilgang.</p>
+ 
+                <p>Selv om Eaze er et skoleprosjekt — er det et gjennomtenkt konsept vi har tatt på alvor 
+                fra første strek til siste linje med kode.</p>
+
             </div>
         </div>            
     )
