@@ -47,7 +47,7 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
     // Hvis innlogget - vis Navbar + Routes
     return (
         <BrowserRouter>
-            <Navbar brukerinfo={brukerinfo} onLoggUt={handleLoggUt} />
+            <Navbar brukerinfo={brukerinfo} onLoggUt={handleLoggUt} rolle={rolle} />
 
             <Routes>
                 <Route path="/hjem" element={<Hjem rolle={rolle} brukerinfo={brukerinfo} />} />

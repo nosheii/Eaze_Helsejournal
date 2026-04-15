@@ -53,18 +53,16 @@ function Hjem({ rolle, brukerinfo }) {
 
     const legeWidgets = [
         { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les nye meldinger", filled: false, path: "/innboks", harUlest: harUlesteMeldinger },
-        { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Kalender", description: "Se kommende timer og påminnelser", filled: false, path: "/avtaler" },
+        { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Avtaler", description: "Se kommende timer og påminnelser", filled: false, path: "/avtaler" },
         { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se og les journaler", filled: false, path: "/journal" },
-        { icon: <User size={36} strokeWidth={1.8} />, title: "Min info", description: "Se og oppdater informasjon", filled: true, path: "/profil" },
-        { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },
+        { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon om prosjektet", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },
     ];
 
     const pasientWidgets = [
         { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les meldinger fra legen din", filled: false, path: "/innboks", harUlest: harUlesteMeldinger },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Avtaler", description: "Se og bestill timer", filled: false, path: "/avtaler" },
         { icon: <NotebookPen size={36} strokeWidth={1.8} />, title: "Journal", description: "Se din egen journal", filled: false, path: `/journal/${brukerinfo?.fnr}` },
-        { icon: <User size={36} strokeWidth={1.8} />, title: "Min profil", description: "Se og oppdater dine opplysninger", filled: true, path: "/profil" },
-        { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },
+        { icon: <Info size={36} strokeWidth={1.8} />, title: "Informasjon om prosjektet", description: "Finn nyttig informasjon", filled: true, path: "/informasjon" },
     ];
 
     const widgets = rolle === "lege" ? legeWidgets : pasientWidgets;
