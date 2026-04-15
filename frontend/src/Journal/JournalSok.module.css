@@ -18,7 +18,7 @@
     padding: 2rem 2rem;
     width: 100%;
     max-width: 500px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 40px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
 }
 
 .tittel {
@@ -80,7 +80,7 @@
     width: 100%;
     padding: 0.9rem;
     background: #0aadad;
-    border-color: #0aadad;
+    border: none;
     border-radius: 10px;
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     font-size: 0.85rem;
@@ -90,6 +90,7 @@
     cursor: pointer;
     transition: background 0.2s ease, transform 0.1s ease;
     margin-top: 0.5rem;
+    color: #ffffff;
 }
 
 .knapp:hover:not(:disabled) {
