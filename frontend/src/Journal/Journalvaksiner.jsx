@@ -1,3 +1,5 @@
+// Ana María Araya Flores, stundentnr 273762
+
 import styles from "../Vaksine.module.css";
 import { useState, useEffect } from "react";
 function JournalVaksiner({ fnr, rolle }) {
