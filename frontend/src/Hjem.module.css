@@ -75,7 +75,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 22px 26px;
+    padding: 45px 26px;
     background: #ffffff;
     border: 1.5px solid #d0ecec;
     border-radius: 16px;
@@ -89,7 +89,7 @@
 
 /* Hover tilstanden er dynamisk  */
 .widgetHover {
-    background: #e8f7f7;
+    background: #e4f5f5;
     box-shadow: 0 6px 24px rgba(0, 168, 168, 0.13);
     transform: translateY(-2px);
 }
