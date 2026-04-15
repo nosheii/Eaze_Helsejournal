@@ -537,3 +537,78 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 20px #03595959;
 }
+
+/* Footer */
+.footer {
+    margin-top: 60px;
+    margin-left: -48px;
+    margin-right: -48px;
+    margin-bottom: -40px;
+    padding: 40px 48px;
+    background: #007185;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+.footerTopp {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.footerNavn {
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.footerDeler {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 16px;
+}
+
+.footerTekst {
+    font-size: 13px;
+    color: #d0f0f0;
+}
+
+.footerAar {
+    font-size: 13px;
+    color: #d0f0f0;
+}
+
+.footerGuide {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 700px;
+}
+
+.footerGuideTittel {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.footerGuideGrid {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 8px 20px;
+}
+
+.footerGuideLabel {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.footerGuideVerdi {
+    font-size: 13px;
+    color: #d0f0f0;
+}

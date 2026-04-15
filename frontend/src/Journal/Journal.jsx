@@ -139,6 +139,31 @@ function Journal({ rolle }) {
         )}
 
       </div>
+      <footer className={styles.footer}>
+        <div className={styles.footerTopp}>
+            <span className={styles.footerNavn}>Eaze</span>
+            <span className={styles.footerDeler}>|</span>
+            <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+            <span className={styles.footerDeler}>|</span>
+            <span className={styles.footerAar}>© 2026</span>
+        </div>
+
+        <div className={styles.footerGuide}>
+            <span className={styles.footerGuideTittel}>På denne siden kan du</span>
+            <div className={styles.footerGuideGrid}>
+                <span className={styles.footerGuideLabel}>Om pasient</span>
+                <span className={styles.footerGuideVerdi}>Se personlig informasjon om pasienten</span>
+                <span className={styles.footerGuideLabel}>Medikament</span>
+                <span className={styles.footerGuideVerdi}>Som lege: legg til, endre og slett resepter. Som pasient: se resepter og be om fornyelse</span>
+                <span className={styles.footerGuideLabel}>Vaksiner</span>
+                <span className={styles.footerGuideVerdi}>Se vaksineoversikt for pasienten</span>
+                <span className={styles.footerGuideLabel}>Journaldokumenter</span>
+                <span className={styles.footerGuideVerdi}>Les og skriv journalnotater</span>
+                <span className={styles.footerGuideLabel}>Besøkshistorikk</span>
+                <span className={styles.footerGuideVerdi}>Som lege: se, legg til, endre og slett avtaler. Som pasient: se kommende og tidligere avtaler</span>
+            </div>
+        </div>
+    </footer>
     </div>
   );
 }

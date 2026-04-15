@@ -227,9 +227,13 @@ function Innboks({ rolle }) {
 
   // Hjelpefunksjon som returnerer avsendernavnet med fnr hvis brukeren er lege og avsenderen er en pasient
   // avsender_fnr er null hvis avsenderen er en lege, så sjekker det før det viser fnr
+  // mottaker_fnr er null hvis mottakeren er en lege, så sjekker det for utboks også
   function visAvsenderNavn(melding) {
     if (!visUtboks && rolle === "lege" && melding.avsender_fnr) {
       return `${melding.avsender_navn} (${melding.avsender_fnr})`;
+    }
+    if (visUtboks && rolle === "lege" && melding.mottaker_fnr) {
+      return `${melding.mottaker_navn} (${melding.mottaker_fnr})`;
     }
     return visUtboks ? melding.mottaker_navn : melding.avsender_navn;
   }
@@ -472,6 +476,29 @@ function Innboks({ rolle }) {
           )}
         </main>
       </div>
+      <footer className={styles.footer}>
+        <div className={styles.footerTopp}>
+            <span className={styles.footerNavn}>Eaze</span>
+            <span className={styles.footerDeler}>|</span>
+            <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+            <span className={styles.footerDeler}>|</span>
+            <span className={styles.footerAar}>© 2026</span>
+        </div>
+
+        <div className={styles.footerGuide}>
+            <span className={styles.footerGuideTittel}>På denne siden kan du</span>
+            <div className={styles.footerGuideGrid}>
+                <span className={styles.footerGuideLabel}>Innboks</span>
+                <span className={styles.footerGuideVerdi}>Les meldinger du har mottatt fra leger eller pasienter</span>
+                <span className={styles.footerGuideLabel}>Utboks</span>
+                <span className={styles.footerGuideVerdi}>Se meldinger du har sendt tidligere</span>
+                <span className={styles.footerGuideLabel}>Ny melding</span>
+                <span className={styles.footerGuideVerdi}>Send en ny melding. Som lege: søk etter pasient. Som pasient: velg blant dine leger</span>
+                <span className={styles.footerGuideLabel}>Svar</span>
+                <span className={styles.footerGuideVerdi}>Svar direkte på en mottatt melding ved å trykke "Svar avsender"</span>
+            </div>
+        </div>
+    </footer>
     </div>
   );
 }

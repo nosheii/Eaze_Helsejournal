@@ -156,28 +156,74 @@
     margin-top: 150px;
     margin-left: -48px;
     margin-right: -48px;
-    padding: 50px 48px;
+    padding: 40px 48px;
     background: #007185;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 24px;
+    gap: 28px;
     font-family: 'Nunito', 'Segoe UI', sans-serif;
 }
+
+.footerTopp {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .footerNavn {
     font-size: 16px;
     font-weight: 800;
     color: #ffffff;
 }
 
+.footerDeler {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 16px;
+}
+
 .footerTekst {
     font-size: 13px;
     color: #d0f0f0;
-    font-weight: 400;
 }
 
 .footerAar {
     font-size: 13px;
     color: #d0f0f0;
-    font-weight: 400;
+}
+
+.footerGuide {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    gap: 12px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.footerGuideTittel {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.footerGuideGrid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 6px 20px;
+    width: 100%;
+}
+
+.footerGuideLabel {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: left;
+}
+
+.footerGuideVerdi {
+    font-size: 13px;
+    color: #d0f0f0;
 }

@@ -99,9 +99,27 @@ function Hjem({ rolle, brukerinfo }) {
                 </div>
             </div>
             <footer className={styles.footer}>
-                <span className={styles.footerNavn}>Eaze</span>
-                <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
-                <span className={styles.footerAar}>© 2026</span>
+                <div className={styles.footerTopp}>
+                    <span className={styles.footerNavn}>Eaze</span>
+                    <span className={styles.footerDeler}>|</span>
+                    <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+                    <span className={styles.footerDeler}>|</span>
+                    <span className={styles.footerAar}>© 2026</span>
+                </div>
+
+                <div className={styles.footerGuide}>
+                    <span className={styles.footerGuideTittel}>På denne siden kan du</span>
+                    <div className={styles.footerGuideGrid}>
+                        <span className={styles.footerGuideLabel}>Innboks</span>
+                        <span className={styles.footerGuideVerdi}>Les og send meldinger mellom lege og pasient</span>
+                        <span className={styles.footerGuideLabel}>Avtaler</span>
+                        <span className={styles.footerGuideVerdi}>Se kommende avtaler</span>
+                        <span className={styles.footerGuideLabel}>Journal</span>
+                        <span className={styles.footerGuideVerdi}>Som lege: søk opp pasient via fødselsnummer. Som pasient: gå direkte til din egen journal</span>
+                        <span className={styles.footerGuideLabel}>Informasjon</span>
+                        <span className={styles.footerGuideVerdi}>Les mer om prosjektet</span>
+                    </div>
+                </div>
             </footer>
         </div>
     );

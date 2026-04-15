@@ -111,7 +111,28 @@ function Avtaler({ rolle }) { //her er hovedkomponenten til hele avtaler siden, 
                     {visAlle ? "Se mindre ↑" : `Se alle ${tidligere.length} tidligere avtaler ↓`}
                 </button>
             )}
+
+            <footer className={styles.footer}>
+                <div className={styles.footerTopp}>
+                    <span className={styles.footerNavn}>Eaze</span>
+                    <span className={styles.footerDeler}>|</span>
+                    <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+                    <span className={styles.footerDeler}>|</span>
+                    <span className={styles.footerAar}>© 2026</span>
+                </div>
+
+                <div className={styles.footerGuide}>
+                    <span className={styles.footerGuideTittel}>På denne siden kan du se</span>
+                    <div className={styles.footerGuideGrid}>
+                        <span className={styles.footerGuideLabel}>Kommende avtaler</span>
+                        <span className={styles.footerGuideVerdi}>Se alle fremtidige avtaler du har som lege eller pasient</span>
+                        <span className={styles.footerGuideLabel}>Tidligere avtaler</span>
+                        <span className={styles.footerGuideVerdi}>Se avtalehistorikk. Trykk "Se alle" for å vise mer enn de tre siste</span>
+                    </div>
+                </div>
+            </footer>
         </div>
+        
     )
 }
 
