@@ -12,8 +12,8 @@
 
 .kort {
     background: #9fd1d1;
-    border: 1.5px solid #9fd1d1;
     border-radius: 5px;
+    border: none;
     padding: 5px;
     width: 100%;
     list-style-position: inside;
@@ -33,8 +33,8 @@
     background-color: #0aadad;
     color: white;
     padding: 2px 5px;
-    border: 1.2px solid #0aadad;
     border-radius: 5px;
+    border:none;
     cursor: pointer;
     font-size: 1rem;
     margin-top: 10px;
@@ -47,9 +47,9 @@
     font-family: 'Nunito', 'Segoe UI', sans-serif;
     background-color: #0aadad;
     color: white;
-    padding: 2px 5px;
-    border: 1.2px solid #0aadad;
+    padding: 6px 16px;
     border-radius: 5px;
+    border: none;
     cursor: pointer;
     font-size: 1rem;
     align-self: flex-start;

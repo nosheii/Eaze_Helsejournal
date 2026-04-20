@@ -15,7 +15,7 @@ import JournalVaksiner from "./JournalVaksiner";
 import JournalDokumenter from "./JournalDokumenter";
 import JournalHistorikk from "./Journalhistorikk";
 
-function Journal({ rolle }) {
+function Journal({ rolle, onTokenFeil }) {  
   const [valgtFaneParams, setValgtFane] = useSearchParams();
   const valgtFane = valgtFaneParams.get("fane") || "pasientInfo"; // Hent "fane" fra URL-en, default til "pasientInfo" hvis ikke satt
 
@@ -38,24 +38,41 @@ function Journal({ rolle }) {
         "Authorization": `Bearer ${token}`
       }
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then((res) => {
+        if (res.status === 401) {
+            onTokenFeil();
+            return;
+        }
+        return res.json();
+    })
+    .then((data) => {
+        if (!data) return;
         console.log("Journal data:", data);
         if (data.journaler && data.journaler.length > 0 && data.journaler[0].forNavn !== null) {
-          const j = data.journaler[0];
-          setJournalNr(j.journalNr);
-          setPasient({
-            fnr: j.fnr,
-            navn: `${j.etterNavn}, ${j.forNavn}`,
-            detaljer: j.fnr
-          });
+            const j = data.journaler[0];
+            setJournalNr(j.journalNr);
+            setPasient({
+                fnr: j.fnr,
+                navn: `${j.etterNavn}, ${j.forNavn}`,
+                detaljer: j.fnr
+            });
         }
-        // Oppretter ikke journal automatisk lenger
-        // JournalSok passer heller på å sjekke at pasienten fatkisk finnes
         setLaster(false);
-      })
+    })
   }, [fnr]); // [fnr] betyr: kjør på nytt hvis fnr i URL-en endrer seg
-
+ 
+  function beregnAlder(fnr) {
+    if (!fnr || fnr.length < 6) return null;
+    const dag = parseInt(fnr.substring(0, 2));
+    const mnd = parseInt(fnr.substring(2, 4)) - 1;
+    const aar = parseInt(fnr.substring(4, 6));
+    const fullAar = aar >= 0 && aar <= 24 ? 2000 + aar : 1900 + aar;
+    const fodsel = new Date(fullAar, mnd, dag);
+    const idag = new Date();
+    let alder = idag.getFullYear() - fodsel.getFullYear();
+    if (idag < new Date(idag.getFullYear(), mnd, dag)) alder--;
+    return alder;
+  }
 
   return (
     <div className={styles.side}>
@@ -69,6 +86,9 @@ function Journal({ rolle }) {
             <>
               <span className={styles.pasientNavn}>{pasient.navn}</span>
               <span className={styles.pasientDetaljer}> – {pasient.detaljer}</span>
+              {beregnAlder(pasient.fnr) !== null && (
+                <span className={styles.pasientDetaljer}> – {beregnAlder(pasient.fnr)} år</span>
+              )}
             </>
           ) : (
             <span className={styles.pasientNavn}>Pasient ikke funnet</span>
@@ -119,24 +139,24 @@ function Journal({ rolle }) {
             kan hente riktige data fra backend */}
 
         {valgtFane === "pasientInfo" && (
-          <JournalOmPasient fnr={fnr} rolle={rolle} />
-        )}  
+  <JournalOmPasient fnr={fnr} rolle={rolle} onTokenFeil={onTokenFeil} />
+)}  
 
-        {valgtFane === "pasientMed" && (
-          <JournalMedikament fnr={fnr} rolle={rolle} />
-        )}
+{valgtFane === "pasientMed" && (
+  <JournalMedikament fnr={fnr} rolle={rolle} onTokenFeil={onTokenFeil} />
+)}
 
-        {valgtFane === "pasientVak" && (
-          <JournalVaksiner fnr={fnr} rolle={rolle} />
-        )}
+{valgtFane === "pasientVak" && (
+  <JournalVaksiner fnr={fnr} rolle={rolle} onTokenFeil={onTokenFeil} />
+)}
 
-        {valgtFane === "pasientDok" && (
-          <JournalDokumenter journalNr={journalNr} fnr={fnr} rolle={rolle} />
-      )}
+{valgtFane === "pasientDok" && (
+  <JournalDokumenter journalNr={journalNr} fnr={fnr} rolle={rolle} onTokenFeil={onTokenFeil} />
+)}
 
-        {valgtFane === "pasientHis" && (
-          <JournalHistorikk fnr={fnr} rolle={rolle} />
-        )}
+{valgtFane === "pasientHis" && (
+  <JournalHistorikk fnr={fnr} rolle={rolle} onTokenFeil={onTokenFeil} />
+)}
 
       </div>
       <footer className={styles.footer}>

@@ -3,10 +3,10 @@ import styles from './Login.module.css'
 import logo from './assets/Logo-eaze.png'
 
 
-function Login({ onLoginSuccess }) {
+function Login({ onLoginSuccess, feilmelding: tokenFeilmelding }) {   
     const [brukernavn, setBrukernavn] = useState("")
     const [passord, setPassord] = useState("")
-    const [feilmelding, setFeilmelding] = useState("")
+    const [feilmelding, setFeilmelding] = useState(tokenFeilmelding || "")
     const [laster, setLaster] = useState(false)
 
     async function handleLogin() {

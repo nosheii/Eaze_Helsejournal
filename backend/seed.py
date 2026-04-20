@@ -24,16 +24,17 @@ def seed():
     # Rekkefølgen er viktig, må slette i riktig retning av
     # foreign key relasjonene, barn før foreldre.
     # user peker på ansatt og pasient, så user slettes først.
-    cursor.execute("DELETE FROM melding WHERE avsenderID IN (SELECT userID FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '21267788', '123456', '987654'))")
-    cursor.execute("DELETE FROM melding WHERE mottakerID IN (SELECT userID FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '21267788', '123456', '987654'))")
-    cursor.execute("DELETE FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '21267788', '123456', '987654')")
-    cursor.execute("DELETE FROM dokument WHERE journalNr IN (SELECT journalNr FROM journal WHERE fnr IN ('21267788', '123456', '987654'))")
-    cursor.execute("DELETE FROM diagnose WHERE journalNr IN (SELECT journalNr FROM journal WHERE fnr IN ('21267788', '123456', '987654'))")
-    cursor.execute("DELETE FROM journal WHERE fnr IN ('21267788', '123456', '987654')")
+    cursor.execute("DELETE FROM melding WHERE avsenderID IN (SELECT userID FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '14038512345', '22079812346', '05119212347'))")
+    cursor.execute("DELETE FROM melding WHERE mottakerID IN (SELECT userID FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '14038512345', '22079812346', '05119212347'))")
+    cursor.execute("DELETE FROM user WHERE brukernavn IN ('dr_hansen', 'dr_ghulam', '14038512345', '22079812346', '05119212347')")
+    cursor.execute("DELETE FROM dokument WHERE journalNr IN (SELECT journalNr FROM journal WHERE fnr IN ('14038512345', '22079812346', '05119212347'))")
+    cursor.execute("DELETE FROM diagnose WHERE journalNr IN (SELECT journalNr FROM journal WHERE fnr IN ('14038512345', '22079812346', '05119212347'))")
+    cursor.execute("DELETE FROM journal WHERE fnr IN ('14038512345', '22079812346', '05119212347')")
     cursor.execute("DELETE FROM ansatt WHERE mail IN ('hansen@eaze.no', 'ghulam@eaze.no')")
-    cursor.execute("DELETE FROM pasient WHERE fnr IN ('21267788', '123456', '987654')")
-    cursor.execute("DELETE FROM vaksine WHERE fnr IN ('21267788', '123456', '987654')")
-    cursor.execute("DELETE FROM avtale WHERE fnr IN ('21267788', '123456', '987654')")
+    cursor.execute("DELETE FROM pasient WHERE fnr IN ('14038512345', '22079812346', '05119212347')")
+    cursor.execute("DELETE FROM vaksine WHERE fnr IN ('14038512345', '22079812346', '05119212347')")
+    cursor.execute("DELETE FROM avtale WHERE fnr IN ('14038512345', '22079812346', '05119212347')")
+    cursor.execute("DELETE FROM pasient_info WHERE fnr IN ('14038512345', '22079812346', '05119212347')")
     print("✓ Ryddet opp gamle testdata")
 
 
@@ -67,85 +68,84 @@ def seed():
     print("✓ Opprettet bruker: dr_ghulam / hemmelig123")
 
 
-    # Mumtaz Cade opprettes som pasient
+    # Mumtaz Cade opprettes som pasient (født 14.03.1985)
     cursor.execute("""
         INSERT INTO pasient (fnr, forNavn, etterNavn)
         VALUES (?, ?, ?)
-    """, ("21267788", "Mumtaz", "Cade"))
-    print("✓ Opprettet pasient: Mumtaz Cade (fnr: 21267788)")
+    """, ("14038512345", "Mumtaz", "Cade"))
+    print("✓ Opprettet pasient: Mumtaz Cade (fnr: 14038512345)")
 
     cursor.execute("""
         INSERT INTO user (brukernavn, passord, ansattID, fnr)
         VALUES (?, ?, NULL, ?)
-    """, ("21267788", hash_password("pasientMumtaz"), "21267788"))
-    print("✓ Opprettet bruker: 21267788 / pasientMumtaz")
+    """, ("14038512345", hash_password("pasientMumtaz"), "14038512345"))
+    print("✓ Opprettet bruker: 14038512345 / pasientMumtaz")
 
 
-    # Tilda Løvold opprettes som pasient
+    # Tilda Løvold opprettes som pasient (født 22.07.1998)
     cursor.execute("""
         INSERT INTO pasient (fnr, forNavn, etterNavn)
         VALUES (?, ?, ?)
-    """, ("123456", "Tilda", "Løvold"))
-    print("✓ Opprettet pasient: Tilda Løvold (fnr: 123456)")
+    """, ("22079812346", "Tilda", "Løvold"))
+    print("✓ Opprettet pasient: Tilda Løvold (fnr: 22079812346)")
 
     cursor.execute("""
         INSERT INTO user (brukernavn, passord, ansattID, fnr)
         VALUES (?, ?, NULL, ?)
-    """, ("123456", hash_password("pasientTilda"), "123456"))
-    print("✓ Opprettet bruker: 123456 / pasientTilda")
+    """, ("22079812346", hash_password("pasientTilda"), "22079812346"))
+    print("✓ Opprettet bruker: 22079812346 / pasientTilda")
 
 
-    # Aurora Krogstad opprettes som pasient
+    # Aurora Krogstad opprettes som pasient (født 05.11.1992)
     cursor.execute("""
         INSERT INTO pasient (fnr, forNavn, etterNavn)
         VALUES (?, ?, ?)
-    """, ("987654", "Aurora", "Krogstad"))
-    print("✓ Opprettet pasient: Aurora Krogstad (fnr: 987654)")
+    """, ("05119212347", "Aurora", "Krogstad"))
+    print("✓ Opprettet pasient: Aurora Krogstad (fnr: 05119212347)")
 
     cursor.execute("""
         INSERT INTO user (brukernavn, passord, ansattID, fnr)
         VALUES (?, ?, NULL, ?)
-    """, ("987654", hash_password("pasientAurora"), "987654"))
-    print("✓ Opprettet bruker: 987654 / pasientAurora")
+    """, ("05119212347", hash_password("pasientAurora"), "05119212347"))
+    print("✓ Opprettet bruker: 05119212347 / pasientAurora")
 
 
     # Hent userID-er for å kunne sende meldinger mellom brukere
-    # Vi kan ikke bruke lastrowid her siden vi ikke vet rekkefølgen
     cursor.execute("SELECT userID FROM user WHERE brukernavn = 'dr_hansen'")
     user_id_hansen = cursor.fetchone()["userID"]
 
     cursor.execute("SELECT userID FROM user WHERE brukernavn = 'dr_ghulam'")
     user_id_ghulam = cursor.fetchone()["userID"]
 
-    cursor.execute("SELECT userID FROM user WHERE brukernavn = '21267788'")
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = '14038512345'")
     user_id_mumtaz = cursor.fetchone()["userID"]
 
-    cursor.execute("SELECT userID FROM user WHERE brukernavn = '123456'")
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = '22079812346'")
     user_id_tilda = cursor.fetchone()["userID"]
 
-    cursor.execute("SELECT userID FROM user WHERE brukernavn = '987654'")
+    cursor.execute("SELECT userID FROM user WHERE brukernavn = '05119212347'")
     user_id_aurora = cursor.fetchone()["userID"]
 
 
-    # En journal til hver pasient, opprettet av en lege sånn at siden ikke kræsjer
+    # En journal til hver pasient
     cursor.execute("""
         INSERT INTO journal (fnr, ansattID, opprettetDato)
         VALUES (?, ?, ?)
-    """, ("21267788", ansatt_id_hansen, "2023-01-10"))
+    """, ("14038512345", ansatt_id_hansen, "2023-01-10"))
     journal_nr_mumtaz = cursor.lastrowid
     print(f"✓ Opprettet journal for Mumtaz Cade (journalNr: {journal_nr_mumtaz})")
 
     cursor.execute("""
         INSERT INTO journal (fnr, ansattID, opprettetDato)
         VALUES (?, ?, ?)
-    """, ("123456", ansatt_id_ghulam, "2023-03-15"))
+    """, ("22079812346", ansatt_id_ghulam, "2023-03-15"))
     journal_nr_tilda = cursor.lastrowid
     print(f"✓ Opprettet journal for Tilda Løvold (journalNr: {journal_nr_tilda})")
 
     cursor.execute("""
         INSERT INTO journal (fnr, ansattID, opprettetDato)
         VALUES (?, ?, ?)
-    """, ("987654", ansatt_id_hansen, "2024-02-19"))
+    """, ("05119212347", ansatt_id_hansen, "2024-02-19"))
     journal_nr_aurora = cursor.lastrowid
     print(f"✓ Opprettet journal for Aurora Krogstad (journalNr: {journal_nr_aurora})")
 
@@ -160,7 +160,7 @@ def seed():
         cursor.execute("""
             INSERT INTO vaksine (fnr, vaksineNavn, dato, ansattID)
             VALUES (?, ?, ?, ?)
-        """, ("21267788", vaksineNavn, dato, ansatt_id_hansen))
+        """, ("14038512345", vaksineNavn, dato, ansatt_id_hansen))
     print("✓ Opprettet testvaksiner for Mumtaz Cade")
 
     # Vaksiner for Tilda
@@ -173,7 +173,7 @@ def seed():
         cursor.execute("""
             INSERT INTO vaksine (fnr, vaksineNavn, dato, ansattID)
             VALUES (?, ?, ?, ?)
-        """, ("123456", vaksineNavn, dato, ansatt_id_ghulam))
+        """, ("22079812346", vaksineNavn, dato, ansatt_id_ghulam))
     print("✓ Opprettet testvaksiner for Tilda Løvold")
 
     # Vaksiner for Aurora
@@ -185,11 +185,11 @@ def seed():
         cursor.execute("""
             INSERT INTO vaksine (fnr, vaksineNavn, dato, ansattID)
             VALUES (?, ?, ?, ?)
-        """, ("987654", vaksineNavn, dato, ansatt_id_hansen))
+        """, ("05119212347", vaksineNavn, dato, ansatt_id_hansen))
     print("✓ Opprettet testvaksiner for Aurora Krogstad")
 
 
-    # Avtaler for Mumtaz, 2 kommende og 6 tidligere slik at se mer knappen vises
+    # Avtaler for Mumtaz
     avtaler_mumtaz = [
         ("2026-09-12 12:00", "Helsesjekk",                    ansatt_id_hansen),
         ("2026-11-03 09:30", "Oppfølging etter blodprøve",    ansatt_id_hansen),
@@ -204,10 +204,10 @@ def seed():
         cursor.execute("""
             INSERT INTO avtale (fnr, ansattID, tidspunkt, kommentar)
             VALUES (?, ?, ?, ?)
-        """, ("21267788", lege_id, tidspunkt, kommentar))
+        """, ("14038512345", lege_id, tidspunkt, kommentar))
     print("✓ Opprettet testavtaler for Mumtaz Cade (2 kommende, 6 tidligere)")
 
-    # Avtaler for Tilda, 2 kommende og 4 tidligere
+    # Avtaler for Tilda
     avtaler_tilda = [
         ("2026-10-01 08:30", "Første konsultasjon",            ansatt_id_ghulam),
         ("2026-12-15 14:00", "Oppfølging kolesterol",          ansatt_id_hansen),
@@ -220,10 +220,10 @@ def seed():
         cursor.execute("""
             INSERT INTO avtale (fnr, ansattID, tidspunkt, kommentar)
             VALUES (?, ?, ?, ?)
-        """, ("123456", lege_id, tidspunkt, kommentar))
+        """, ("22079812346", lege_id, tidspunkt, kommentar))
     print("✓ Opprettet testavtaler for Tilda Løvold (2 kommende, 4 tidligere)")
 
-    # Avtaler for Aurora, 2 kommende og 3 tidligere
+    # Avtaler for Aurora
     avtaler_aurora = [
         ("2026-08-22 10:00", "Ny pasient innledende samtale",  ansatt_id_hansen),
         ("2026-10-30 13:00", "Hudundersøkelse oppfølging",     ansatt_id_ghulam),
@@ -235,11 +235,11 @@ def seed():
         cursor.execute("""
             INSERT INTO avtale (fnr, ansattID, tidspunkt, kommentar)
             VALUES (?, ?, ?, ?)
-        """, ("987654", lege_id, tidspunkt, kommentar))
+        """, ("05119212347", lege_id, tidspunkt, kommentar))
     print("✓ Opprettet testavtaler for Aurora Krogstad (2 kommende, 3 tidligere)")
 
 
-    # Testmeldinger fra leger til pasienter og tilbake
+    # Testmeldinger
     meldinger = [
         (user_id_hansen, user_id_mumtaz,  "Oppfølging etter blodprøve",    "Hei Mumtaz, blodprøvene dine viser normale verdier. Ingen videre tiltak er nødvendig, men vi anbefaler en ny kontroll om seks måneder. Ta gjerne kontakt hvis du har spørsmål."),
         (user_id_hansen, user_id_mumtaz,  "Resept fornyet",                 "Hei, jeg har nå fornyet resepten din på Paracet. Den er klar til henting på apoteket fra i morgen. Husk å ta medisinen som foreskrevet."),
@@ -250,7 +250,6 @@ def seed():
         (user_id_ghulam, user_id_aurora,  "Hudundersøkelse resultater",     "Hei Aurora, undersøkelsen viste ingen tegn til alvorlige forandringer. Vi anbefaler likevel at du bruker solkrem daglig og holder øye med eventuelle nye flekker."),
         (user_id_aurora, user_id_hansen,  "Spørsmål om henvisning",         "Hei Dr. Hansen, jeg har fått beskjed fra Dr. Ghulam om at jeg muligens trenger en henvisning. Kan du hjelpe meg med dette?"),
     ]
-
     for avsender, mottaker, overskrift, innhold in meldinger:
         cursor.execute("""
             INSERT INTO melding (avsenderID, mottakerID, overskrift, innhold)
@@ -258,7 +257,7 @@ def seed():
         """, (avsender, mottaker, overskrift, innhold))
     print("✓ Opprettet testmeldinger mellom leger og pasienter")
 
-    # Testresepter for Tilda Løvold (123456) - skrevet av Dr. Hansen
+    # Testresepter for Tilda Løvold
     resepter_tilda = [
         ("Paracet 500 mg tabletter", "1-2 tabletter ved behov, maks 3 ganger daglig", "20 stk", 2, "2026-09-10", "Følg pakningsvedlegg. Ikke kombiner med annen paracetamol.", "aktiv"),
         ("Nasonex nesespray 50 µg/dose", "1 spray i hvert nesebor morgen og kveld", "1 flaske", 1, "2026-10-23", "Ved tett nese og allergi", "aktiv"),
@@ -269,10 +268,10 @@ def seed():
         cursor.execute("""
             INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, ("123456", ansatt_id_hansen, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
+        """, ("22079812346", ansatt_id_hansen, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
     print("✓ Opprettet testresepter for Tilda Løvold")
 
-    # Testresepter for Mumtaz Cade (21267788) - skrevet av Dr. Ghulam
+    # Testresepter for Mumtaz Cade
     resepter_mumtaz = [
         ("Metformin 500 mg tabletter", "1 tablett 2 ganger daglig", "60 stk", 3, "2026-12-01", "Ta med mat. Kontroller blodsukkeret regelmessig.", "aktiv"),
         ("Lisinopril 10 mg tabletter", "1 tablett daglig", "30 stk", 2, "2026-08-15", "Blodtrykksmedisinen. Ikke slutt brått.", "aktiv"),
@@ -282,10 +281,10 @@ def seed():
         cursor.execute("""
             INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, ("21267788", ansatt_id_ghulam, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
+        """, ("14038512345", ansatt_id_ghulam, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
     print("✓ Opprettet testresepter for Mumtaz Cade")
 
-    # Testresepter for Aurora Krogstad (987654) - skrevet av Dr. Hansen
+    # Testresepter for Aurora Krogstad
     resepter_aurora = [
         ("Cetirizin 10 mg tabletter", "1 tablett daglig ved behov", "30 stk", 1, "2026-07-20", "Mot allergisymptomer", "aktiv"),
         ("Prednisolon 5 mg tabletter", "Som foreskrevet", "20 stk", 0, "2024-11-30", "Kortvarig kur", "arkivert"),
@@ -294,8 +293,37 @@ def seed():
         cursor.execute("""
             INSERT INTO resept (fnr, ansattID, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, ("987654", ansatt_id_hansen, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
+        """, ("05119212347", ansatt_id_hansen, mediNavn, dosering, mengde, reiterasjoner, utlopsdato, kommentar, status))
     print("✓ Opprettet testresepter for Aurora Krogstad")
+
+    # Pasientinfo for alle pasienter
+    pasientinfo = [
+        ("14038512345", "om_pasient",   "Født 1985"),
+        ("14038512345", "om_pasient",   "Røyker ikke"),
+        ("14038512345", "om_pasient",   "Trener 2-3 ganger i uken"),
+        ("14038512345", "om_pasient",   "Gift, to barn"),
+        ("14038512345", "kritisk_info", "Diabetiker type 2"),
+        ("14038512345", "kritisk_info", "Allergisk mot penicillin"),
+
+        ("22079812346", "om_pasient",   "Født 1998"),
+        ("22079812346", "om_pasient",   "Student"),
+        ("22079812346", "om_pasient",   "Ikke-røyker"),
+        ("22079812346", "om_pasient",   "Kjent med sesongallergi"),
+        ("22079812346", "kritisk_info", "Allergisk mot latex"),
+        ("22079812346", "kritisk_info", "Høyt kolesterol"),
+
+        ("05119212347", "om_pasient",   "Født 1992"),
+        ("05119212347", "om_pasient",   "Jobber som lærer"),
+        ("05119212347", "om_pasient",   "Aktiv mosjonist"),
+        ("05119212347", "kritisk_info", "Eksem, unngå kortisonkrem"),
+        ("05119212347", "kritisk_info", "Allergisk mot sulfa"),
+    ]
+    for fnr, kategori, innhold in pasientinfo:
+        cursor.execute("""
+            INSERT INTO pasient_info (fnr, kategori, innhold)
+            VALUES (?, ?, ?)
+        """, (fnr, kategori, innhold))
+    print("✓ Opprettet pasientinfo for alle pasienter")
 
     connection.commit()
     connection.close()
@@ -303,12 +331,12 @@ def seed():
     print("\n Seeding fullført!")
     print("\nTestbrukere:")
     print("  Leger:")
-    print("    dr_hansen   / hemmelig123")
-    print("    dr_ghulam   / hemmelig123")
+    print("    dr_hansen       / hemmelig123")
+    print("    dr_ghulam       / hemmelig123")
     print("  Pasienter:")
-    print("    21267788    / pasientMumtaz   (Mumtaz Cade)")
-    print("    123456      / pasientTilda    (Tilda Løvold)")
-    print("    987654      / pasientAurora   (Aurora Krogstad)")
+    print("    14038512345     / pasientMumtaz   (Mumtaz Cade, født 14.03.1985)")
+    print("    22079812346     / pasientTilda    (Tilda Løvold, født 22.07.1998)")
+    print("    05119212347     / pasientAurora   (Aurora Krogstad, født 05.11.1992)")
 
 if __name__ == "__main__":
     seed()

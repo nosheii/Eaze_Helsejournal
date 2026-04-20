@@ -14,7 +14,7 @@ const tomtSkjema = {
     kommentar: "",
 };
 
-function JournalDokumenter({ journalNr, fnr, rolle }) {
+function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {    
     const token = sessionStorage.getItem("token");
 
     const [dokumenter, setDokumenter] = useState([]);
@@ -39,7 +39,13 @@ function JournalDokumenter({ journalNr, fnr, rolle }) {
         fetch(`${API}/pasient/${fnr}/info`, {
             headers: { Authorization: `Bearer ${token}` }
         })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 401) {
+                    onTokenFeil();
+                    return;
+                }
+                return res.json();
+            })
             .then(data => setKritiskInfo(data.kritisk_info))
             .catch(() => {});
     }, [fnr]);
@@ -51,6 +57,10 @@ function JournalDokumenter({ journalNr, fnr, rolle }) {
             const res = await fetch(`${API}/dokument/${journalNr}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
+            if (res.status === 401) {
+                onTokenFeil();
+                return;
+            }
             if (!res.ok) throw new Error("Kunne ikke hente dokumenter");
             const data = await res.json();
             setDokumenter(data.dokumenter);
@@ -76,6 +86,7 @@ function JournalDokumenter({ journalNr, fnr, rolle }) {
                 },
                 body: JSON.stringify({ journalNr, tekst: JSON.stringify(skjema) }),
             });
+            if (res.status === 401) { onTokenFeil(); return; }
             if (!res.ok) throw new Error("Kunne ikke lagre dokument");
             setVisSkjema(false);
             setSkjema(tomtSkjema);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./JournalOmPasient.module.css";
 
-function JournalOmPasient({ fnr, rolle }) {
+function JournalOmPasient({ fnr, rolle, onTokenFeil }) {    
     const [omPasient, setOmPasient] = useState([]);
     const [kritiskInfo, setKritiskInfo] = useState([]);
     const [laster, setLaster] = useState(true);
@@ -23,9 +23,13 @@ function JournalOmPasient({ fnr, rolle }) {
             }
         })
             .then((res) => {
-                if (!res.ok) throw new Error("Klarte ikke hente pasientinfo");
-                return res.json();
-            })
+            if (res.status === 401) {
+                onTokenFeil();
+                return;
+            }
+            if (!res.ok) throw new Error("Klarte ikke hente pasientinfo");
+            return res.json();
+        })
             .then((data) => {
                 setOmPasient(data.om_pasient);
                 setKritiskInfo(data.kritisk_info);
@@ -36,18 +40,24 @@ function JournalOmPasient({ fnr, rolle }) {
 
     function lagre() {
         fetch(`http://localhost:8000/pasient/${fnr}/info`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            om_pasient: omPasient,
-            kritisk_info: kritiskInfo,
-        }),
-    });
-    setRedigerer(false);
-}
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                om_pasient: omPasient,
+                kritisk_info: kritiskInfo,
+            }),
+        })
+        .then((res) => {
+            if (res.status === 401) {
+                onTokenFeil();
+                return;
+            }
+        });
+        setRedigerer(false);
+    }
 
     function oppdater(liste, setListe, index, verdi) {
         const ny = [...liste];

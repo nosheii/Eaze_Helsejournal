@@ -22,7 +22,8 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
 
     const [token, setToken] = useState(existing_token) // useState for å huske token (hvis det finnes)
     const [rolle, setRolle] = useState(decoded_token ? decoded_token.rolle : null) // useState for å huske rolle (hvis det finnes)
-    const [brukerinfo, setBrukerinfo] = useState(decoded_token ? decoded_token.brukerinfo : null) // useState for å huske brukerinfo (hvis det finnes)
+    const [brukerinfo, setBrukerinfo] = useState(decoded_token ? decoded_token.brukerinfo : null)
+    const [tokenFeil, setTokenFeil] = useState(null) // useState for å huske tokenFeil (hvis det finnes)
 
     function handleLoginSuccess(nyToken, nyRolle, nyBrukerinfo) { // Denne funksjonen kalles når Login.jsx får en vellykket login-respons fra backend
         sessionStorage.setItem("token", nyToken) // Lagre token i sessionStorage slik at den er tilgjengelig ved refresh
@@ -38,10 +39,17 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
 
         sessionStorage.removeItem("token") // Fjerner token fra sessionStorage slik at den ikke lenger er tilgjengelig ved refresh
     }
+    function handleTokenFeil() {
+        sessionStorage.removeItem("token")
+        setToken(null)
+        setRolle(null)
+        setBrukerinfo(null)
+        setTokenFeil("Ugyldig eller utløpt token. Vennligst logg inn på nytt.")
+    }
 
     // Hvis ikke innlogget - vis Login-siden
-    if (!token) { // Hvis det ikke finnes en token (!utrops tegnet betyr "ikke"), vis Login-siden (dvs. at brukeren ikke er logget inn)
-        return <Login onLoginSuccess={handleLoginSuccess} />
+    if (!token) {
+    return <Login onLoginSuccess={handleLoginSuccess} feilmelding={tokenFeil} />
     }
 
     // Hvis innlogget - vis Navbar + Routes
@@ -56,8 +64,7 @@ function App() { // Sjekk om det allerede finnes en token i sessionStorage (dvs.
                 <Route path="/vaksine" element={<Vaksine rolle={rolle} brukerinfo={brukerinfo} />} />
                 <Route path="/informasjon" element={<Informasjon />} />
                 <Route path="/journal" element={<JournalSok />} />
-                <Route path="/journal/:fnr" element={<Journal rolle={rolle} />} />
-                <Route path="*" element={<Navigate to="/hjem" />} />
+                <Route path="/journal/:fnr" element={<Journal rolle={rolle} onTokenFeil={handleTokenFeil} />} />                <Route path="*" element={<Navigate to="/hjem" />} />
                 
             </Routes>
         </BrowserRouter>
