@@ -325,6 +325,78 @@ def seed():
         """, (fnr, kategori, innhold))
     print("✓ Opprettet pasientinfo for alle pasienter")
 
+    # Journaldokumenter lagres som JSON, samme format som frontend bruker
+    import json
+
+    dokumenter = [
+        # Mumtaz Cade - 2 dokumenter
+        (journal_nr_mumtaz, ansatt_id_hansen, "2023-01-10", json.dumps({
+            "dokumentnavn": "Innledende konsultasjon",
+            "kategori": "Konsultasjonsnotat",
+            "subjektivt": "Pasienten rapporterer om tretthet og økt tørste de siste månedene.",
+            "objektivt": "BT: 138/88. BMI: 27. Blodsukker: 8.2 mmol/L.",
+            "vurdering": "Mistenker diabetes type 2. Blodprøver bestilt.",
+            "plan": "Henvise til diabetespoliklinikk. Starte med kostholdsendringer.",
+            "kommentar": ""
+        })),
+        (journal_nr_mumtaz, ansatt_id_ghulam, "2024-05-20", json.dumps({
+            "dokumentnavn": "Oppfølging diabetes",
+            "kategori": "Konsultasjonsnotat",
+            "subjektivt": "Pasienten følger behandlingsplanen. Føler seg bedre, mindre tørste.",
+            "objektivt": "BT: 132/82. HbA1c: 52 mmol/mol. Vekt stabil.",
+            "vurdering": "God blodsukkerregulering med Metformin. Fortsetter behandlingen.",
+            "plan": "Ny kontroll om 6 måneder. Fortsette med nåværende medisinering.",
+            "kommentar": "Pasienten er motivert og følger kostholdsrådene godt."
+        })),
+
+        # Tilda Løvold - 2 dokumenter
+        (journal_nr_tilda, ansatt_id_ghulam, "2023-03-15", json.dumps({
+            "dokumentnavn": "Første konsultasjon",
+            "kategori": "Konsultasjonsnotat",
+            "subjektivt": "Pasienten klager over hodepine og svimmelhet. Ingen kjente sykdommer.",
+            "objektivt": "BT: 142/90. Puls: 78. Nevrologisk status normal.",
+            "vurdering": "Forhøyet blodtrykk. Kolesterolmåling bestilt.",
+            "plan": "Blodprøver tas. Livsstilsendringer anbefalt. Oppfølging om 3 måneder.",
+            "kommentar": ""
+        })),
+        (journal_nr_tilda, ansatt_id_hansen, "2025-03-05", json.dumps({
+            "dokumentnavn": "Reseptfornyelse kolesterol",
+            "kategori": "Konsultasjonsnotat",
+            "subjektivt": "Pasienten ønsker fornyelse av resept. Ingen nye plager.",
+            "objektivt": "BT: 128/80. Kolesterol: 5.1 mmol/L (ned fra 6.3).",
+            "vurdering": "God respons på behandling. Kolesterolet har gått ned.",
+            "plan": "Fornyer resept. Ny kontroll om 6 måneder.",
+            "kommentar": "Pasienten har endret kosthold og mosjonerer regelmessig."
+        })),
+
+        # Aurora Krogstad - 2 dokumenter
+        (journal_nr_aurora, ansatt_id_hansen, "2024-02-19", json.dumps({
+            "dokumentnavn": "Velkomstsamtale ny pasient",
+            "kategori": "Konsultasjonsnotat",
+            "subjektivt": "Ny pasient. Kommer for generell helsesjekk. Nevner hudutslett på armer.",
+            "objektivt": "Generell status god. Eksem observert på begge underarmer.",
+            "vurdering": "Atopisk eksem. Ingen tegn til infeksjon.",
+            "plan": "Fuktighetsbehandling anbefalt. Unngå kortisonkrem. Oppfølging ved behov.",
+            "kommentar": ""
+        })),
+        (journal_nr_aurora, ansatt_id_ghulam, "2025-03-11", json.dumps({
+            "dokumentnavn": "Hudundersøkelse oppfølging",
+            "kategori": "Konsultasjonsnotat",
+            "subjektivt": "Pasienten rapporterer at eksemen er noe bedre, men fortsatt plagsom.",
+            "objektivt": "Redusert utslett på underarmer. Ingen nye områder affisert.",
+            "vurdering": "Bedring av atopisk eksem med fuktighetsbehandling.",
+            "plan": "Fortsette med samme behandling. Henvis til hudlege ved forverring.",
+            "kommentar": "Anbefalt å unngå parfymerte produkter."
+        })),
+    ]
+
+    for journalNr, ansattID, dato, tekst in dokumenter:
+        cursor.execute("""
+            INSERT INTO dokument (journalNr, ansattID, opprettetDato, tekst)
+            VALUES (?, ?, ?, ?)
+        """, (journalNr, ansattID, dato, tekst))
+    print("✓ Opprettet journaldokumenter for alle pasienter")
+
     connection.commit()
     connection.close()
 
