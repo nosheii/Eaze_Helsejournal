@@ -126,8 +126,9 @@
 /* Footer */
 .footer {
     margin-top: 60px;
-    margin-left: -30rem;
-    margin-right: -30rem;
+    margin-left: -50rem;
+    margin-right: -50rem;
+    margin-bottom: -40px;
     padding: 40px 48px;
     background: #007185;
     display: flex;
