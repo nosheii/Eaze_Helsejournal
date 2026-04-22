@@ -9,7 +9,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import styles from "./Journal.module.css";
 
 // Her importeres underkomponentene for hver fane.
-import JournalOmPasient from "./JournalOmPasient";
+import JournalOmPasient from "./Journalompasient";
 import JournalMedikament from "./JournalMedikament";
 import JournalVaksiner from "./JournalVaksiner";
 import JournalDokumenter from "./JournalDokumenter";
