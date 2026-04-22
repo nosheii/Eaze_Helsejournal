@@ -1,15 +1,17 @@
-// Ana María Araya Flores, stundentnr 273762
-// Viser vaksinehistorikk for pasient
-// Lege har knapp for å legge til vaksine
+// Ana María Araya Flores - 273762
 
-import {useState, useEffect} from "react";
+// Vaksine-side som viser vaksinehistorikk for innlogget pasient.
+// Henter fnr og rolle som props fra App.jsx
+// Legg-til-knappen vises kun for leger.
+
+import { useState, useEffect } from "react";
 import styles from "./Vaksine.module.css";
 
-export function Vaksine ({brukerinfo, rolle}) {
-    const[vaksine, setVaksine] = useState([]) //lagrer vaksiner
+export function Vaksine({ brukerinfo, rolle }) {
+    const [vaksine, setVaksine] = useState([]) //lagrer vaksiner
     const fnr = brukerinfo?.fnr
 
-    useEffect(() => {   
+    useEffect(() => {
         // henter JWT-token for å bekrefte innlogging
         const token = sessionStorage.getItem("token")
 
@@ -18,8 +20,8 @@ export function Vaksine ({brukerinfo, rolle}) {
             fetch(`http://localhost:8000/vaksine/${fnr}`, { // sender GET-forespørsel til backend
                 headers: {
                     "Authorization": `Bearer ${token}` //innlogging
-                     }
-                })
+                }
+            })
                 .then(res => res.json()) // konverterer responsen til JSON
                 .then(data => {
                     setVaksine(data.vaksine) // oppdaterer vaksine state med data fra backend
@@ -53,7 +55,7 @@ export function Vaksine ({brukerinfo, rolle}) {
                                     <td><strong>{v.vaksineNavn}</strong></td>
                                     <td className={styles.dato}>{v.dato.replace(/-/g, ".")}</td>
                                 </tr>
-                            ))}    
+                            ))}
                         </tbody>
                     </table>
                 </div>

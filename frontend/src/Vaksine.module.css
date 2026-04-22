@@ -1,18 +1,24 @@
-/* Ana María Araya Flores, stundentnr 273762 */
+/* Ana María Araya Flores - 273762 */
+
+/* CSS for Journalvaksiner-komponenten */
 .vaksineSide {
     background-color: #ecfcff;
     height: 100vh;
-    font-family: 'Nunito', 'Segoe UI', sans-serif;;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
 }
+
 .vaksineKort {
     color: #1a2e2e;
 }
+
 .vaksineHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
+    padding-top: 8px;
 }
+
 .vaksineKnapp {
     background: #0aadad;
     color: #ffffff;
@@ -24,34 +30,28 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    margin-bottom: 16px;
 }
+
 .vaksineKnapp:hover {
-    background:#007185;
+    background: #007185;
 }
+
 .vaksineHeader h2 {
     font-size: 20px;
     font-weight: 800;
     color: #1a2e2e;
-    margin: 0;  
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
+    margin: 0;
 }
+
 .vaksineTabell {
     width: 100%;
     border-collapse: collapse;
     margin-top: 0;
 }
-.vaksineTabell thead tr { /* Vaksinasjon og vaksinasjonsdato */
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #ffffff;
-    margin-top: 0;
-}
+
 .vaksineTabell th {
     text-align: left;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: #007185;
     background: #f0fafa;
@@ -61,17 +61,74 @@
     border-bottom: 1.5px solid #007185;
     padding-bottom: 6px;
 }
+
 .vaksineTabell td {
     text-align: left;
+    font-size: 14px;
     color: #1a2e2e;
     padding: 12px 14px;
     border-bottom: 1px solid #e0f0f0;
+}
 
-}
-.dato {
-    text-align: left;
-}
 .vaksineScrollbar {
     max-height: 300px;
     overflow-y: auto;
+}
+
+/* Skjema for å legge til ny vaksine */
+
+.vaksineSkjema {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    background: #ffffff;
+    border: 1px solid #c8e8e8;
+    border-radius: 5px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+
+.vaksineFelt { /* sidestiller feltene */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.vaksineFelt>div { /* plasserer label over input-feltet */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.vaksineFelt label {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #007185;
+}
+
+.vaksineFelt input {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    padding: 8px 12px;
+    border: 1px solid #c8e8e8;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #1a2e2e;
+}
+
+.lagreKnapp {
+    background: #0aadad;
+    color: #ffffff;
+    font-size: 14px;
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 8px 16px;
+    border: 1px solid #c8e8e8;
+}
+
+.lagreKnapp:hover {
+    background: #007185;
 }
