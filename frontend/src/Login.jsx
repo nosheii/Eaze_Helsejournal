@@ -1,3 +1,6 @@
+// Tilda Løvold - 273803
+// Login.jsx
+// Denne komponenten håndterer innloggingsprosessen for både leger og pasienter.
 import { useState } from 'react'
 import styles from './Login.module.css'
 import logo from './assets/Logo-eaze.png'

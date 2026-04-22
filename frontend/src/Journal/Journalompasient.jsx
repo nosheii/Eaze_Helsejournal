@@ -1,3 +1,4 @@
+/* Sofie Kure - 273800 */
 import { useState, useEffect } from "react";
 import styles from "./JournalOmPasient.module.css";
 

@@ -1,3 +1,4 @@
+/* Aurora Krogstad - 261696 */
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import './Navbar.css'

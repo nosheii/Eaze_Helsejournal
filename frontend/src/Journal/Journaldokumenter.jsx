@@ -1,3 +1,4 @@
+/* Sofie Kure - 273800 og Aurora Krogstad - 261696 */
 import { Funnel } from "lucide-react";
 import { useState, useEffect } from "react";
 import styles from "./Journaldokumenter.module.css";
