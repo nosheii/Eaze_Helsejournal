@@ -3,6 +3,8 @@
 // Denne skal ha ansvar for å vite hvilken fane er valgt og vise riktig innhold basert på onClick
 // Logikken på de andre fanene er delt opp i underkomponenter for 
 // å holde det mer ryddig og mindre kaotisk
+// NORA AL-TAY - 146274
+// SOFIE KURE - 261696 
 
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
