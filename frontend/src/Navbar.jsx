@@ -11,7 +11,7 @@ function Navbar({ brukerinfo, onLoggUt, rolle }) {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <img src={logo} alt="Eaze logo" className="navbar-logo" />
+        <Link to="/hjem" className="navbar-link"><img src={logo} alt="Eaze logo" className="navbar-logo" /></Link>
         <div className="navbar-links">
           <Link to="/hjem" className="navbar-link">Hjem</Link>
           <Link to="/innboks" className="navbar-link">Innboks</Link>
