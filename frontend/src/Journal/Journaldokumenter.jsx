@@ -15,6 +15,8 @@ const tomtSkjema = {
     kommentar: "",
 };
 
+// JournalDokumenter viser alle journaldokumenter for en pasient
+// Legen kan opprette nye dokumenter, pasienten kan bare lese
 function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {    
     const token = sessionStorage.getItem("token");
 
@@ -35,6 +37,7 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
         if (journalNr) hentDokumenter();
     }, [journalNr]);
 
+    // Henter kritisk info om pasienten for å vise i skjema-visningen
     useEffect(() => {
         if (!fnr) return;
         fetch(`${API}/pasient/${fnr}/info`, {
@@ -47,10 +50,12 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
                 }
                 return res.json();
             })
+            // data.kritisk_info er en liste med strenger som vises i kritiskInfoBlok
             .then(data => setKritiskInfo(data.kritisk_info))
             .catch(() => {});
     }, [fnr]);
 
+    // Henter alle dokumenter tilknyttet denne journalen fra backend
     async function hentDokumenter() {
         setLaster(true);
         setFeil(null);
@@ -72,6 +77,8 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
         }
     }
 
+    // Lagrer et nytt dokument. Teksten serialiseres som JSON siden
+    // dokumentet inneholder flere felt (subjektivt, objektivt, osv.)
     async function lagreDokument() {
         if (!skjema.dokumentnavn.trim()) {
             alert("Dokumentnavn er påkrevd");
@@ -85,6 +92,8 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
+                // JSON.stringify(skjema) konverterer skjema-objektet til en tekststreng
+                // slik at hele dokumentet kan lagres i én tekstkolonne i databasen
                 body: JSON.stringify({ journalNr, tekst: JSON.stringify(skjema) }),
             });
             if (res.status === 401) { onTokenFeil(); return; }
@@ -99,10 +108,12 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
         }
     }
 
+    // Veksler mellom ekspandert og kollapset visning for et dokument i listen
     function toggleEkspander(id) {
         setEkspandert(ekspandert === id ? null : id);
     }
 
+    // Filtrerer dokumenter basert på dato hvis filter er satt
     const filtrert = dokumenter.filter((dok) => {
         if (!fraFilter && !tilFilter) return true;
         const dato = new Date(dok.opprettetDato);
@@ -111,6 +122,8 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
         return true;
     });
 
+    // Kritisk info-blokk som vises i skjema og åpent dokument
+    // slik at legen alltid har tilgang til viktig pasientinfo under skriving
     const kritiskInfoBlokk = (
         <div className={styles.skjemaHoyre}>
             <span className={styles.kritiskInfoTittel}>Kritisk info:</span>
@@ -131,7 +144,7 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
         </div>
     );
 
-    // --- Opprett skjema ---
+    // --- Opprett skjema --- vises når legen klikker "Opprett nytt dokument"
     if (visSkjema) {
         return (
             <div className={styles.kontainer}>
@@ -193,7 +206,10 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
         );
     }
 
+    // --- Åpent dokument --- vises når legen klikker "Åpne" på et dokument
     if (apentDokument) {
+        // JSON.parse brukes for å konvertere tekststrengen tilbake til et objekt
+        // try/catch håndterer eldre dokumenter som ikke er lagret som JSON
         const innhold = (() => {
             try { return JSON.parse(apentDokument.tekst); }
             catch { return {}; }
@@ -231,7 +247,7 @@ function JournalDokumenter({ journalNr, fnr, rolle, onTokenFeil }) {
         );
     }
 
-    // --- Dokumentliste ---
+    // --- Dokumentliste --- hovedvisningen med alle dokumenter i en tabell
     if (laster) return <p>Laster dokumenter...</p>;
     if (feil) return <p>{feil}</p>;
 

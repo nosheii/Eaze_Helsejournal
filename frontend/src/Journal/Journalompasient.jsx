@@ -2,7 +2,9 @@
 import { useState, useEffect } from "react";
 import styles from "./JournalOmPasient.module.css";
 
-function JournalOmPasient({ fnr, rolle, onTokenFeil }) {    
+// JournalOmPasient viser og lar legen redigere generell info og kritisk info om pasienten
+function JournalOmPasient({ fnr, rolle, onTokenFeil }) {
+    // omPasient og kritiskInfo er lister med tekststrenger hentet fra backend    
     const [omPasient, setOmPasient] = useState([]);
     const [kritiskInfo, setKritiskInfo] = useState([]);
     const [laster, setLaster] = useState(true);
@@ -13,6 +15,7 @@ function JournalOmPasient({ fnr, rolle, onTokenFeil }) {
 
     const token = sessionStorage.getItem("token");
 
+    // useEffect kjører når fnr endres, og henter pasientinfo fra backend
     useEffect(() => {
         if (!fnr) return;
         setLaster(true);
@@ -39,6 +42,7 @@ function JournalOmPasient({ fnr, rolle, onTokenFeil }) {
             .finally(() => setLaster(false));
     }, [fnr]);
 
+    // lagre() sender oppdatert pasientinfo til backend med PUT-request
     function lagre() {
         fetch(`http://localhost:8000/pasient/${fnr}/info`, {
             method: "PUT",
@@ -60,6 +64,8 @@ function JournalOmPasient({ fnr, rolle, onTokenFeil }) {
         setRedigerer(false);
     }
 
+    // oppdater() er en hjelpefunksjon for å oppdatere ett element i en liste
+    // uten å mutere den originale listen direkte
     function oppdater(liste, setListe, index, verdi) {
         const ny = [...liste];
         ny[index] = verdi;
@@ -74,6 +80,7 @@ function JournalOmPasient({ fnr, rolle, onTokenFeil }) {
         <div className={styles.side}>
             <div className={styles.kort}>
                 <h2 className={styles.tittel}><b>Om pasient:</b></h2>
+                {/* Viser hvert element i listen, enten som tekst eller som input i redigeringsmodus */}
                 <ul>
                     {omPasient.map((item, i) => (
                         <li key={i}>
@@ -104,7 +111,7 @@ function JournalOmPasient({ fnr, rolle, onTokenFeil }) {
                 {redigerer && <button onClick={() => setKritiskInfo([...kritiskInfo, ""])}>+ Legg til</button>}
             </div>
         </div>
-
+        {/* Rediger/Lagre-knappen vises kun for leger, ikke pasienter */}
         {rolle !== "pasient" && (
             redigerer
                 ? <button className={styles.redigerKnapp} onClick={lagre}>Lagre</button>
