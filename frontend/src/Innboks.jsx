@@ -59,6 +59,12 @@ function Innboks({ rolle }) {
   useEffect(() => {
     const token = sessionStorage.getItem("token");
 
+    // hvis token ikke finnes ennå (f.eks. bruker ikke logget inn), avslutt tidlig
+    if (!token) {
+      setLaster(false);
+      return;
+    }
+
     // velg riktig URL basert pa om vi viser utboks eller innboks
     const url = visUtboks
       ? "http://localhost:8000/meldinger/sendt"
@@ -75,11 +81,13 @@ function Innboks({ rolle }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        setMeldinger(data.meldinger);
+        // ?? [] sikrer at vi aldri setter meldinger til undefined selv om backend ikke returnerer listen
+        const liste = data.meldinger ?? [];
+        setMeldinger(liste);
 
         // nar vi forst ser meldingene sa viser den forste melding i listen automatisk
-        if (data.meldinger.length > 0) {
-          setValgtId(data.meldinger[0].meldingID);
+        if (liste.length > 0) {
+          setValgtId(liste[0].meldingID);
         }
 
         setLaster(false); // nar dataen er hentet sa skrurs av spinneren
@@ -171,6 +179,7 @@ function Innboks({ rolle }) {
     // hvis kallet feiler returnerer backend ikke en resultater-liste og da krasjer siden
     setSokeResultater(data.resultater ?? [])
   }
+
   // Denne funksjonen henter pasientens leger fra backend nar ny melding skjemaet apnes
   // den kalles kun for pasienter siden de ikke kan soke fritt blant alle brukere
   // pasienter kan bare sende meldinger til leger de har hatt avtaler med
@@ -478,27 +487,27 @@ function Innboks({ rolle }) {
       </div>
       <footer className={styles.footer}>
         <div className={styles.footerTopp}>
-            <span className={styles.footerNavn}>Eaze</span>
-            <span className={styles.footerDeler}>|</span>
-            <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
-            <span className={styles.footerDeler}>|</span>
-            <span className={styles.footerAar}>© 2026</span>
+          <span className={styles.footerNavn}>Eaze</span>
+          <span className={styles.footerDeler}>|</span>
+          <span className={styles.footerTekst}>Et studentprosjekt ved USN</span>
+          <span className={styles.footerDeler}>|</span>
+          <span className={styles.footerAar}>© 2026</span>
         </div>
 
         <div className={styles.footerGuide}>
-            <span className={styles.footerGuideTittel}>På denne siden kan du</span>
-            <div className={styles.footerGuideGrid}>
-                <span className={styles.footerGuideLabel}>Innboks</span>
-                <span className={styles.footerGuideVerdi}>Les meldinger du har mottatt fra leger eller pasienter</span>
-                <span className={styles.footerGuideLabel}>Utboks</span>
-                <span className={styles.footerGuideVerdi}>Se meldinger du har sendt tidligere</span>
-                <span className={styles.footerGuideLabel}>Ny melding</span>
-                <span className={styles.footerGuideVerdi}>Send en ny melding. Som lege: søk etter pasient. Som pasient: velg blant dine leger</span>
-                <span className={styles.footerGuideLabel}>Svar</span>
-                <span className={styles.footerGuideVerdi}>Svar direkte på en mottatt melding ved å trykke "Svar avsender"</span>
-            </div>
+          <span className={styles.footerGuideTittel}>På denne siden kan du</span>
+          <div className={styles.footerGuideGrid}>
+            <span className={styles.footerGuideLabel}>Innboks</span>
+            <span className={styles.footerGuideVerdi}>Les meldinger du har mottatt fra leger eller pasienter</span>
+            <span className={styles.footerGuideLabel}>Utboks</span>
+            <span className={styles.footerGuideVerdi}>Se meldinger du har sendt tidligere</span>
+            <span className={styles.footerGuideLabel}>Ny melding</span>
+            <span className={styles.footerGuideVerdi}>Send en ny melding. Som lege: søk etter pasient. Som pasient: velg blant dine leger</span>
+            <span className={styles.footerGuideLabel}>Svar</span>
+            <span className={styles.footerGuideVerdi}>Svar direkte på en mottatt melding ved å trykke "Svar avsender"</span>
+          </div>
         </div>
-    </footer>
+      </footer>
     </div>
   );
 }
