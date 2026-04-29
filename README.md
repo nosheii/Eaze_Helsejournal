@@ -151,6 +151,7 @@ Frontend kjører på: `http://localhost:5173`
 | PUT | /avtaler/{avtaleID} | Endre avtale | Tilda |
 | DELETE | /avtaler/{avtaleID} | Slett avtale | Tilda |
 | GET | /avtaler/mine | Hent egne avtaler | Nora |
+| GET | /avtaler/pasient | Hent egne avtaler (pasient) | Nora |
 | GET | /resept/{fnr} | Hent resepter | Tilda |
 | POST | /resept | Opprett resept | Tilda |
 | PUT | /resept/{reseptID} | Endre resept | Tilda |
