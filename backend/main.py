@@ -101,20 +101,6 @@ class ReseptOppdaterRequest(BaseModel):
     kommentar: str = None
     status: str = "aktiv"
 
-
-@app.post("/leggTilPas") # Endpoint for å legge til en ny pasient
-def leggTilPas(pasient:Pasient): # Tar imot pasientdata som en Pasient-modell
-    connection = getConnection()
-    connection.execute(
-        """INSERT INTO pasient (
-                                fornavn, etternavn, fnr, tlf, adresse, epost
-                                ) VALUES (?,?,?,?,?,?) """ , # Grunnen til spørsmålstegn er for å validere at du ikke sender inn SQL statements, for sikkerhetsmessige grunner
-                                (pasient.fornavn, pasient.etternavn, pasient.fnr, pasient.tlf, pasient.adresse, pasient.epost)
-    )
-    connection.commit()
-    connection.close()
-    return {"status":"Success!"}
-
 @app.get("/brukere/søk") # Endpoint for å søke etter pasienter basert på navn,
     #krever at brukeren er en lege (krever_lege). Denne brukes i innboks søkefunksjonen 
 def søk_brukere(navn: str, bruker = Depends(krever_lege)):
