@@ -137,29 +137,30 @@ Frontend kjører på: `http://localhost:5173`
 
 ## API-endepunkter
 
-| Metode | Endepunkt | Beskrivelse |
-|--------|-----------|-------------|
-| POST | /login | Logg inn |
-| GET | /journal/{fnr} | Hent journal for pasient |
-| POST | /journal | Opprett journal |
-| GET | /dokument/{journalNr} | Hent journaldokumenter |
-| POST | /dokument | Opprett dokument |
-| GET | /vaksine/{fnr} | Hent vaksiner |
-| POST | /vaksine | Registrer vaksine |
-| GET | /avtaler/{fnr} | Hent avtaler for pasient |
-| POST | /avtaler | Opprett avtale |
-| PUT | /avtaler/{avtaleID} | Endre avtale |
-| DELETE | /avtaler/{avtaleID} | Slett avtale |
-| GET | /avtaler/mine | Hent egne avtaler |
-| GET | /resept/{fnr} | Hent resepter |
-| POST | /resept | Opprett resept |
-| PUT | /resept/{reseptID} | Endre resept |
-| DELETE | /resept/{reseptID} | Slett resept |
-| GET | /meldinger | Hent meldinger |
-| POST | /meldinger | Send melding |
-| PATCH | /meldinger/{meldingID}/lest | Merk melding som lest |
-| GET | /pasient/{fnr}/info | Hent pasientinfo |
-| PUT | /pasient/{fnr}/info | Oppdater pasientinfo |
+| Metode | Endepunkt | Beskrivelse | Utvikler |
+|--------|-----------|-------------|-------------|
+| POST | /login | Logg inn | Tilda |
+| GET | /journal/{fnr} | Hent journal for pasient | felles |
+| POST | /journal | Opprett journal | felles |
+| GET | /dokument/{journalNr} | Hent journaldokumenter | felles |
+| POST | /dokument | Opprett dokument | felles |
+| GET | /vaksine/{fnr} | Hent vaksiner | Ana Maria |
+| POST | /vaksine | Registrer vaksine | Ana Maria |
+| GET | /avtaler/{fnr} | Hent avtaler for pasient | Tilda |
+| POST | /avtaler | Opprett avtale | Tilda |
+| PUT | /avtaler/{avtaleID} | Endre avtale | Tilda |
+| DELETE | /avtaler/{avtaleID} | Slett avtale | Tilda |
+| GET | /avtaler/mine | Hent egne avtaler | Nora |
+| GET | /resept/{fnr} | Hent resepter | Tilda |
+| POST | /resept | Opprett resept | Tilda |
+| PUT | /resept/{reseptID} | Endre resept | Tilda |
+| DELETE | /resept/{reseptID} | Slett resept | Tilda |
+| GET | /meldinger | Hent meldinger | Nora |
+| POST | /meldinger | Send melding | Nora |
+| GET | /meldinger/sendt | Hent sendte meldinger | Nora |
+| PATCH | /meldinger/{meldingID}/lest | Merk melding som lest | Nora |
+| GET | /pasient/{fnr}/info | Hent pasientinfo | Sofie |
+| PUT | /pasient/{fnr}/info | Oppdater pasientinfo | Sofie |
 
 ---
 
@@ -172,7 +173,7 @@ Frontend kjører på: `http://localhost:5173`
 
 ### ARBEIDSKRAV  ### 
 
-Dokumentasjon for hvert endepunkt: 
+Dokumentasjon for 6 av endepunktene: 
 
 HTTP-metode og URL 
 
