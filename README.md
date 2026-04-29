@@ -162,6 +162,9 @@ Frontend kjører på: `http://localhost:5173`
 | PATCH | /meldinger/{meldingID}/lest | Merk melding som lest | Nora |
 | GET | /pasient/{fnr}/info | Hent pasientinfo | Sofie |
 | PUT | /pasient/{fnr}/info | Oppdater pasientinfo | Sofie |
+| GET | /brukere/søk | Søk etter pasienter (kun lege) | Nora |
+| GET | /brukere/mine-leger | Hent leger tilknyttet innlogget pasient | Nora |
+| GET | /bruker/lege/{fnr} | Hent legens userID for en pasient | Tilda |
 
 ---
 
