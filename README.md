@@ -139,7 +139,7 @@ Frontend kjører på: `http://localhost:5173`
 
 | Metode | Endepunkt | Beskrivelse | Utvikler |
 |--------|-----------|-------------|-------------|
-| POST | /login | Logg inn | Tilda |
+| POST | /login | Logg inn | felles |
 | GET | /journal/{fnr} | Hent journal for pasient | felles |
 | POST | /journal | Opprett journal | felles |
 | GET | /dokument/{journalNr} | Hent journaldokumenter | felles |
