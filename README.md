@@ -141,6 +141,7 @@ Frontend kjører på: `http://localhost:5173`
 |--------|-----------|-------------|-------------|
 | POST | /login | Logg inn | felles |
 | GET | /journal/{fnr} | Hent journal for pasient | felles |
+| GET | /journal | Hent alle journaler (kun lege) | felles |
 | POST | /journal | Opprett journal | felles |
 | GET | /dokument/{journalNr} | Hent journaldokumenter | felles |
 | POST | /dokument | Opprett dokument | felles |
