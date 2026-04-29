@@ -1,11 +1,11 @@
-// Hjem.jsx
+// Hjem.jsx jahdajkds
 // Nora Al-Tay - 146274
-// Tilda Løvold - 273803
 // Mumtaz A. Cade - 273783
+// Tilda Løvold - 273803
 // Her vises alle hovedkompontene for både lege og pasient etter innlogging. 
 // Hvilke komponenter som vises avhenger av om det er en lege eller pasient som er logget inn. 
 
-import { Mail, Calendar, NotebookPen, Info } from "lucide-react"; 
+import { Mail, Calendar, NotebookPen, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Hjem.module.css";
@@ -24,7 +24,7 @@ function Widget({ icon, title, description, onClick, filled = false, harUlest = 
             onMouseLeave={() => setHovered(false)}
             className={kortKlasse}
         >
-            <div className={styles.ikonWrapper}> 
+            <div className={styles.ikonWrapper}>
                 <div className={ikonKlasse}>
                     {icon}
                 </div>
@@ -58,8 +58,8 @@ function Hjem({ rolle, brukerinfo }) { // Rolle og brukerinfo kommer som props f
     const idag = new Date(); // Her hentes dagens dato for at den skal vises på hjemmesiden.
     const dagManed = idag.toLocaleDateString("nb-NO", { day: "numeric", month: "long" });
     const visningsnavn = brukerinfo?.navn ?? rolle; // Her bestemmes hvilket navn som skal vises basert på brukerinfo. Hvis det ikke finnes, vises rollen (lege/pasient) i stedet.
-// Her defineres hvilke widgets som skal vises for lege og pasient. 
-// For eksempel skal legen kunne se journalen til alle pasienter, mens pasienten kun skal se sin egen journal.
+    // Her defineres hvilke widgets som skal vises for lege og pasient. 
+    // For eksempel skal legen kunne se journalen til alle pasienter, mens pasienten kun skal se sin egen journal.
     const legeWidgets = [
         { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les nye meldinger", filled: false, path: "/innboks", harUlest: harUlesteMeldinger },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Avtaler", description: "Se kommende timer og påminnelser", filled: false, path: "/avtaler" },
@@ -75,7 +75,7 @@ function Hjem({ rolle, brukerinfo }) { // Rolle og brukerinfo kommer som props f
     ];
 
     const widgets = rolle === "lege" ? legeWidgets : pasientWidgets;
-// Her returneres selve hjemmeside-koden, som inkluderer en hilsen, dagens dato, og de relevante widgetene basert på brukerrollen.
+    // Her returneres selve hjemmeside-koden, som inkluderer en hilsen, dagens dato, og de relevante widgetene basert på brukerrollen.
     return (
         <div className={styles.side}>
             <div className={styles.innhold}>
