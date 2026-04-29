@@ -14,6 +14,7 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 # "Vakten" som sjekker token
 security = HTTPBearer()
 
+# Denne funksjonen har blitt utviklet i felleskap
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     try:
@@ -25,6 +26,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
             detail="Ugyldig eller utløpt token"
         )
 
+# Denne funksjonen har blitt utviklet i felleskap
 def krever_lege(bruker = Depends(verify_token)): # Avhengighet som sjekker at brukeren er en lege
     if bruker.get("rolle") != "lege":
         raise HTTPException(
@@ -39,11 +41,7 @@ app = FastAPI() # Oppretter en FastAPI-applikasjon
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]) # Legger til CORS-middleware for å tillate forespørsler fra alle opprinnelser
 init_db() # Initialiserer databasen ved oppstart av applikasjonen
 
-@app.get("/debug/meg")
-def debug_meg(bruker = Depends(verify_token)):
-    # Returnerer hele payload-objektet fra tokenet for å kunne debuge ved feil
-    return {"token_innhold": dict(bruker)}
-
+# Utviklet i felleskap
 @app.get("/") # Definerer en GET-endpoint på roten av applikasjonen
 async def root(): # Returnerer en enkel melding for å indikere at serveren kjører
     return {"msg": "You are connected"}
@@ -101,6 +99,7 @@ class ReseptOppdaterRequest(BaseModel):
     kommentar: str = None
     status: str = "aktiv"
 
+# Utviklet av Nora Al-Tay 146274
 @app.get("/brukere/søk") # Endpoint for å søke etter pasienter basert på navn,
     #krever at brukeren er en lege (krever_lege). Denne brukes i innboks søkefunksjonen 
 def søk_brukere(navn: str, bruker = Depends(krever_lege)):
@@ -126,6 +125,7 @@ def søk_brukere(navn: str, bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+# Utviklet av Nora Al-Tay 146274
 @app.get("/brukere/mine-leger") # Endpoint for å hente alle leger som har hatt avtaler med innlogget pasient
 def hent_mine_leger(bruker = Depends(verify_token)):
     connection = getConnection()
@@ -146,6 +146,7 @@ def hent_mine_leger(bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Nora Al-Tay 146274
 @app.get("/avtaler/mine")
 def hent_mine_avtaler(bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -172,6 +173,7 @@ def hent_mine_avtaler(bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+# Utviklet av Nora Al-Tay 146274
 @app.get("/avtaler/pasient")
 def hent_pasient_avtaler(bruker = Depends(verify_token)):
     connection = getConnection()
@@ -194,6 +196,7 @@ def hent_pasient_avtaler(bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.get("/avtaler/{fnr}")
 def hent_avtaler(fnr: str, bruker = Depends(verify_token)):
     if bruker.get("rolle") == "pasient":
@@ -221,6 +224,7 @@ def hent_avtaler(fnr: str, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.post("/avtaler") # Oppretter en ny avtale, krever at brukeren er en lege
 def opprett_avtale(avtale_data: AvtaleRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -242,6 +246,7 @@ def opprett_avtale(avtale_data: AvtaleRequest, bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.put("/avtaler/{avtaleID}") # Endrer en eksisterende avtale, krever at brukeren er en lege
 def oppdater_avtale(avtaleID: int, avtale_data: AvtaleOppdaterRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -263,6 +268,7 @@ def oppdater_avtale(avtaleID: int, avtale_data: AvtaleOppdaterRequest, bruker = 
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.delete("/avtaler/{avtaleID}") # Sletter en avtale, krever at brukeren er en lege
 def slett_avtale(avtaleID: int, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -276,6 +282,7 @@ def slett_avtale(avtaleID: int, bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+# Utviklet i felleskap
 @app.get("/journal") # Endpoint for å hente alle journaler, krever at brukeren er en lege (krever_lege)
 def hent_alle_journaler(bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -302,6 +309,7 @@ def hent_alle_journaler(bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+# Utviklet i felleskap
 @app.get("/journal/{fnr}") # Endpoint for å hente journaler for en spesifikk pasient basert på fødselsnummer (fnr), krever at brukeren er enten legen selv eller pasienten det gjelder
 def hent_journal_for_pasient(fnr: str, bruker = Depends(verify_token)):
     # Pasient kan bare se sin egen journal
@@ -337,7 +345,7 @@ def hent_journal_for_pasient(fnr: str, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
-
+# Utviklet i felleskap
 @app.post("/journal") # Endpoint for å opprette en ny journal, krever at brukeren er en lege (krever_lege)
 def opprett_journal(journal_data: JournalRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -363,6 +371,7 @@ def opprett_journal(journal_data: JournalRequest, bruker = Depends(krever_lege))
     finally:
         connection.close()
 
+# Utviklet i felleskap
 @app.post("/dokument") # Endpoint for å opprette et nytt dokument i en journal, krever at brukeren er en lege (krever_lege)
 def opprett_dokument(dokument_data: DokumentRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -388,6 +397,7 @@ def opprett_dokument(dokument_data: DokumentRequest, bruker = Depends(krever_leg
     finally:
         connection.close()
 
+# Utviklet i felleskap
 @app.get("/dokument/{journalNr}") # Endpoint for å hente alle dokumenter i en journal, krever at brukeren er enten legen selv eller pasienten det gjelder
 def hent_dokumenter(journalNr: int, bruker = Depends(verify_token)):
     connection = getConnection()
@@ -427,6 +437,7 @@ def hent_dokumenter(journalNr: int, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Ana Maria Flores - 273762
 @app.get("/vaksine/{fnr}") # henter vaksiner fra fødselsnummer
 def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
     if bruker.get("rolle") == "pasient":
@@ -457,6 +468,7 @@ def hent_vaksine(fnr: str, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Ana Maria Flores - 273762
 @app.post("/vaksine") # oppretter vaksine
 def ny_vaksine(vaksine_data: VaksineRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -485,6 +497,7 @@ class PasientInfoRequest(BaseModel):
     om_pasient: List[str]
     kritisk_info: List[str]
 
+# Utviklet av Sofie Kure - 273800
 @app.get("/pasient/{fnr}/info")
 def hent_pasient_info(fnr: str, bruker = Depends(verify_token)):
     if bruker.get("rolle") == "pasient":
@@ -505,6 +518,7 @@ def hent_pasient_info(fnr: str, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Sofie Kure - 273800
 @app.put("/pasient/{fnr}/info")
 def oppdater_pasient_info(fnr: str, data: PasientInfoRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -526,6 +540,7 @@ def oppdater_pasient_info(fnr: str, data: PasientInfoRequest, bruker = Depends(k
     finally:
         connection.close()
 
+# Utviklet av Nora Al-Tay 146274
 @app.get("/meldinger/sendt")
 def hent_sendte_meldinger(bruker = Depends(verify_token)):
     """
@@ -560,6 +575,7 @@ def hent_sendte_meldinger(bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Nora Al-Tay 146274
 @app.get("/meldinger")
 def hent_meldinger(bruker = Depends(verify_token)):
     """
@@ -602,7 +618,7 @@ def hent_meldinger(bruker = Depends(verify_token)):
     finally:
         connection.close()
 
-
+# Utviklet av Nora Al-Tay 146274
 @app.post("/meldinger")
 def send_melding(melding_data: MeldingRequest, bruker = Depends(verify_token)):
     """
@@ -628,7 +644,7 @@ def send_melding(melding_data: MeldingRequest, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
-
+# Utviklet av Nora Al-Tay 146274
 @app.patch("/meldinger/{meldingID}/lest")
 def merk_som_lest(meldingID: int, bruker = Depends(verify_token)):
     """
@@ -654,6 +670,7 @@ def merk_som_lest(meldingID: int, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.get("/resept/{fnr}") # Henter alle resepter for en pasient
 def hent_resept(fnr: str, bruker = Depends(verify_token)):
     if bruker.get("rolle") == "pasient":
@@ -687,6 +704,7 @@ def hent_resept(fnr: str, bruker = Depends(verify_token)):
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.post("/resept") # Oppretter en ny resept, krever at brukeren er en lege
 def opprett_resept(resept_data: ReseptRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -710,6 +728,7 @@ def opprett_resept(resept_data: ReseptRequest, bruker = Depends(krever_lege)):
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.put("/resept/{reseptID}") # Endrer en eksisterende resept, krever at brukeren er en lege
 def oppdater_resept(reseptID: int, resept_data: ReseptOppdaterRequest, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -734,6 +753,7 @@ def oppdater_resept(reseptID: int, resept_data: ReseptOppdaterRequest, bruker = 
     finally:
         connection.close()
 
+# Utviklet av Tilda Løvold 273803
 @app.delete("/resept/{reseptID}") # Sletter en resept, krever at brukeren er en lege
 def slett_resept(reseptID: int, bruker = Depends(krever_lege)):
     connection = getConnection()
@@ -745,6 +765,7 @@ def slett_resept(reseptID: int, bruker = Depends(krever_lege)):
     finally:
         connection.close()
         
+# Utviklet av Tilda Løvold 273803
 @app.get("/bruker/lege/{fnr}")
 def hent_lege_for_pasient(fnr: str, bruker = Depends(verify_token)):
     connection = getConnection()
@@ -800,6 +821,7 @@ def create_access_token(data: dict) -> str:
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+# Utviklet i fellesskap
 @app.post("/login", response_model=LoginResponse)
 async def login(login_data: LoginRequest):
     """
