@@ -2,16 +2,12 @@
 // Nora Al-Tay - 146274
 // Mumtaz A. Cade - 273783
 // Tilda Løvold - 273803
-// Her vises alle hovedkompontene for både lege og pasient etter innlogging. 
-// Hvilke komponenter som vises avhenger av om det er en lege eller pasient som er logget inn. 
 
 import { Mail, Calendar, NotebookPen, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Hjem.module.css";
 
-// Widget funksjonen er en gjenbrukbar komponent for de forskjellige kortene på hjemmesiden. 
-// Som avtaler, journal, innboks osv. 
 function Widget({ icon, title, description, onClick, filled = false, harUlest = false }) {
     const [hovered, setHovered] = useState(false);
     const kortKlasse = `${styles.widget} ${hovered ? styles.widgetHover : ""}`;
@@ -19,7 +15,7 @@ function Widget({ icon, title, description, onClick, filled = false, harUlest = 
 
     return (
         <button
-            onClick={onClick} // onClick kommer fra props og bestemmer hva som skjer når man klikker på widgeten
+            onClick={onClick}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             className={kortKlasse}
@@ -38,8 +34,8 @@ function Widget({ icon, title, description, onClick, filled = false, harUlest = 
     );
 }
 
-function Hjem({ rolle, brukerinfo }) { // Rolle og brukerinfo kommer som props fra token i App.jsx, 
-    const navigate = useNavigate(); // Og bestemmer hva som vises basert på brukerrolle. 
+function Hjem({ rolle, brukerinfo }) {
+    const navigate = useNavigate();
     const [harUlesteMeldinger, setHarUlesteMeldinger] = useState(false);
 
     useEffect(() => {
@@ -55,11 +51,10 @@ function Hjem({ rolle, brukerinfo }) { // Rolle og brukerinfo kommer som props f
             .catch((feil) => console.error("Kunne ikke sjekke uleste:", feil));
     }, []);
 
-    const idag = new Date(); // Her hentes dagens dato for at den skal vises på hjemmesiden.
+    const idag = new Date();
     const dagManed = idag.toLocaleDateString("nb-NO", { day: "numeric", month: "long" });
-    const visningsnavn = brukerinfo?.navn ?? rolle; // Her bestemmes hvilket navn som skal vises basert på brukerinfo. Hvis det ikke finnes, vises rollen (lege/pasient) i stedet.
-    // Her defineres hvilke widgets som skal vises for lege og pasient. 
-    // For eksempel skal legen kunne se journalen til alle pasienter, mens pasienten kun skal se sin egen journal.
+    const visningsnavn = brukerinfo?.navn ?? rolle;
+
     const legeWidgets = [
         { icon: <Mail size={36} strokeWidth={1.8} />, title: "Innboks", description: "Les nye meldinger", filled: false, path: "/innboks", harUlest: harUlesteMeldinger },
         { icon: <Calendar size={36} strokeWidth={1.8} />, title: "Avtaler", description: "Se kommende timer og påminnelser", filled: false, path: "/avtaler" },
