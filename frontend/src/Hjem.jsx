@@ -1,7 +1,7 @@
 // Hjem.jsx
-// Mumtaz A. Cade - 273783
-// Tilda Løvold - 273803
 // Nora Al-Tay - 146274
+// Tilda Løvold - 273803
+// Mumtaz A. Cade - 273783
 // Her vises alle hovedkompontene for både lege og pasient etter innlogging. 
 // Hvilke komponenter som vises avhenger av om det er en lege eller pasient som er logget inn. 
 
