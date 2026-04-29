@@ -9,7 +9,7 @@ import profilBilde from './assets/profil-bilde.jpg'
 
 function Navbar({ brukerinfo, onLoggUt, rolle }) { // Brukerinfo, onLoggUt og rolle kommer som props fra token i App.jsx, og bestemmer hva som vises i navbaren basert på brukerrolle.
   const journalPath = rolle === 'lege' ? '/journal' : `/journal/${brukerinfo.fnr}`
-// Her defineres journalPath basert på brukerrolle. Leger skal kunne se journalen til alle pasienter, mens pasienter skal kun se sin egen. 
+  // Her defineres journalPath basert på brukerrolle. Leger skal kunne se journalen til alle pasienter, mens pasienter skal kun se sin egen. 
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -23,7 +23,8 @@ function Navbar({ brukerinfo, onLoggUt, rolle }) { // Brukerinfo, onLoggUt og ro
         </div>
       </div>
       <div className="navbar-right">
-        <span className="navbar-user-name">{brukerinfo.navn}</span>  // Her vises navnet til den innloggede brukeren i navbaren, hentet fra brukerinfo.
+        {/* Her vises navnet til den innloggede brukeren i navbaren, hentet fra brukerinfo. */}
+        <span className="navbar-user-name">{brukerinfo.navn}</span>
         <img src={profilBilde} alt="Profil" className="navbar-profile-img" />
         <button className="navbar-loggut-btn" onClick={onLoggUt}>Logg ut</button>
       </div>
