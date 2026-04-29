@@ -1,4 +1,4 @@
-// Hjem.jsx jahdajkds
+// Hjem.jsx 
 // Nora Al-Tay - 146274
 // Mumtaz A. Cade - 273783
 // Tilda Løvold - 273803
